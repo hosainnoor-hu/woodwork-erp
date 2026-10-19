@@ -49,35 +49,26 @@
             <i data-lucide="layers" class="w-6 h-6 text-white"></i>
           </div>
           <div>
-            <h1 class="text-lg font-black tracking-tight flex items-center gap-2">
+            <h1 class="text-lg font-black tracking-tight">
               منظومة الأخشاب والدواليب
-              <span id="badge-current-mode" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                الوضع المتكامل الشامل
-              </span>
             </h1>
             <p class="text-xs text-wood-200">إدارة المعارض، ورش التصنيع، وتجارة ومستودعات الأخشاب</p>
           </div>
         </div>
       </div>
 
-      <!-- Center: 4 Operational Modes Switcher (مفتاح أنماط التشغيل الأربعة) -->
-      <div class="bg-wood-950/80 p-1 rounded-2xl border border-wood-700/60 flex flex-wrap items-center justify-center gap-1 shadow-inner text-xs font-bold">
-        <button onclick="setOperationalMode('FULL')" id="btn-mode-full" class="px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 bg-amber-500 text-wood-950 shadow-sm">
-          <i data-lucide="split" class="w-3.5 h-3.5"></i>
-          <span>1. الشامل المتكامل</span>
-        </button>
-        <button onclick="setOperationalMode('SHOWROOM')" id="btn-mode-showroom" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
-          <i data-lucide="store" class="w-3.5 h-3.5"></i>
-          <span>2. المعرض فقط</span>
-        </button>
-        <button onclick="setOperationalMode('WORKSHOP')" id="btn-mode-workshop" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
-          <i data-lucide="hammer" class="w-3.5 h-3.5"></i>
-          <span>3. الورشة فقط</span>
-        </button>
-        <button onclick="setOperationalMode('WAREHOUSE')" id="btn-mode-warehouse" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
-          <i data-lucide="package-search" class="w-3.5 h-3.5"></i>
-          <span>4. مستودع الأخشاب فقط</span>
-        </button>
+      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل) -->
+      <div class="flex items-center gap-2 bg-wood-950/90 px-3.5 py-1.5 rounded-2xl border border-wood-700/70 shadow-inner">
+        <label for="select-operational-mode" class="text-xs font-bold text-amber-400 flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span>نمط التشغيل:</span>
+        </label>
+        <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="bg-wood-900 text-white text-xs font-black py-1.5 px-3 rounded-xl border border-wood-600 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
+          <option value="FULL">1. الشامل المتكامل (معرض + ورشة + مستودع)</option>
+          <option value="SHOWROOM">2. المعرض وصالة المبيعات فقط</option>
+          <option value="WORKSHOP">3. ورشة التصنيع والقص فقط</option>
+          <option value="WAREHOUSE">4. مستودع وتجارة الأخشاب فقط</option>
+        </select>
       </div>
 
       <!-- Quick Actions -->
@@ -710,23 +701,12 @@
     function setOperationalMode(mode) {
       appData.settings.mode = mode;
       
-      const badge = document.getElementById('badge-current-mode');
+      const sel = document.getElementById('select-operational-mode');
+      if (sel) sel.value = mode;
+
       const bannerText = document.getElementById('mode-alert-text');
       const quoteBtn = document.getElementById('btn-header-new-quote');
       const timberSaleBtn = document.getElementById('btn-header-timber-sale');
-
-      const btns = {
-        FULL: document.getElementById('btn-mode-full'),
-        SHOWROOM: document.getElementById('btn-mode-showroom'),
-        WORKSHOP: document.getElementById('btn-mode-workshop'),
-        WAREHOUSE: document.getElementById('btn-mode-warehouse')
-      };
-
-      Object.values(btns).forEach(b => {
-        b.className = 'px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1';
-      });
-
-      btns[mode].className = 'px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 bg-amber-500 text-wood-950 shadow-sm font-extrabold';
 
       // Hide or show tabs according to mode
       const showroomTabs = document.querySelectorAll('.showroom-tab');
@@ -734,7 +714,6 @@
       const warehouseTabs = document.querySelectorAll('.warehouse-tab');
 
       if (mode === 'FULL') {
-        badge.textContent = 'الوضع المتكامل الشامل';
         bannerText.innerHTML = 'أنت الآن في <strong>الوضع المتكامل الشامل</strong>: مبيعات المعرض مع الكروكي، ورشة التصنيع، ومستودع الأخشاب ومشتريات الموردين.';
         quoteBtn.classList.remove('hidden');
         timberSaleBtn.classList.remove('hidden');
@@ -742,7 +721,6 @@
         workshopTabs.forEach(el => el.classList.remove('hidden'));
         warehouseTabs.forEach(el => el.classList.remove('hidden'));
       } else if (mode === 'SHOWROOM') {
-        badge.textContent = 'وضع المعرض وصالة المبيعات فقط';
         bannerText.innerHTML = 'أنت الآن في <strong>وضع المعرض فقط</strong>: عقود تفصيل الدواليب، ربط البائعين، والكروكي، والدفعات ومصروفات المعرض.';
         quoteBtn.classList.remove('hidden');
         timberSaleBtn.classList.add('hidden');
@@ -750,7 +728,6 @@
         workshopTabs.forEach(el => el.classList.add('hidden'));
         warehouseTabs.forEach(el => el.classList.add('hidden'));
       } else if (mode === 'WORKSHOP') {
-        badge.textContent = 'وضع ورشة التصنيع والقص فقط';
         bannerText.innerHTML = 'أنت الآن في <strong>وضع الورشة فقط</strong>: أوامر تشغيل المحطات الخمس، كشف العمال والرواتب، ومصروفات الإعاشة والماء والزيوت.';
         quoteBtn.classList.add('hidden');
         timberSaleBtn.classList.add('hidden');
@@ -758,7 +735,6 @@
         workshopTabs.forEach(el => el.classList.remove('hidden'));
         warehouseTabs.forEach(el => el.classList.remove('hidden'));
       } else if (mode === 'WAREHOUSE') {
-        badge.textContent = 'وضع مستودع وتجارة الأخشاب فقط';
         bannerText.innerHTML = 'أنت الآن في <strong>وضع مستودع وتجارة الأخشاب فقط</strong>: مشتريات الموردين، مبيعات الأخشاب بالألواح، وتتبع الذمم المدينة والديون.';
         quoteBtn.classList.add('hidden');
         timberSaleBtn.classList.remove('hidden');
