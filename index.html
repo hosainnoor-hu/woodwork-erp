@@ -36,35 +36,35 @@
     }
   </script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
 
   <!-- Header -->
-  <header class="bg-wood-900 text-white shadow-lg sticky top-0 z-40 border-b border-wood-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+  <header class="bg-wood-900 text-white shadow-lg sticky top-0 z-40 border-b border-wood-700 w-full overflow-hidden">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-2.5">
       
       <!-- Brand & Title -->
-      <div class="flex items-center space-x-3 space-x-reverse w-full md:w-auto justify-between md:justify-start">
-        <div class="flex items-center space-x-3 space-x-reverse">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-wood-500 to-amber-600 flex items-center justify-center shadow-md">
-            <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+      <div class="flex items-center justify-between w-full md:w-auto gap-2.5">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-wood-500 to-amber-600 flex items-center justify-center shadow-md shrink-0">
+            <i data-lucide="layers" class="w-5 h-5 text-white"></i>
           </div>
-          <div>
-            <h1 class="text-lg font-black tracking-tight">
+          <div class="min-w-0">
+            <h1 class="text-base sm:text-lg font-black tracking-tight truncate">
               منظومة الأخشاب والدواليب
             </h1>
-            <p class="text-xs text-wood-200">إدارة المعارض، ورش التصنيع، وتجارة ومستودعات الأخشاب</p>
+            <p class="text-[11px] text-wood-200 truncate hidden xs:block sm:block">إدارة المعارض، ورش التصنيع، وتجارة ومستودعات الأخشاب</p>
           </div>
         </div>
       </div>
 
-      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل) -->
-      <div class="flex items-center gap-2 bg-wood-950/90 px-3.5 py-1.5 rounded-2xl border border-wood-700/70 shadow-inner">
-        <label for="select-operational-mode" class="text-xs font-bold text-amber-400 flex items-center gap-1.5 whitespace-nowrap">
-          <i data-lucide="sliders" class="w-4 h-4"></i>
-          <span>نمط التشغيل:</span>
+      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل - متجاوبة للجوال) -->
+      <div class="w-full md:w-auto flex items-center gap-2 bg-wood-950/90 px-3 py-1.5 rounded-xl border border-wood-700/70 shadow-inner min-w-0">
+        <label for="select-operational-mode" class="text-xs font-bold text-amber-400 flex items-center gap-1 shrink-0 whitespace-nowrap">
+          <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+          <span>النمط:</span>
         </label>
-        <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="bg-wood-900 text-white text-xs font-black py-1.5 px-3 rounded-xl border border-wood-600 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
-          <option value="FULL">1. الشامل المتكامل (معرض + ورشة + مستودع)</option>
+        <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="flex-1 md:w-64 min-w-0 bg-wood-900 text-white text-xs font-black py-1.5 px-2.5 rounded-lg border border-wood-600 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer truncate">
+          <option value="FULL">1. الشامل (معرض + ورشة + مستودع)</option>
           <option value="SHOWROOM">2. المعرض وصالة المبيعات فقط</option>
           <option value="WORKSHOP">3. ورشة التصنيع والقص فقط</option>
           <option value="WAREHOUSE">4. مستودع وتجارة الأخشاب فقط</option>
@@ -72,16 +72,16 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="flex items-center gap-2">
-        <button onclick="openNewExpenseModal()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1">
+      <div class="flex items-center justify-center sm:justify-end gap-2 w-full md:w-auto">
+        <button onclick="openNewExpenseModal()" class="flex-1 sm:flex-initial bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center justify-center gap-1">
           <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
           <span>تسجيل مصروف</span>
         </button>
-        <button onclick="openNewQuoteModal()" id="btn-header-new-quote" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1">
+        <button onclick="openNewQuoteModal()" id="btn-header-new-quote" class="flex-1 sm:flex-initial bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md flex items-center justify-center gap-1">
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
           <span>عقد تفصيل</span>
         </button>
-        <button onclick="openDirectTimberSaleModal()" id="btn-header-timber-sale" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1">
+        <button onclick="openDirectTimberSaleModal()" id="btn-header-timber-sale" class="hidden flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center justify-center gap-1">
           <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
           <span>بيع أخشاب مباشر</span>
         </button>
