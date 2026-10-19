@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منظومة إدارة معارض ومناجر ومستودعات الأخشاب | Hussain OS</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+    * { font-family: 'Tajawal', sans-serif; }
+    @media print {
+      body * { visibility: hidden; }
+      #printable-area, #printable-area * { visibility: visible; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; background: white; color: black; }
+      .no-print { display: none !important; }
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wood: {
+              50: '#fdf8f4', 100: '#faefe6', 200: '#f4dbc9', 500: '#c27838', 600: '#a35d27', 700: '#84471e', 800: '#6d391b', 900: '#482512',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-wood-900 text-white shadow-lg sticky top-0 z-40 border-b border-wood-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-3 space-x-reverse w-full md:w-auto justify-between md:justify-start">
+        <div class="flex items-center space-x-3 space-x-reverse">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-wood-500 to-amber-600 flex items-center justify-center shadow-md">
+            <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-black tracking-tight flex items-center gap-2">
+              منظومة الأخشاب والدواليب
+              <span id="badge-current-mode" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                الوضع المتكامل الشامل
+              </span>
+            </h1>
+            <p class="text-xs text-wood-200">إدارة المعارض، ورش التصنيع، وتجارة ومستودعات الأخشاب</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: 4 Operational Modes Switcher (مفتاح أنماط التشغيل الأربعة) -->
+      <div class="bg-wood-950/80 p-1 rounded-2xl border border-wood-700/60 flex flex-wrap items-center justify-center gap-1 shadow-inner text-xs font-bold">
+        <button onclick="setOperationalMode('FULL')" id="btn-mode-full" class="px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 bg-amber-500 text-wood-950 shadow-sm">
+          <i data-lucide="split" class="w-3.5 h-3.5"></i>
+          <span>1. الشامل المتكامل</span>
+        </button>
+        <button onclick="setOperationalMode('SHOWROOM')" id="btn-mode-showroom" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
+          <i data-lucide="store" class="w-3.5 h-3.5"></i>
+          <span>2. المعرض فقط</span>
+        </button>
+        <button onclick="setOperationalMode('WORKSHOP')" id="btn-mode-workshop" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
+          <i data-lucide="hammer" class="w-3.5 h-3.5"></i>
+          <span>3. الورشة فقط</span>
+        </button>
+        <button onclick="setOperationalMode('WAREHOUSE')" id="btn-mode-warehouse" class="px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1">
+          <i data-lucide="package-search" class="w-3.5 h-3.5"></i>
+          <span>4. مستودع الأخشاب فقط</span>
+        </button>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2">
+        <button onclick="openNewExpenseModal()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1">
+          <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
+          <span>تسجيل مصروف</span>
+        </button>
+        <button onclick="openNewQuoteModal()" id="btn-header-new-quote" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1">
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>عقد تفصيل</span>
+        </button>
+        <button onclick="openDirectTimberSaleModal()" id="btn-header-timber-sale" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1">
+          <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+          <span>بيع أخشاب مباشر</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Filtered dynamically based on chosen Operational Mode) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 space-x-reverse overflow-x-auto text-xs sm:text-sm font-semibold border-t border-wood-800 custom-scrollbar">
+      <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="tab-btn py-3 px-3 text-amber-400 border-b-2 border-amber-400 flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        لوحة القيادة والصندوق
+      </button>
+
+      <!-- Showroom specific tabs -->
+      <button onclick="switchTab('contracts')" id="tab-btn-contracts" class="tab-btn showroom-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="file-check-2" class="w-4 h-4"></i>
+        عقود التفصيل والكروكي
+      </button>
+
+      <!-- Warehouse & Inventory Tabs -->
+      <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="boxes" class="w-4 h-4"></i>
+        مستودع الأخشاب والمبيعات المباشرة
+      </button>
+      <button onclick="switchTab('suppliers')" id="tab-btn-suppliers" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="truck" class="w-4 h-4"></i>
+        الموردون والمشتريات
+      </button>
+
+      <!-- Workshop specific tabs -->
+      <button onclick="switchTab('workorders')" id="tab-btn-workorders" class="tab-btn workshop-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="hammer" class="w-4 h-4"></i>
+        محطات تصنيع الورشة الخمس
+      </button>
+      <button onclick="switchTab('workers')" id="tab-btn-workers" class="tab-btn workshop-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="users-2" class="w-4 h-4"></i>
+        كشف العمال والرواتب والسلف
+      </button>
+
+      <!-- Common Core Financial Tabs -->
+      <button onclick="switchTab('expenses')" id="tab-btn-expenses" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="wallet-cards" class="w-4 h-4"></i>
+        المصروفات ومراكز التكلفة
+      </button>
+      <button onclick="switchTab('debts')" id="tab-btn-debts" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="clock-alert" class="w-4 h-4"></i>
+        الديون غير المسددة (الآجل)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Operational Mode Alert Banner -->
+    <div id="mode-alert-banner" class="bg-amber-50 border border-amber-200 text-amber-900 px-4 py-2.5 rounded-2xl text-xs flex justify-between items-center shadow-sm">
+      <div class="flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4 text-amber-700"></i>
+        <span id="mode-alert-text">
+          أنت الآن في <strong>الوضع المتكامل الشامل</strong>: مبيعات المعرض مع الكروكي، ورشة التصنيع، ومستودع الأخشاب ومشتريات الموردين.
+        </span>
+      </div>
+      <span class="text-[11px] font-bold text-amber-800 bg-amber-200/60 px-2.5 py-0.5 rounded-md">مستند إلى خطة أ. محمود مصطفى</span>
+    </div>
+
+    <!-- TAB 1: DASHBOARD & CASH CLOSING (صندوق الإغلاق اليومي) -->
+    <section id="tab-dashboard" class="tab-content space-y-6">
+      
+      <!-- Live Cash Drawer Closure (صندوق السيولة النقدية اليومي من ورقة أ. محمود) -->
+      <div class="bg-gradient-to-r from-slate-900 via-wood-950 to-slate-900 text-white p-6 rounded-3xl shadow-xl border border-wood-700/50">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-4 border-b border-wood-800">
+          <div>
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="scale" class="w-4 h-4"></i>
+              صندوق الإغلاق اليومي للدرج والسيولة
+            </span>
+            <h2 class="text-xl font-black mt-1">المعادلة المحاسبية: المبيعات - (المشتريات + المصروفات) = الصافي</h2>
+          </div>
+          <button onclick="reconcileDailyCash()" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-md">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            إعادة احتساب الصندوق اليوم
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+          <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+            <span class="text-xs text-slate-300 font-bold block mb-1">إجمالي المبيعات المحصلة</span>
+            <span id="dash-cash-sales" class="text-xl font-black text-emerald-400">0.00 ر.س</span>
+            <span class="text-[10px] text-slate-400 block mt-1">عربون + دفعات + بيع خشب</span>
+          </div>
+          <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+            <span class="text-xs text-slate-300 font-bold block mb-1">مشتريات مسددة للموردين</span>
+            <span id="dash-cash-purchases" class="text-xl font-black text-rose-300">0.00 ر.س</span>
+            <span class="text-[10px] text-slate-400 block mt-1">أخشاب طه، أراك، المناع...</span>
+          </div>
+          <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+            <span class="text-xs text-slate-300 font-bold block mb-1">المصروفات التشغيلية والشخصية</span>
+            <span id="dash-cash-expenses" class="text-xl font-black text-rose-400">0.00 ر.س</span>
+            <span class="text-[10px] text-slate-400 block mt-1">إعاشة، وايت، صيانة، إيجار</span>
+          </div>
+          <div class="bg-amber-500/20 p-4 rounded-2xl border border-amber-500/40">
+            <span class="text-xs text-amber-300 font-black block mb-1">الصافي المتبقي في الدرج (الكاش)</span>
+            <span id="dash-cash-net" class="text-2xl font-black text-amber-400">0.00 ر.س</span>
+            <span class="text-[10px] text-amber-200 block mt-1">السيولة النقدية الفعلية</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick KPI Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">مبالغ غير مسددة (ديون على الزبائن)</p>
+            <h3 class="text-xl font-black text-rose-600" id="stat-unpaid-debts">0.00 ر.س</h3>
+            <span class="text-[11px] text-rose-500 font-bold mt-1 inline-block">ذمم مدينة قيد المتابعة</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+            <i data-lucide="alert-circle" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">أرصدة الموردين المستحقة</p>
+            <h3 class="text-xl font-black text-amber-700" id="stat-suppliers-due">0.00 ر.س</h3>
+            <span class="text-[11px] text-slate-500 font-bold mt-1 inline-block">طه، أراك، عزيز، المناع</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+            <i data-lucide="truck" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">مصروفات إعاشة الورشة والماء</p>
+            <h3 class="text-xl font-black text-blue-700" id="stat-workshop-expenses">0.00 ر.س</h3>
+            <span class="text-[11px] text-blue-600 font-bold mt-1 inline-block">أكل، وايت، زيوت، سباكة</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <i data-lucide="utensils" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">قيمة مخزون الألواح بالمستودع</p>
+            <h3 class="text-xl font-black text-wood-800" id="stat-stock-value">0.00 ر.س</h3>
+            <span class="text-[11px] text-wood-600 font-bold mt-1 inline-block">ألواح وقواطع متاحة للبيع</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-wood-50 text-wood-700 flex items-center justify-center">
+            <i data-lucide="boxes" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions Table -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-800">أحدث العمليات والحركات النقدية</h2>
+            <p class="text-xs text-slate-500">مبيعات، مشتريات موردين، ومصروفات مسجلة</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3">التاريخ</th>
+                <th class="py-2.5 px-3">النوع</th>
+                <th class="py-2.5 px-3">البيان / المستفيد</th>
+                <th class="py-2.5 px-3">مركز التكلفة / البائع</th>
+                <th class="py-2.5 px-3">المبلغ</th>
+                <th class="py-2.5 px-3">طريقة الدفع</th>
+              </tr>
+            </thead>
+            <tbody id="recent-transactions-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: CONTRACTS & CROQUIS (العقود وتوجيه العربون والكروكي) -->
+    <section id="tab-contracts" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">عقود تفصيل الدواليب ومخططات الكروكي</h2>
+            <p class="text-xs text-slate-500">ربط البائعين (محمد، عيسى، يونس)، كروكي قبل وبعد التنفيذ، وتوجيه العربون لموردي الخشب</p>
+          </div>
+          <button onclick="openNewQuoteModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            عقد تفصيل وكروكي جديد
+          </button>
+        </div>
+
+        <div class="space-y-4" id="contracts-list-container"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TIMBER WAREHOUSE & DIRECT SALES (مستودع الأخشاب والمبيعات الخارجية) -->
+    <section id="tab-inventory" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="boxes" class="w-5 h-5 text-wood-600"></i>
+              مستودع وتجارة الأخشاب (تعدد وحدات القياس Multi-UOM)
+            </h2>
+            <p class="text-xs text-slate-500">أرصدة الألواح القياسية (244×122)، المتر المكعب (م³)، والمتر المربع (م²)</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="openDirectTimberSaleModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+              <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+              فاتورة بيع خشب خارجي
+            </button>
+            <button onclick="openNewInventoryItemModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              إضافة لوح خشب
+            </button>
+          </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">رمز الصنف</th>
+                <th class="py-3 px-3">اسم الصنف والمواصفات</th>
+                <th class="py-3 px-3">المورد المعتمد</th>
+                <th class="py-3 px-3">رصيد الألواح</th>
+                <th class="py-3 px-3">المعادل بالمتر المربع (م²)</th>
+                <th class="py-3 px-3">تكلفة الشراء</th>
+                <th class="py-3 px-3">سعر بيع الجملة (مستودع)</th>
+                <th class="py-3 px-3">سعر التجزئة (م.ط)</th>
+                <th class="py-3 px-3">الموقع بالهنجر</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SUPPLIERS & PURCHASES (الموردون والمشتريات) -->
+    <section id="tab-suppliers" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="truck" class="w-5 h-5 text-wood-600"></i>
+              دليل الموردين المعتمدين والمشتريات
+            </h2>
+            <p class="text-xs text-slate-500">أخشاب طه، أراك، مستودع عزيز، ركن الخشب، المناع للقزاز، تاجكو، المنار...</p>
+          </div>
+          <button onclick="openNewPurchaseModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            تسجيل فاتورة مشتريات من مورد
+          </button>
+        </div>
+
+        <!-- Suppliers Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="suppliers-cards-container"></div>
+      </div>
+    </section>
+
+    <!-- TAB 5: WORKSHOP PRODUCTION STAGES (المحطات الخمس) -->
+    <section id="tab-workorders" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="hammer" class="w-5 h-5 text-wood-600"></i>
+              محطات خط إنتاج الورشة الخمس وتكاليف المواد (WIP)
+            </h2>
+            <p class="text-xs text-slate-500">1. قص الألواح ⬅️ 2. قشاط PVC ⬅️ 3. التجميع ⬅️ 4. الإكسسوارات والتشطيب ⬅️ 5. فحص الجودة والتوريد</p>
+          </div>
+        </div>
+        <div class="space-y-4" id="workorders-cards-container"></div>
+      </div>
+    </section>
+
+    <!-- TAB 6: WORKERS & PAYROLL (كشف العمال والرواتب والسلف) -->
+    <section id="tab-workers" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="users-2" class="w-5 h-5 text-wood-600"></i>
+              كشف العمال والرواتب والسلف الميدانية
+            </h2>
+            <p class="text-xs text-slate-500">معلمي المنشار، فنيي القشاط، التجميع، وعمال التحميل وتتبع سلفهم من الدرج</p>
+          </div>
+          <button onclick="openNewWorkerAdvanceModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i data-lucide="hand-coins" class="w-4 h-4"></i>
+            صرف سلفة لعامل
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">اسم العامل</th>
+                <th class="py-3 px-3">المهنة والمهمة</th>
+                <th class="py-3 px-3">نوع الأجر</th>
+                <th class="py-3 px-3">الراتب / اليومية الأساسية</th>
+                <th class="py-3 px-3">رصيد السلف المسحوبة</th>
+                <th class="py-3 px-3">الصافي المستحق</th>
+                <th class="py-3 px-3">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="workers-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: EXPENSES TREE (شجرة المصروفات ومراكز التكلفة) -->
+    <section id="tab-expenses" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="wallet-cards" class="w-5 h-5 text-wood-600"></i>
+              شجرة المصروفات المصنفة بمراكز التكلفة الأربعة
+            </h2>
+            <p class="text-xs text-slate-500">المعرض | ورشة التصنيع (إعاشة، ماء، سباكة، زيوت) | المستودع | مسحوبات المالك والصدقات</p>
+          </div>
+          <button onclick="openNewExpenseModal()" class="bg-rose-700 hover:bg-rose-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            تسجيل مصروف جديد
+          </button>
+        </div>
+
+        <!-- Filter Cost Centers -->
+        <div class="flex flex-wrap gap-2 mb-4 text-xs font-bold">
+          <button onclick="filterExpenses('ALL')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white" id="exp-f-all">الكل</button>
+          <button onclick="filterExpenses('WORKSHOP')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-workshop">🏭 ورشة التصنيع (إعاشة، وايت، صيانة)</button>
+          <button onclick="filterExpenses('SHOWROOM')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-showroom">🏢 المعرض (إيجار، كهرباء، ضيافة)</button>
+          <button onclick="filterExpenses('WAREHOUSE')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-warehouse">📦 المستودع (ديزل فوركلفت، تنزيل)</button>
+          <button onclick="filterExpenses('OWNER')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-owner">👤 مسحوبات شخصية وصدقة</button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">رقم المصروف</th>
+                <th class="py-3 px-3">التاريخ</th>
+                <th class="py-3 px-3">مركز التكلفة</th>
+                <th class="py-3 px-3">البند والتفاصيل</th>
+                <th class="py-3 px-3">المستفيد</th>
+                <th class="py-3 px-3">المبلغ</th>
+                <th class="py-3 px-3">طريقة الصرف</th>
+              </tr>
+            </thead>
+            <tbody id="expenses-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: UNPAID DEBTS (الديون غير المسددة والآجل) -->
+    <section id="tab-debts" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="clock-alert" class="w-5 h-5 text-rose-600"></i>
+              سجل المبالغ غير المسددة من قبل الزبائن (الآجل والديون)
+            </h2>
+            <p class="text-xs text-slate-500">متابعة تحصيل المتبقي من عقود التفصيل وفواتير بيع الأخشاب الخارجية</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">العميل / المحل</th>
+                <th class="py-3 px-3">رقم الجوال</th>
+                <th class="py-3 px-3">رقم العقد / الفاتورة</th>
+                <th class="py-3 px-3">إجمالي القيمة</th>
+                <th class="py-3 px-3">المبلغ المسدد</th>
+                <th class="py-3 px-3">المبلغ المتبقي (الدين)</th>
+                <th class="py-3 px-3">تاريخ الاستحقاق</th>
+                <th class="py-3 px-3">إجراء التحصيل</th>
+              </tr>
+            </thead>
+            <tbody id="debts-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: NEW EXPENSE (شجرة المصروفات ومراكز التكلفة) -->
+  <div id="modal-new-expense" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="receipt" class="w-4 h-4 text-rose-600"></i>
+          تسجيل مصروف جديد من الدرج / البنك
+        </h3>
+        <button onclick="closeModal('modal-new-expense')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">مركز التكلفة *</label>
+          <select id="exp-cost-center" onchange="updateExpenseCategories()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+            <option value="WORKSHOP">🏭 ورشة التصنيع والمنجرة</option>
+            <option value="SHOWROOM">🏢 المعرض وصالة المبيعات</option>
+            <option value="WAREHOUSE">📦 مستودع الأخشاب</option>
+            <option value="OWNER">👤 مسحوبات المالك والصدقات</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">البند والتصنيف *</label>
+          <select id="exp-category" class="w-full p-2.5 rounded-xl border border-slate-300">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المصروف (ر.س) *</label>
+            <input type="number" id="exp-amount" placeholder="0.00" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-rose-700 text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">طريقة الصرف</label>
+            <select id="exp-method" class="w-full p-2.5 rounded-xl border border-slate-300">
+              <option value="CASH">نقد من درج الكاش</option>
+              <option value="BANK">تحويل بنكي من حساب المؤسسة</option>
+              <option value="MADA">بطاقة مدى</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">المستفيد / اسم المحل أو الشخص</label>
+          <input type="text" id="exp-beneficiary" placeholder="مثال: بقالة التموين، صاحب وايت الماء، سباك الصيانة" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">ملاحظات إضافية</label>
+          <input type="text" id="exp-notes" placeholder="تفاصيل الصرف..." class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+        <button onclick="closeModal('modal-new-expense')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewExpense()" class="bg-rose-700 hover:bg-rose-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          تسجيل المصروف وخصمه من الصندوق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DIRECT TIMBER SALE (بيع أخشاب مباشر للمستودع والخارجي) -->
+  <div id="modal-direct-sale" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="shopping-cart" class="w-4 h-4 text-emerald-600"></i>
+          فاتورة بيع أخشاب مباشر / ورش خارجية
+        </h3>
+        <button onclick="closeModal('modal-direct-sale')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اسم المحل / الورشة أو الشخص الخارجي *</label>
+          <input type="text" id="sale-buyer-name" placeholder="مثال: منجرة الفن الحديث، المقاول أبو فهد" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">نوع الخشب المباع *</label>
+            <select id="sale-timber-code" onchange="recalcDirectSale()" class="w-full p-2.5 rounded-xl border border-slate-300">
+              <!-- Dynamically populated from inventory -->
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">عدد الألواح المباعة *</label>
+            <input type="number" id="sale-qty" value="10" oninput="recalcDirectSale()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">سعر بيع اللوح (ر.س)</label>
+            <input type="number" id="sale-price" value="180" oninput="recalcDirectSale()" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-emerald-700">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">طريقة السداد</label>
+            <select id="sale-payment-type" onchange="recalcDirectSale()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="CASH">نقد مسدد بالكامل (كاش)</option>
+              <option value="PARTIAL">مسدد جزء والباقي آجل (دين)</option>
+              <option value="DEBIT">آجل بالكامل (دين على الزبون)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2" id="sale-partial-box">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المقبوض نقداً</label>
+            <input type="number" id="sale-paid-amount" value="1800" oninput="recalcDirectSale()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold text-center text-emerald-600">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المتبقي كدين غير مسدد</label>
+            <input type="text" id="sale-unpaid-amount" value="0.00 ر.س" disabled class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-black text-center text-rose-600">
+          </div>
+        </div>
+
+        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-center">
+          <span class="text-xs text-emerald-800 font-bold">إجمالي الفاتورة:</span>
+          <span id="sale-total-display" class="text-lg font-black text-emerald-900 block">1,800.00 ر.س</span>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+        <button onclick="closeModal('modal-direct-sale')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveDirectTimberSale()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ الفاتورة وتحديث المخزون
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    // State including Mahmoud Mustafa's exact requirements
+    const DB = {
+      settings: { mode: 'FULL' },
+      suppliers: [
+        { code: 'SUP-TAHA', name: 'أخشاب طه', cat: 'أخشاب', phone: '0501112233', balance: 8400.00 },
+        { code: 'SUP-ARAK', name: 'أراك للأخشاب والإكسسوارات', cat: 'أخشاب وإكسسوارات', phone: '0502223344', balance: 5200.00 },
+        { code: 'SUP-AZIZ', name: 'مستودع عزيز', cat: 'أخشاب', phone: '0503334455', balance: 12000.00 },
+        { code: 'SUP-ROKN', name: 'ركن الخشب', cat: 'أخشاب', phone: '0504445566', balance: 3100.00 },
+        { code: 'SUP-MANAR', name: 'المنار الأول', cat: 'أخشاب', phone: '0505556677', balance: 0.00 },
+        { code: 'SUP-TAGCO', name: 'تاجكو', cat: 'أخشاب', phone: '0506667788', balance: 4500.00 },
+        { code: 'SUP-MANNA', name: 'المناع للقزاز', cat: 'زجاج ومرايا', phone: '0507778899', balance: 1850.00 }
+      ],
+      salesmen: [
+        { id: 'S1', name: 'محمد' },
+        { id: 'S2', name: 'عيسى' },
+        { id: 'S3', name: 'يونس' }
+      ],
+      inventory: [
+        { code: 'WOOD-THAI-WHT-18', name: 'خشب تايلاندي أبيض مقاوم 18مم', supplier: 'أخشاب طه', stock: 120, cost: 115, wholesalePrice: 155, retailPrice: 350, location: 'هنجر A - رف 12' },
+        { code: 'WOOD-GERM-WBP-18', name: 'خشب ألماني أصلي مقاوم للحرارة 18مم', supplier: 'مستودع عزيز', stock: 80, cost: 185, wholesalePrice: 240, retailPrice: 520, location: 'هنجر A - رف 15' },
+        { code: 'SHTR-HPL-MATT', name: 'ألواح HPL ألماني مطفي ضد التبصيم', supplier: 'أراك للأخشاب', stock: 55, cost: 260, wholesalePrice: 340, retailPrice: 750, location: 'هنجر B - رف 4' },
+        { code: 'GLASS-BLACK-FLUTED', name: 'زجاج أسود مضلع مع إطار ألومنيوم', supplier: 'المناع للقزاز', stock: 40, cost: 140, wholesalePrice: 210, retailPrice: 480, location: 'قسم الزجاج C' }
+      ],
+      contracts: [
+        {
+          id: 'CNT-2026-001',
+          customerName: 'عبد العزيز بن محمد الراجحي',
+          phone: '0555123456',
+          salesman: 'محمد',
+          title: 'تفصيل دولاب ملابس ماستر بخشب تايلاندي وأبواب HPL',
+          totalAmount: 11000.00,
+          advancePaid: 4000.00,
+          advanceDirectedTo: 'أخشاب طه', // فكرة الأستاذ محمود: العربون تم توجيهه لسداد أخشاب طه
+          remainingAmount: 7000.00,
+          croquisBefore: 'مخطط كروكي 2D معتمد بالمقاسات الليزرية (4.2م)',
+          croquisAfter: 'قيد التنفيذ في الورشة',
+          signingDate: '2026-10-19',
+          status: 'IN_WORKSHOP'
+        }
+      ],
+      workOrders: [
+        {
+          id: 'WO-2026-001',
+          contractId: 'CNT-2026-001',
+          customerName: 'عبد العزيز بن محمد الراجحي',
+          title: 'دولاب ملابس ماستر (4.2 متر طولي)',
+          stage: 'SAW_CUTTING', // SAW_CUTTING, EDGE_BANDING, ASSEMBLY, FINISHING, QA_PACKING
+          bomCost: 1733.00,
+          targetDate: '2026-10-28'
+        }
+      ],
+      workers: [
+        { id: 'W1', name: 'أحمد النجار', role: 'معلم قص المنشار', wageType: 'شهري', wage: 3500.00, advances: 500.00 },
+        { id: 'W2', name: 'بلال القشاط', role: 'فني قشاط حواف PVC', wageType: 'شهري', wage: 3000.00, advances: 200.00 },
+        { id: 'W3', name: 'سعيد التركيبات', role: 'معلم تجميع وتركيب موقع', wageType: 'يومية', wage: 150.00, advances: 0.00 },
+        { id: 'W4', name: 'كومار', role: 'عامل تحميل ومستودع', wageType: 'شهري', wage: 2000.00, advances: 100.00 }
+      ],
+      expenses: [
+        { id: 'EXP-101', date: '2026-10-19', costCenter: 'WORKSHOP', category: 'إعاشة عمال الورشة (أرز + زيت + أكل)', amount: 350.00, method: 'CASH', beneficiary: 'تموينات الأمانة', notes: 'وجبات وعشاء عمال الورشة' },
+        { id: 'EXP-102', date: '2026-10-19', costCenter: 'WORKSHOP', category: 'وايت ماء + صرف صحي', amount: 180.00, method: 'CASH', beneficiary: 'صهريج أبو علي', notes: 'تعبئة خزان الورشة' },
+        { id: 'EXP-103', date: '2026-10-19', costCenter: 'WORKSHOP', category: 'أدوات سباكة وزيوت ماكينات', amount: 120.00, method: 'CASH', beneficiary: 'سباكة الهدى', notes: 'زيت ماكينة القص وسيفون' },
+        { id: 'EXP-104', date: '2026-10-19', costCenter: 'SHOWROOM', category: 'ضيافة وإفطار موظفي المعرض', amount: 65.00, method: 'CASH', beneficiary: 'بوفية السعادة', notes: 'فطور محمد وعيسى وضيافة عميل' },
+        { id: 'EXP-105', date: '2026-10-19', costCenter: 'OWNER', category: 'مسحوبات شخصية للمالك', amount: 1000.00, method: 'CASH', beneficiary: 'المالك', notes: 'سحب شخصي نقدي' }
+      ],
+      directSales: [
+        { id: 'DS-2026-01', buyer: 'منجرة الفن الحديث', date: '2026-10-19', timber: 'خشب تايلاندي أبيض مقاوم 18مم', qty: 15, total: 2325.00, paid: 1500.00, unpaid: 825.00, method: 'PARTIAL' }
+      ]
+    };
+
+    let appData = JSON.parse(localStorage.getItem('woodwork_os_v3')) || DB;
+
+    function saveDB() {
+      localStorage.setItem('woodwork_os_v3', JSON.stringify(appData));
+      renderAll();
+    }
+
+    // Set Operational Mode (1. المتكامل، 2. المعرض، 3. الورشة، 4. مستودع الأخشاب)
+    function setOperationalMode(mode) {
+      appData.settings.mode = mode;
+      
+      const badge = document.getElementById('badge-current-mode');
+      const bannerText = document.getElementById('mode-alert-text');
+      const quoteBtn = document.getElementById('btn-header-new-quote');
+      const timberSaleBtn = document.getElementById('btn-header-timber-sale');
+
+      const btns = {
+        FULL: document.getElementById('btn-mode-full'),
+        SHOWROOM: document.getElementById('btn-mode-showroom'),
+        WORKSHOP: document.getElementById('btn-mode-workshop'),
+        WAREHOUSE: document.getElementById('btn-mode-warehouse')
+      };
+
+      Object.values(btns).forEach(b => {
+        b.className = 'px-2.5 py-1.5 rounded-xl text-wood-200 hover:text-white transition-all flex items-center gap-1';
+      });
+
+      btns[mode].className = 'px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 bg-amber-500 text-wood-950 shadow-sm font-extrabold';
+
+      // Hide or show tabs according to mode
+      const showroomTabs = document.querySelectorAll('.showroom-tab');
+      const workshopTabs = document.querySelectorAll('.workshop-tab');
+      const warehouseTabs = document.querySelectorAll('.warehouse-tab');
+
+      if (mode === 'FULL') {
+        badge.textContent = 'الوضع المتكامل الشامل';
+        bannerText.innerHTML = 'أنت الآن في <strong>الوضع المتكامل الشامل</strong>: مبيعات المعرض مع الكروكي، ورشة التصنيع، ومستودع الأخشاب ومشتريات الموردين.';
+        quoteBtn.classList.remove('hidden');
+        timberSaleBtn.classList.remove('hidden');
+        showroomTabs.forEach(el => el.classList.remove('hidden'));
+        workshopTabs.forEach(el => el.classList.remove('hidden'));
+        warehouseTabs.forEach(el => el.classList.remove('hidden'));
+      } else if (mode === 'SHOWROOM') {
+        badge.textContent = 'وضع المعرض وصالة المبيعات فقط';
+        bannerText.innerHTML = 'أنت الآن في <strong>وضع المعرض فقط</strong>: عقود تفصيل الدواليب، ربط البائعين، والكروكي، والدفعات ومصروفات المعرض.';
+        quoteBtn.classList.remove('hidden');
+        timberSaleBtn.classList.add('hidden');
+        showroomTabs.forEach(el => el.classList.remove('hidden'));
+        workshopTabs.forEach(el => el.classList.add('hidden'));
+        warehouseTabs.forEach(el => el.classList.add('hidden'));
+      } else if (mode === 'WORKSHOP') {
+        badge.textContent = 'وضع ورشة التصنيع والقص فقط';
+        bannerText.innerHTML = 'أنت الآن في <strong>وضع الورشة فقط</strong>: أوامر تشغيل المحطات الخمس، كشف العمال والرواتب، ومصروفات الإعاشة والماء والزيوت.';
+        quoteBtn.classList.add('hidden');
+        timberSaleBtn.classList.add('hidden');
+        showroomTabs.forEach(el => el.classList.add('hidden'));
+        workshopTabs.forEach(el => el.classList.remove('hidden'));
+        warehouseTabs.forEach(el => el.classList.remove('hidden'));
+      } else if (mode === 'WAREHOUSE') {
+        badge.textContent = 'وضع مستودع وتجارة الأخشاب فقط';
+        bannerText.innerHTML = 'أنت الآن في <strong>وضع مستودع وتجارة الأخشاب فقط</strong>: مشتريات الموردين، مبيعات الأخشاب بالألواح، وتتبع الذمم المدينة والديون.';
+        quoteBtn.classList.add('hidden');
+        timberSaleBtn.classList.remove('hidden');
+        showroomTabs.forEach(el => el.classList.add('hidden'));
+        workshopTabs.forEach(el => el.classList.add('hidden'));
+        warehouseTabs.forEach(el => el.classList.remove('hidden'));
+      }
+
+      saveDB();
+      switchTab('dashboard');
+    }
+
+    // Switch Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('text-amber-400', 'border-amber-400');
+        btn.classList.add('text-slate-300', 'border-transparent');
+      });
+
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (targetTab && targetBtn) {
+        targetTab.classList.remove('hidden');
+        targetBtn.classList.remove('text-slate-300', 'border-transparent');
+        targetBtn.classList.add('text-amber-400', 'border-amber-400');
+      }
+      lucide.createIcons();
+    }
+
+    // Reconcile Daily Cash (المعادلة المحاسبية للأستاذ محمود)
+    function reconcileDailyCash() {
+      // 1. Total Cash Sales (العربون المحصل من العقود + المقبوض من بيع الخشب المباشر)
+      let totalSales = 0;
+      appData.contracts.forEach(c => totalSales += (c.advancePaid || 0));
+      appData.directSales.forEach(ds => totalSales += (ds.paid || 0));
+
+      // 2. Total Cash Purchases paid to suppliers
+      let totalPurchases = 0;
+      // Araboon directed to suppliers (counted as supplier payment)
+      appData.contracts.forEach(c => {
+        if (c.advanceDirectedTo) {
+          totalPurchases += c.advancePaid;
+        }
+      });
+
+      // 3. Total Cash Expenses (المصروفات النقدية)
+      let totalExpenses = 0;
+      let workshopExp = 0;
+      appData.expenses.forEach(e => {
+        if (e.method === 'CASH') {
+          totalExpenses += e.amount;
+        }
+        if (e.costCenter === 'WORKSHOP') {
+          workshopExp += e.amount;
+        }
+      });
+
+      // Net Cash Remaining in Drawer
+      const netCash = totalSales - totalExpenses; // (assuming araboon directed to suppliers is paid out)
+
+      document.getElementById('dash-cash-sales').textContent = totalSales.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('dash-cash-purchases').textContent = totalPurchases.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('dash-cash-expenses').textContent = totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('dash-cash-net').textContent = netCash.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+
+      // KPI stats
+      let unpaidDebts = 0;
+      appData.contracts.forEach(c => unpaidDebts += (c.remainingAmount || 0));
+      appData.directSales.forEach(ds => unpaidDebts += (ds.unpaid || 0));
+
+      let suppliersDue = 0;
+      appData.suppliers.forEach(s => suppliersDue += s.balance);
+
+      let stockVal = 0;
+      appData.inventory.forEach(i => stockVal += (i.stock * i.cost));
+
+      document.getElementById('stat-unpaid-debts').textContent = unpaidDebts.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('stat-suppliers-due').textContent = suppliersDue.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('stat-workshop-expenses').textContent = workshopExp.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('stat-stock-value').textContent = stockVal.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+    }
+
+    // Render Recent Transactions
+    function renderTransactions() {
+      const tbody = document.getElementById('recent-transactions-tbody');
+      tbody.innerHTML = '';
+
+      // Merge contracts, expenses, and direct sales
+      const items = [];
+      appData.contracts.forEach(c => {
+        items.push({
+          date: c.signingDate,
+          type: 'مبيعات تفصيل (عربون)',
+          title: `${c.title} (العميل: ${c.customerName})`,
+          badge: `البائع: ${c.salesman}`,
+          amount: `+${c.advancePaid.toFixed(2)} ر.س`,
+          color: 'text-emerald-700 font-bold',
+          method: c.advanceDirectedTo ? `سُدد لمورد: ${c.advanceDirectedTo}` : 'كاش بالدرج'
+        });
+      });
+
+      appData.expenses.forEach(e => {
+        items.push({
+          date: e.date,
+          type: 'مصروف تشغيلي',
+          title: `${e.category} - ${e.beneficiary}`,
+          badge: e.costCenter === 'WORKSHOP' ? 'الورشة' : e.costCenter === 'SHOWROOM' ? 'المعرض' : 'مسحوبات المالك',
+          amount: `-${e.amount.toFixed(2)} ر.س`,
+          color: 'text-rose-700 font-bold',
+          method: e.method === 'CASH' ? 'نقد من الدرج' : 'تحويل بنكي'
+        });
+      });
+
+      appData.directSales.forEach(ds => {
+        items.push({
+          date: ds.date,
+          type: 'بيع أخشاب مباشر',
+          title: `${ds.timber} (${ds.qty} لوح) - ${ds.buyer}`,
+          badge: 'مستودع الأخشاب',
+          amount: `+${ds.paid.toFixed(2)} ر.س`,
+          color: 'text-emerald-700 font-bold',
+          method: ds.unpaid > 0 ? `مقبوض ${ds.paid} والباقي دين ${ds.unpaid}` : 'مسدد بالكامل'
+        });
+      });
+
+      items.forEach(it => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 text-slate-500 font-mono">${it.date}</td>
+          <td class="py-2.5 px-3 font-bold">${it.type}</td>
+          <td class="py-2.5 px-3 text-slate-700">${it.title}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${it.badge}</span></td>
+          <td class="py-2.5 px-3 ${it.color}">${it.amount}</td>
+          <td class="py-2.5 px-3 text-slate-500">${it.method}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Contracts with Croquis & Araboon Destination
+    function renderContracts() {
+      const container = document.getElementById('contracts-list-container');
+      container.innerHTML = '';
+
+      appData.contracts.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4';
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-200">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-sm font-black text-wood-700">${c.id}</span>
+                <h3 class="font-bold text-slate-800">${c.title}</h3>
+                <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full text-xs font-bold">بإشراف البائع: ${c.salesman}</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">العميل: <strong>${c.customerName}</strong> (${c.phone}) | تاريخ العقد: ${c.signingDate}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-500 block">إجمالي قيمة العقد</span>
+              <span class="text-base font-black text-wood-900">${c.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</span>
+            </div>
+          </div>
+
+          <!-- Araboon Destination & Remaining (فكرة الأستاذ محمود مصطفى) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 space-y-1">
+              <span class="text-emerald-700 font-bold block">العربون المدفوع وتوجيهه:</span>
+              <div class="text-sm font-black text-emerald-900">${c.advancePaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
+              <p class="text-[11px] text-emerald-800">
+                تم توجيهه لسداد: <strong class="bg-white px-1.5 py-0.5 rounded text-emerald-950 font-black">${c.advanceDirectedTo || 'صندوق المؤسسة'}</strong>
+              </p>
+            </div>
+            <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 space-y-1">
+              <span class="text-amber-800 font-bold block">المبلغ المتبقي على الزبون (دين قيد الإنجاز):</span>
+              <div class="text-sm font-black text-amber-900">${c.remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
+              <p class="text-[11px] text-amber-700">يُسدد وفق مراحل التركيب والاستلام النهائي</p>
+            </div>
+          </div>
+
+          <!-- Croquis Before & After Section -->
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-xs">
+            <h4 class="font-black text-slate-700 mb-2 flex items-center gap-1.5">
+              <i data-lucide="image" class="w-4 h-4 text-wood-600"></i>
+              مخطط الكروكي والمطابقة (قبل وبعد التنفيذ):
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-slate-700 block">كروكي قبل التنفيذ:</span>
+                  <span class="text-slate-500 text-[11px]">${c.croquisBefore}</span>
+                </div>
+                <span class="px-2 py-1 rounded bg-slate-200 text-slate-700 font-bold text-[10px]">مرفق معتمد</span>
+              </div>
+              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-slate-700 block">كروكي وصور بعد التنفيذ:</span>
+                  <span class="text-slate-500 text-[11px]">${c.croquisAfter}</span>
+                </div>
+                <button onclick="alert('خاصية رفع صورة الدولاب بعد التركيب بالجوال')" class="px-2 py-1 rounded bg-wood-600 hover:bg-wood-700 text-white font-bold text-[10px]">
+                  رفع صورة الإنجاز
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Render Suppliers & Balances
+    function renderSuppliers() {
+      const container = document.getElementById('suppliers-cards-container');
+      container.innerHTML = '';
+
+      appData.suppliers.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3';
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-1">
+              <span class="text-[10px] font-mono text-slate-400 font-bold">${s.code}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.cat === 'زجاج ومرايا' ? 'bg-blue-100 text-blue-700' : 'bg-wood-100 text-wood-800'}">${s.cat}</span>
+            </div>
+            <h4 class="font-black text-slate-800 text-sm">${s.name}</h4>
+            <p class="text-xs text-slate-500" dir="ltr">${s.phone}</p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex justify-between items-center">
+            <div>
+              <span class="text-[10px] text-slate-400 block font-bold">الرصيد المستحق (دائن):</span>
+              <span class="text-sm font-black ${s.balance > 0 ? 'text-rose-600' : 'text-slate-500'}">${s.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</span>
+            </div>
+            <button onclick="paySupplierModal('${s.code}')" class="bg-wood-700 hover:bg-wood-800 text-white text-[11px] px-2.5 py-1 rounded-lg font-bold">
+              سداد دفعة
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function paySupplierModal(supCode) {
+      const sup = appData.suppliers.find(s => s.code === supCode);
+      if (!sup) return;
+      const amtStr = prompt(`أدخل المبلغ المراد سداده للمورد: ${sup.name}\n(الرصيد الحالي: ${sup.balance} ر.س)`);
+      const amt = parseFloat(amtStr);
+      if (amt && amt > 0) {
+        sup.balance = Math.max(0, sup.balance - amt);
+        appData.expenses.unshift({
+          id: `EXP-${Date.now().toString().slice(-4)}`,
+          date: new Date().toISOString().split('T')[0],
+          costCenter: 'WAREHOUSE',
+          category: `سداد دفعة للمورد: ${sup.name}`,
+          amount: amt,
+          method: 'CASH',
+          beneficiary: sup.name,
+          notes: 'سداد نقدي من الدرج لحساب المورد'
+        });
+        saveDB();
+        alert(`تم سداد ${amt} ر.س للمورد ${sup.name} وخصمها من رصيده ومن الدرج.`);
+      }
+    }
+
+    // Render Inventory
+    function renderInventory() {
+      const tbody = document.getElementById('inventory-table-body');
+      tbody.innerHTML = '';
+      appData.inventory.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-bold text-wood-700">${item.code}</td>
+          <td class="py-3 px-3 font-bold text-slate-800">${item.name}</td>
+          <td class="py-3 px-3 text-slate-600 font-bold">${item.supplier}</td>
+          <td class="py-3 px-3 font-black text-slate-900">${item.stock} لوح</td>
+          <td class="py-3 px-3 font-bold text-blue-700">${(item.stock * 2.98).toFixed(1)} م²</td>
+          <td class="py-3 px-3 font-mono">${item.cost.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 font-bold text-emerald-700">${item.wholesalePrice.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-slate-700">${item.retailPrice.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-slate-400">${item.location}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Work Orders
+    function renderWorkOrders() {
+      const container = document.getElementById('workorders-cards-container');
+      container.innerHTML = '';
+      const stagesOrder = ['SAW_CUTTING', 'EDGE_BANDING', 'ASSEMBLY', 'FINISHING', 'QA_PACKING'];
+      const stageNames = {
+        SAW_CUTTING: '1. قص الألواح وتفصيل المقاسات',
+        EDGE_BANDING: '2. قشاط شريط الحواف PVC 2مم',
+        ASSEMBLY: '3. التجميع الهيكلي للقواطع والأرفف',
+        FINISHING: '4. تركيب المفصلات والإكسسوارات والتشطيب',
+        QA_PACKING: '5. فحص الجودة والتغليف للتوريد'
+      };
+
+      appData.workOrders.forEach(wo => {
+        const curIdx = stagesOrder.indexOf(wo.stage);
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3';
+        card.innerHTML = `
+          <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+            <div>
+              <span class="font-mono text-xs font-black text-emerald-700">${wo.id}</span>
+              <h4 class="font-bold text-slate-800 inline mr-2">${wo.title}</h4>
+              <span class="text-xs text-slate-500">العميل: ${wo.customerName}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-amber-700 bg-amber-100 px-2.5 py-1 rounded-xl">المحطة الحالية: ${stageNames[wo.stage]}</span>
+              ${curIdx < stagesOrder.length - 1 ? `
+                <button onclick="advanceWorkOrder('${wo.id}')" class="bg-wood-700 hover:bg-wood-800 text-white text-xs px-3 py-1 rounded-xl font-bold">
+                  ترقية للمحطة التالية
+                </button>
+              ` : `
+                <span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-xl font-bold">جاهز للتوريد</span>
+              `}
+            </div>
+          </div>
+          <div class="text-xs text-slate-500 flex justify-between">
+            <span>تاريخ التسليم المستهدف: ${wo.targetDate}</span>
+            <span>تكلفة المواد المسحوبة من المستودع: <strong class="text-wood-900">${wo.bomCost.toFixed(2)} ر.س</strong></span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function advanceWorkOrder(id) {
+      const stagesOrder = ['SAW_CUTTING', 'EDGE_BANDING', 'ASSEMBLY', 'FINISHING', 'QA_PACKING'];
+      const wo = appData.workOrders.find(w => w.id === id);
+      if (!wo) return;
+      const idx = stagesOrder.indexOf(wo.stage);
+      if (idx < stagesOrder.length - 1) {
+        wo.stage = stagesOrder[idx + 1];
+        saveDB();
+      }
+    }
+
+    // Render Workers
+    function renderWorkers() {
+      const tbody = document.getElementById('workers-table-body');
+      tbody.innerHTML = '';
+      appData.workers.forEach(w => {
+        const net = w.wage - w.advances;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-bold text-slate-800">${w.name}</td>
+          <td class="py-3 px-3 text-slate-600">${w.role}</td>
+          <td class="py-3 px-3">${w.wageType}</td>
+          <td class="py-3 px-3 font-bold">${w.wage.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 font-bold text-rose-600">${w.advances.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 font-black text-emerald-700">${net.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3">
+            <button onclick="giveWorkerAdvance('${w.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2 py-1 rounded text-[11px] font-bold">
+              صرف سلفة
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function giveWorkerAdvance(wId) {
+      const w = appData.workers.find(worker => worker.id === wId);
+      if (!w) return;
+      const amtStr = prompt(`أدخل مبلغ السلفة للعامل: ${w.name}`);
+      const amt = parseFloat(amtStr);
+      if (amt && amt > 0) {
+        w.advances += amt;
+        appData.expenses.unshift({
+          id: `EXP-${Date.now().toString().slice(-4)}`,
+          date: new Date().toISOString().split('T')[0],
+          costCenter: 'WORKSHOP',
+          category: `سلفة عامل: ${w.name} (${w.role})`,
+          amount: amt,
+          method: 'CASH',
+          beneficiary: w.name,
+          notes: 'سلفة نقدية من الدرج تُخصم من الراتب'
+        });
+        saveDB();
+        alert(`تم تسجيل سلفة ${amt} ر.س للعامل ${w.name} وخصمها من الكاش.`);
+      }
+    }
+
+    // Render Expenses & Filter
+    let currentExpenseFilter = 'ALL';
+    function filterExpenses(filter) {
+      currentExpenseFilter = filter;
+      document.querySelectorAll('.exp-filter-btn').forEach(b => {
+        b.className = 'exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200';
+      });
+      const activeBtn = document.getElementById(`exp-f-${filter.toLowerCase()}`);
+      if (activeBtn) activeBtn.className = 'exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white font-bold';
+
+      const tbody = document.getElementById('expenses-table-body');
+      tbody.innerHTML = '';
+      const list = filter === 'ALL' ? appData.expenses : appData.expenses.filter(e => e.costCenter === filter);
+
+      list.forEach(e => {
+        const centerBadge = 
+          e.costCenter === 'WORKSHOP' ? '<span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">🏭 الورشة</span>' :
+          e.costCenter === 'SHOWROOM' ? '<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">🏢 المعرض</span>' :
+          e.costCenter === 'WAREHOUSE' ? '<span class="bg-wood-100 text-wood-800 px-2 py-0.5 rounded-full font-bold">📦 المستودع</span>' :
+          '<span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">👤 مسحوبات وصدقة</span>';
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-bold text-slate-500">${e.id}</td>
+          <td class="py-3 px-3 text-slate-500">${e.date}</td>
+          <td class="py-3 px-3">${centerBadge}</td>
+          <td class="py-3 px-3 font-bold text-slate-800">${e.category}</td>
+          <td class="py-3 px-3 text-slate-600">${e.beneficiary}</td>
+          <td class="py-3 px-3 font-black text-rose-600">${e.amount.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-slate-500">${e.method === 'CASH' ? 'نقد (درج)' : 'تحويل'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Debts (مبالغ غير مسددة من قبل الزبون)
+    function renderDebts() {
+      const tbody = document.getElementById('debts-table-body');
+      tbody.innerHTML = '';
+
+      appData.contracts.filter(c => c.remainingAmount > 0).forEach(c => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-bold text-slate-800">${c.customerName}</td>
+          <td class="py-3 px-3 text-slate-500" dir="ltr">${c.phone}</td>
+          <td class="py-3 px-3 font-mono text-wood-700">${c.id}</td>
+          <td class="py-3 px-3 font-bold">${c.totalAmount.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-emerald-600 font-bold">${c.advancePaid.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 font-black text-rose-600">${c.remainingAmount.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-slate-500">عند التركيب النهائي</td>
+          <td class="py-3 px-3">
+            <button onclick="collectDebt('${c.id}', 'CONTRACT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold">
+              تحصيل الآن
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      appData.directSales.filter(ds => ds.unpaid > 0).forEach(ds => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-bold text-slate-800">${ds.buyer} (ورشة/محل)</td>
+          <td class="py-3 px-3 text-slate-500">—</td>
+          <td class="py-3 px-3 font-mono text-wood-700">${ds.id}</td>
+          <td class="py-3 px-3 font-bold">${ds.total.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-emerald-600 font-bold">${ds.paid.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 font-black text-rose-600">${ds.unpaid.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-slate-500">${ds.date}</td>
+          <td class="py-3 px-3">
+            <button onclick="collectDebt('${ds.id}', 'DIRECT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold">
+              تحصيل الآن
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function collectDebt(id, type) {
+      if (type === 'CONTRACT') {
+        const c = appData.contracts.find(item => item.id === id);
+        if (!c) return;
+        const amtStr = prompt(`تحصيل دفعة من العميل: ${c.customerName}\n(المتبقي: ${c.remainingAmount} ر.س)`);
+        const amt = parseFloat(amtStr);
+        if (amt && amt > 0) {
+          c.advancePaid += amt;
+          c.remainingAmount = Math.max(0, c.remainingAmount - amt);
+          saveDB();
+          alert(`تم تحصيل ${amt} ر.س بنجاح وإيداعها في الصندوق`);
+        }
+      } else {
+        const ds = appData.directSales.find(item => item.id === id);
+        if (!ds) return;
+        const amtStr = prompt(`تحصيل دين بيع الخشب من: ${ds.buyer}\n(المتبقي: ${ds.unpaid} ر.س)`);
+        const amt = parseFloat(amtStr);
+        if (amt && amt > 0) {
+          ds.paid += amt;
+          ds.unpaid = Math.max(0, ds.unpaid - amt);
+          saveDB();
+          alert(`تم تحصيل ${amt} ر.س بنجاح وإيداعها في الصندوق`);
+        }
+      }
+    }
+
+    // Expense Categories per Cost Center
+    function updateExpenseCategories() {
+      const center = document.getElementById('exp-cost-center').value;
+      const sel = document.getElementById('exp-category');
+      sel.innerHTML = '';
+
+      const cats = {
+        WORKSHOP: [
+          'إعاشة عمال الورشة (أرز + زيت + أكل)',
+          'وايت ماء + شفط صرف صحي',
+          'أدوات سباكة وصيانة هنجر',
+          'زيوت ماكينات وشحذ سنون المناشير',
+          'رواتب وسلف عمال الورشة',
+          'مصاريف ورشة عامة ونثريات'
+        ],
+        SHOWROOM: [
+          'إيجار المعرض وصالة العرض',
+          'فاتورة كهرباء وإنترنت المعرض',
+          'ضيافة وإفطار موظفي المعرض والزبائن',
+          'عينات ألوان، أقمشة، وكتالوجات',
+          'عمولات ومكافآت بائعي المعرض',
+          'تسويق وإعلانات المعرض'
+        ],
+        WAREHOUSE: [
+          'إيجار هنجر مستودع الأخشاب',
+          'ديزل وصيانة الرافعة الشوكية (فوركلفت)',
+          'أجور عمال تنزيل وتحميل التريلات'
+        ],
+        OWNER: [
+          'مسحوبات شخصية للمالك (أبو الزبير)',
+          'صدقات وتبرعات لوجه الله',
+          'رسوم حكومية ورخص وتأمينات'
+        ]
+      };
+
+      (cats[center] || []).forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        sel.appendChild(opt);
+      });
+    }
+
+    function openNewExpenseModal() {
+      updateExpenseCategories();
+      document.getElementById('exp-amount').value = '';
+      document.getElementById('exp-beneficiary').value = '';
+      document.getElementById('exp-notes').value = '';
+      openModal('modal-new-expense');
+    }
+
+    function saveNewExpense() {
+      const center = document.getElementById('exp-cost-center').value;
+      const cat = document.getElementById('exp-category').value;
+      const amt = parseFloat(document.getElementById('exp-amount').value) || 0;
+      const method = document.getElementById('exp-method').value;
+      const beneficiary = document.getElementById('exp-beneficiary').value.trim() || '—';
+      const notes = document.getElementById('exp-notes').value.trim();
+
+      if (amt <= 0) {
+        alert('يرجى إدخال مبلغ صحيح');
+        return;
+      }
+
+      appData.expenses.unshift({
+        id: `EXP-${Date.now().toString().slice(-4)}`,
+        date: new Date().toISOString().split('T')[0],
+        costCenter: center,
+        category: cat,
+        amount: amt,
+        method: method,
+        beneficiary: beneficiary,
+        notes: notes
+      });
+
+      saveDB();
+      closeModal('modal-new-expense');
+      switchTab('expenses');
+    }
+
+    // Direct Timber Sale Modal Logic
+    function openDirectTimberSaleModal() {
+      const sel = document.getElementById('sale-timber-code');
+      sel.innerHTML = '';
+      appData.inventory.forEach(inv => {
+        const opt = document.createElement('option');
+        opt.value = inv.code;
+        opt.textContent = `${inv.name} (المتوفر: ${inv.stock} لوح)`;
+        opt.setAttribute('data-price', inv.wholesalePrice);
+        sel.appendChild(opt);
+      });
+      recalcDirectSale();
+      openModal('modal-direct-sale');
+    }
+
+    function recalcDirectSale() {
+      const sel = document.getElementById('sale-timber-code');
+      if (!sel || !sel.options.length) return;
+      const opt = sel.options[sel.selectedIndex];
+      const basePrice = parseFloat(opt.getAttribute('data-price')) || 180;
+      const qty = parseFloat(document.getElementById('sale-qty').value) || 0;
+      const price = parseFloat(document.getElementById('sale-price').value) || basePrice;
+      const total = qty * price;
+
+      const pType = document.getElementById('sale-payment-type').value;
+      let paid = total;
+      if (pType === 'DEBIT') {
+        paid = 0;
+      } else if (pType === 'PARTIAL') {
+        paid = parseFloat(document.getElementById('sale-paid-amount').value) || 0;
+      } else {
+        document.getElementById('sale-paid-amount').value = total.toFixed(2);
+      }
+
+      const unpaid = Math.max(0, total - paid);
+      document.getElementById('sale-total-display').textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      document.getElementById('sale-unpaid-amount').value = unpaid.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+    }
+
+    function saveDirectTimberSale() {
+      const buyer = document.getElementById('sale-buyer-name').value.trim();
+      const sel = document.getElementById('sale-timber-code');
+      const opt = sel.options[sel.selectedIndex];
+      const timberName = opt.textContent.split('(')[0].trim();
+      const qty = parseFloat(document.getElementById('sale-qty').value) || 0;
+      const price = parseFloat(document.getElementById('sale-price').value) || 0;
+      const total = qty * price;
+      const pType = document.getElementById('sale-payment-type').value;
+
+      let paid = total;
+      if (pType === 'DEBIT') paid = 0;
+      else if (pType === 'PARTIAL') paid = parseFloat(document.getElementById('sale-paid-amount').value) || 0;
+      const unpaid = total - paid;
+
+      if (!buyer) {
+        alert('يرجى إدخال اسم المحل أو الشخص المشتري');
+        return;
+      }
+
+      // Deduct stock
+      const invItem = appData.inventory.find(i => i.code === sel.value);
+      if (invItem) {
+        invItem.stock = Math.max(0, invItem.stock - qty);
+      }
+
+      appData.directSales.unshift({
+        id: `DS-2026-${appData.directSales.length + 1}`,
+        buyer: buyer,
+        date: new Date().toISOString().split('T')[0],
+        timber: timberName,
+        qty: qty,
+        total: total,
+        paid: paid,
+        unpaid: unpaid,
+        method: pType
+      });
+
+      saveDB();
+      closeModal('modal-direct-sale');
+      switchTab('inventory');
+    }
+
+    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+    // Render All
+    function renderAll() {
+      reconcileDailyCash();
+      renderTransactions();
+      renderContracts();
+      renderSuppliers();
+      renderInventory();
+      renderWorkOrders();
+      renderWorkers();
+      filterExpenses(currentExpenseFilter);
+      renderDebts();
+      lucide.createIcons();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setOperationalMode(appData.settings.mode || 'FULL');
+    });
+  </script>
+</body>
+</html>
