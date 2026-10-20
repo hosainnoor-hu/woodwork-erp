@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المجلة المصورة والمنهج التعليمي لمنظومة الأخشاب والدواليب | Hussain OS</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+    * { font-family: 'Tajawal', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wood: {
+              50: '#fdf8f4', 100: '#faefe6', 200: '#f4dbc9', 500: '#c27838', 600: '#a35d27', 700: '#84471e', 800: '#6d391b', 900: '#482512',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-white">
+
+  <!-- Top Hero Header -->
+  <header class="bg-gradient-to-r from-wood-950 via-slate-900 to-wood-900 text-white shadow-xl sticky top-0 z-50 border-b border-wood-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row justify-between items-center gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-wood-600 flex items-center justify-center shadow-lg border border-amber-300/30 shrink-0">
+          <i data-lucide="book-open-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-wood-950 font-black text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">دليل تشغيلي تفاعلي</span>
+            <span class="text-xs text-amber-300 font-bold">إصدار 2026 م</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">
+            المجلة المصورة لتعليم وتشغيل منظومة الأخشاب والدواليب
+          </h1>
+        </div>
+      </div>
+
+      <!-- Quick Nav Jump & Live App Link -->
+      <div class="flex items-center gap-2">
+        <a href="https://hosainnoor-hu.github.io/woodwork-erp/" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 transition-all transform hover:scale-105">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          <span>فتح النظام الحي الآن</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Magazine Chapter Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 space-x-reverse overflow-x-auto py-2.5 text-xs font-bold border-t border-wood-800/80 custom-scrollbar">
+      <a href="#intro" class="px-3 py-1.5 rounded-lg bg-wood-800 hover:bg-wood-700 text-amber-300 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+        1. فلسفة النظام
+      </a>
+      <a href="#modes" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+        2. الأنماط الأربعة
+      </a>
+      <a href="#settlement" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
+        3. ميزان التسوية (لك أو عليك)
+      </a>
+      <a href="#suppliers" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+        4. مطابقة زاهد وعواجي
+      </a>
+      <a href="#workers" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="users-2" class="w-3.5 h-3.5"></i>
+        5. عمال المياومة والسلف
+      </a>
+      <a href="#contracts" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="file-check-2" class="w-3.5 h-3.5"></i>
+        6. العقود وتوجيه العربون
+      </a>
+      <a href="#drawer" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+        7. إغلاق الصندوق اليومي
+      </a>
+      <a href="#pwa" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-all whitespace-nowrap flex items-center gap-1">
+        <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+        8. تثبيته بجوال الورشة
+      </a>
+    </div>
+  </header>
+
+  <!-- Magazine Body -->
+  <main class="max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-12 flex-1">
+
+    <!-- WELCOME BANNER -->
+    <section class="bg-gradient-to-r from-amber-600 via-wood-700 to-wood-900 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
+      <div class="relative z-10 max-w-2xl space-y-3">
+        <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black tracking-wider text-amber-200 inline-block">
+          دليل الإتقان التنفيذي | أ. حسين (أبو الزبير) & أ. محمود مصطفى
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black leading-tight">
+          من دفاتر الإكسل المشتتة.. إلى منظومة رقمية ذكية باللمس
+        </h2>
+        <p class="text-sm text-wood-100 leading-relaxed font-medium">
+          هذا الدليل المصور يوضح لكما خطوة بخطوة، بالصور المحاكية والأزرار والأسهم التوضيحية، كيف تديران صالة المعرض، وورشة التصنيع، وحسابات توريد الألواح والعمالة من شاشة واحدة بكل وضوح وسهولة.
+        </p>
+      </div>
+      <div class="absolute -left-10 -bottom-10 opacity-15 pointer-events-none">
+        <i data-lucide="layers" class="w-80 h-80 text-white"></i>
+      </div>
+    </section>
+
+    <!-- CHAPTER 1: PHILOSOPHY -->
+    <section id="intro" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">1</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">فلسفة المنظومة ودورة تدفق العمل والسيولة</h3>
+          <p class="text-xs text-slate-500">كيف ترتبط حركة الزبون في المعرض مع منشار الورشة وصندوق الحسابات؟</p>
+        </div>
+      </div>
+
+      <!-- Illustrated Process Flow Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative group hover:border-amber-400 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-black text-xs mb-3">1</div>
+          <h4 class="font-bold text-sm text-slate-800 mb-1 flex items-center gap-1.5">
+            <i data-lucide="store" class="w-4 h-4 text-amber-600"></i>
+            صالة المعرض
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            يوقع العميل عقد تفصيل الدولاب ويُسدد العربون، ويحدد البائع المقاسات بالكروكي.
+          </p>
+          <div class="mt-3 pt-3 border-t border-slate-200 text-[11px] font-bold text-amber-700 flex items-center justify-between">
+            <span>توجيه العربون ⬅️</span>
+            <span class="bg-amber-100 px-2 py-0.5 rounded">لسداد الخشب</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative group hover:border-wood-500 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-wood-100 text-wood-800 flex items-center justify-center font-black text-xs mb-3">2</div>
+          <h4 class="font-bold text-sm text-slate-800 mb-1 flex items-center gap-1.5">
+            <i data-lucide="hammer" class="w-4 h-4 text-wood-600"></i>
+            ورشة التصنيع
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            يستلم الأستاذ محمود أمر التشغيل، ويطلب الألواح من (زاهد وعواجي)، وتبدأ محطات القص والقشاط.
+          </p>
+          <div class="mt-3 pt-3 border-t border-slate-200 text-[11px] font-bold text-wood-700 flex items-center justify-between">
+            <span>محطات العمل ⬅️</span>
+            <span class="bg-wood-100 px-2 py-0.5 rounded">قص ⬅️ قشاط</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative group hover:border-blue-500 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-black text-xs mb-3">3</div>
+          <h4 class="font-bold text-sm text-slate-800 mb-1 flex items-center gap-1.5">
+            <i data-lucide="truck" class="w-4 h-4 text-blue-600"></i>
+            حسابات التوريد
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            تتبع ألواح الأخشاب المسحوبة، وتسجيل الحوالات والشبكة والمردودات لكل مورد تلقائياً.
+          </p>
+          <div class="mt-3 pt-3 border-t border-slate-200 text-[11px] font-bold text-blue-700 flex items-center justify-between">
+            <span>مطابقة الأرصدة ⬅️</span>
+            <span class="bg-blue-100 px-2 py-0.5 rounded">سداد ومردود</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative group hover:border-emerald-500 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs mb-3">4</div>
+          <h4 class="font-bold text-sm text-slate-800 mb-1 flex items-center gap-1.5">
+            <i data-lucide="scale" class="w-4 h-4 text-emerald-600"></i>
+            صندوق الإغلاق اليومي
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            احتساب الصافي المتبقي بالدرج: المبيعات ناقص (مشتريات الموردين + المصروفات) = الكاش الحقيقي.
+          </p>
+          <div class="mt-3 pt-3 border-t border-slate-200 text-[11px] font-bold text-emerald-700 flex items-center justify-between">
+            <span>حماية السيولة ⬅️</span>
+            <span class="bg-emerald-100 px-2 py-0.5 rounded">صافي الدرج</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 2: OPERATIONAL MODES -->
+    <section id="modes" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">2</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">قائمة أنماط التشغيل (كيف تخصص الشاشة حسب مكانك؟)</h3>
+          <p class="text-xs text-slate-500">ميزة تمنع التشتت وتفصل صالة العرض عن ضجيج الورشة والمستودع</p>
+        </div>
+      </div>
+
+      <!-- Visual Mockup of Header Dropdown -->
+      <div class="bg-slate-900 rounded-2xl p-5 text-white space-y-4">
+        <div class="flex items-center justify-between text-xs pb-3 border-b border-slate-800">
+          <span class="text-amber-400 font-bold flex items-center gap-1.5">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            محاكاة قائمة الهيدر في المنظومة:
+          </span>
+          <span class="text-slate-400">تجدها أعلى الشاشة يميناً</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 py-3">
+          <div class="bg-wood-950 px-4 py-2.5 rounded-xl border border-wood-700 flex items-center gap-3 shadow-lg">
+            <span class="text-amber-400 text-xs font-bold flex items-center gap-1">
+              <i data-lucide="sliders" class="w-4 h-4"></i>
+              النمط:
+            </span>
+            <div class="bg-wood-900 text-white font-black text-xs px-3 py-1.5 rounded-lg border border-wood-600 flex items-center gap-2">
+              <span>2. المعرض وصالة المبيعات فقط</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanatory Grid of the 4 Modes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-2">
+          
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+            <strong class="text-amber-300 block">1. الشامل (كامل):</strong>
+            <p class="text-slate-300">يظهر كل شيء (معرض، ورشة، مستودع، حسابات). مخصص لأبي الزبير والأستاذ محمود.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
+            <strong class="text-emerald-300 block">2. المعرض فقط:</strong>
+            <p class="text-slate-300">يُخفي الورشة والألواح، ويُبقي عقود التفصيل والكروكي ومصروفات المعرض للبائعين.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 space-y-1">
+            <strong class="text-blue-300 block">3. الورشة فقط:</strong>
+            <p class="text-slate-300">يُخفي عقود البيع، ويُبقي محطات القص والتجميع وكشف عمال المياومة والسلف.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
+            <strong class="text-amber-300 block">4. المستودع فقط:</strong>
+            <p class="text-slate-300">مخصص لبيع الأخشاب بالألواح للمناجر الخارجية ومتابعة سداد زاهد وعواجي.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 3: MONTHLY SETTLEMENT (LAK AW ALAYK) -->
+    <section id="settlement" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">3</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">شاشة ميزان التسوية الشهرية (كيف تقرأ: لك أو عليك؟)</h3>
+          <p class="text-xs text-slate-500">تمثيل دفاتر الأستاذ محمود لعام 2026 م بأرقامها الحقيقية</p>
+        </div>
+      </div>
+
+      <!-- Illustrated Cards Mockup -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+        <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-200">
+          <span class="text-xs font-bold text-emerald-800 block mb-1">إجمالي الحوالات + شبكة</span>
+          <div class="text-2xl font-black text-emerald-700 font-mono">599,653 ر.س</div>
+          <span class="text-[11px] text-emerald-600 block mt-1">السيولة المقبوضة بحساباتكم</span>
+        </div>
+        <div class="bg-blue-50 p-5 rounded-2xl border border-blue-200">
+          <span class="text-xs font-bold text-blue-800 block mb-1">إجمالي فواتير المعارض</span>
+          <div class="text-2xl font-black text-blue-700 font-mono">556,548 ر.س</div>
+          <span class="text-[11px] text-blue-600 block mt-1">داريفا، ماي هوم، والألمنيوم</span>
+        </div>
+        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-300">
+          <span class="text-xs font-bold text-amber-900 block mb-1">الصافي السنوي (لك أو عليك)</span>
+          <div class="text-2xl font-black text-amber-700 font-mono">+43,105 ر.س</div>
+          <span class="text-[11px] text-amber-800 block mt-1 font-bold">فائض حوالات محصلة تفوق الفواتير (لك)</span>
+        </div>
+      </div>
+
+      <!-- Interactive Reading Tip -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-start gap-3 text-xs leading-relaxed">
+        <i data-lucide="info" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+        <div>
+          <strong class="text-slate-800 block mb-1">سر قراءة عمود «الفرق (لك أو عليك)»:</strong>
+          <span class="text-slate-600">إذا رأيت الرقم باللون <strong>الأخضر</strong> وبجانبه كلمة <code>(لك)</code> مثل شهر يونيو (+31,425 ر.س) فهذا يعني أن السيولة المستلمة أكثر من الفواتير المنجزة. وإذا رأيته باللون <strong>الأحمر</strong> وبجانبه <code>(عليك)</code> مثل شهر مايو (-17,315 ر.س) فهذا يعني أنكم أنجزتم فواتير ولم تستلموا مقابلها حوالات بعد فتطالبون بها المعارض.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4: TIMBER RECONCILIATION -->
+    <section id="suppliers" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">4</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">شاشة مطابقة كبار موردي الأخشاب (زاهد وعواجي)</h3>
+          <p class="text-xs text-slate-500">تتبع دقيق لكل لوح تم سحبه، وسجل الحوالات وخصم المردودات آلياً</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        
+        <!-- Left Explanatory Guide -->
+        <div class="space-y-4 text-xs">
+          <div class="bg-wood-50 p-4 rounded-2xl border border-wood-200">
+            <h4 class="font-bold text-sm text-wood-900 mb-2 flex items-center gap-1.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-wood-600"></i>
+              خطوات المطابقة الذكية في المنظومة:
+            </h4>
+            <ol class="space-y-2 list-decimal list-inside text-wood-800 leading-relaxed font-medium">
+              <li>اضغط على زر التبديل العلوي لاختيار المورد: <strong>زاهد للأخشاب</strong> أو <strong>عواجي للأخشاب</strong>.</li>
+              <li>راجع بطاقة <strong>«صافي الرصيد المتبقي»</strong> لتشاهد المبلغ النهائي المطلوب سداده بدقة سنتيمترية.</li>
+              <li>شاهد في الجانب الأيمن سجل الألواح المسحوبة بكودها وسعرها وقسمها (خشب أم ألمنيوم).</li>
+              <li>شاهد في الجانب الأيسر جميع الحوالات المسددة، وتلاحظ أن أي <strong>«لوح مرتجع»</strong> أو <strong>«خصم شريط»</strong> يظهر باللون الكهرماني ويُخصم تلقائياً من ذمة المورد.</li>
+            </ol>
+          </div>
+
+          <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-amber-900">
+            <strong class="block mb-1">أرقام المطابقة الحقيقية المعتمدة:</strong>
+            <p>• <strong>زاهد:</strong> طلبات <code>304,701.50</code> ر.س - سداد ومردود <code>272,637.50</code> ر.س = المتبقي <strong><code>32,064.00</code> ر.س</strong>.</p>
+            <p class="mt-1">• <strong>عواجي:</strong> طلبات <code>23,015.00</code> ر.س - سداد <code>19,930.00</code> ر.س = المتبقي <strong><code>3,085.00</code> ر.س</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Right Visual Mockup -->
+        <div class="bg-slate-900 rounded-2xl p-5 text-white space-y-3 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
+            <span class="text-amber-400 font-bold">شكل شاشة المطابقة في النظام:</span>
+            <div class="flex gap-1">
+              <span class="bg-wood-800 px-2 py-0.5 rounded text-[10px] text-white font-bold">زاهد</span>
+              <span class="bg-white/10 px-2 py-0.5 rounded text-[10px] text-slate-300">عواجي</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+              <span class="text-[10px] text-slate-400 block">طلبات خشب</span>
+              <span class="text-sm font-black text-blue-400 font-mono">304,701.50 ر.س</span>
+            </div>
+            <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+              <span class="text-[10px] text-slate-400 block">المسدد والرجيع</span>
+              <span class="text-sm font-black text-emerald-400 font-mono">272,637.50 ر.س</span>
+            </div>
+          </div>
+
+          <div class="bg-rose-500/20 p-3 rounded-xl border border-rose-500/40 text-center">
+            <span class="text-xs text-rose-300 font-bold block">المتبقي النهائي في ذمتنا للمورد</span>
+            <span class="text-xl font-black text-rose-400 font-mono">32,064.00 ر.س</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 5: WORKERS & DAILY WAGES -->
+    <section id="workers" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">5</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">كشف عمال المياومة الأسبوعية ونظام صرف السلف</h3>
+          <p class="text-xs text-slate-500">حساب اليوميات بالكسور، والدفعات المستلمة، والصافي المتبقي لكل عامل</p>
+        </div>
+      </div>
+
+      <!-- Workers Formula Illustrated -->
+      <div class="bg-gradient-to-r from-slate-900 to-wood-950 p-6 rounded-2xl text-white space-y-4">
+        <h4 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="calculator" class="w-4 h-4"></i>
+          المعادلة الذكية لاحتساب مستحقات عمال الورشة:
+        </h4>
+        <div class="p-3 bg-white/10 rounded-xl font-mono text-center text-sm font-black text-amber-200">
+          (أيام العمل المنفذة × اليومية المحسوبة) - مجموع الدفعات المسلمة = الصافي المتبقي للعامل
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
+          <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+            <span class="text-slate-400 text-[11px] block">إجمالي أيام الورشة</span>
+            <span class="text-lg font-black text-amber-400 font-mono">865.6 يوم</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+            <span class="text-slate-400 text-[11px] block">المجموع اليومي للأجور</span>
+            <span class="text-lg font-black text-amber-400 font-mono">793.31 ر.س/يوم</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+            <span class="text-slate-400 text-[11px] block">إجمالي دفعات العمال</span>
+            <span class="text-lg font-black text-emerald-400 font-mono">43,100 ر.س</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+            <span class="text-slate-400 text-[11px] block">المتبقي بذمة الورشة</span>
+            <span class="text-lg font-black text-rose-400 font-mono">19,103.91 ر.س</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to pay advance button -->
+      <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2.5">
+          <span class="bg-amber-600 text-white font-bold px-3 py-1 rounded-lg text-xs">زر: صرف دفعة</span>
+          <span class="text-amber-900 font-bold">بضغطة واحدة أمام اسم أي عامل (مثل: عمر فاروق، رفيق، ميزان) تسجل السلفة وتُخصم فوراً.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6: CONTRACTS & ARABOON -->
+    <section id="contracts" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">6</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">عقود التفصيل والكروكي وميزة توجيه العربون</h3>
+          <p class="text-xs text-slate-500">ابتكار الأستاذ محمود: العربون لا يضيع بالدرج بل يُوجه مباشرة لسداد موردي الأخشاب</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-2">
+          <strong class="text-emerald-900 text-sm font-black flex items-center gap-1.5">
+            <i data-lucide="split" class="w-4 h-4 text-emerald-700"></i>
+            كيف يعمل توجيه العربون؟
+          </strong>
+          <p class="text-emerald-800 leading-relaxed font-medium">
+            عندما يستلم بائع المعرض عربوناً (مثلاً: <code>4,000</code> ر.س)، يسأله النظام: أين تريد توجيهه؟<br>
+            فإذا اختار <strong>«سداد أخشاب طه أو زاهد»</strong>، يقوم النظام تلقائياً بتخفيض مديونية مورد الخشب وتزويد الورشة بالألواح فوراً دون اختلاط أموال الصندوق.
+          </p>
+        </div>
+
+        <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 space-y-2">
+          <strong class="text-amber-900 text-sm font-black flex items-center gap-1.5">
+            <i data-lucide="image" class="w-4 h-4 text-amber-700"></i>
+            الكروكي قبل وبعد التنفيذ:
+          </strong>
+          <p class="text-amber-800 leading-relaxed font-medium">
+            يتيح النظام إرفاق كروكي المقاسات الليزرية المعتمدة قبل القص، وعند انتهاء الورشة وتركيب الدولاب عند العميل، يرفع الفني صورة الدولاب المنجز لتوثيق الجودة وإلغاء أي خلاف مع الزبون.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7: CASH DRAWER -->
+    <section id="drawer" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <span class="w-10 h-10 rounded-xl bg-wood-100 text-wood-900 font-black text-lg flex items-center justify-center shrink-0">7</span>
+        <div>
+          <h3 class="text-xl font-black text-slate-800">صندوق الإغلاق اليومي للسيولة والدرج</h3>
+          <p class="text-xs text-slate-500">معادلة ضبط الكاش اليومي المعتمدة لحماية الأرباح ومنع العجز</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 p-6 rounded-2xl text-white text-center space-y-3">
+        <span class="text-xs text-amber-400 font-bold uppercase tracking-wider block">المعادلة المحاسبية الذهبية</span>
+        <div class="text-base sm:text-lg font-black text-amber-200 font-mono">
+          إجمالي المبيعات المقبوضة - (مشتريات الموردين + المصروفات التشغيلية) = صافي الكاش في الدرج
+        </div>
+        <p class="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed">
+          تضغط في نهاية اليوم على زر <strong>«إعادة احتساب الصندوق اليوم»</strong> فيُعطيك النظام بالهللة كم يجب أن يكون في درج المعرض والورشة.
+        </p>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8: PWA MOBILE INSTALL -->
+    <section id="pwa" class="bg-gradient-to-br from-wood-900 via-slate-900 to-wood-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-wood-800">
+        <span class="w-10 h-10 rounded-xl bg-amber-500 text-wood-950 font-black text-lg flex items-center justify-center shrink-0">8</span>
+        <div>
+          <h3 class="text-xl font-black text-white">كيف يثبت الأستاذ محمود النظام كتطبيق على جواله؟</h3>
+          <p class="text-xs text-amber-300">خطوتان بسيطتان لتحويل الرابط إلى تطبيق مستقل يعمل دون إنترنت في الورشة</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        
+        <div class="bg-white/5 p-5 rounded-2xl border border-white/10 space-y-2">
+          <strong class="text-amber-300 text-sm font-bold flex items-center gap-1.5">
+            <i data-lucide="smartphone" class="w-4 h-4"></i>
+            على جوالات أندرويد (كروم):
+          </strong>
+          <ol class="space-y-1.5 list-decimal list-inside text-slate-200 leading-relaxed">
+            <li>افتح الرابط في متصفح كروم.</li>
+            <li>اضغط على النقاط الثلاث أعلى اليسار (⋮).</li>
+            <li>اختر <strong>«التثبيت في الشاشة الرئيسية»</strong> أو <strong>«Install app»</strong>.</li>
+            <li>سيظهر شعار المنظومة فوراً كتطبيق مستقل على شاشة جوالك.</li>
+          </ol>
+        </div>
+
+        <div class="bg-white/5 p-5 rounded-2xl border border-white/10 space-y-2">
+          <strong class="text-amber-300 text-sm font-bold flex items-center gap-1.5">
+            <i data-lucide="apple" class="w-4 h-4"></i>
+            على جوالات آيفون (سفاري):
+          </strong>
+          <ol class="space-y-1.5 list-decimal list-inside text-slate-200 leading-relaxed">
+            <li>افتح الرابط في متصفح سفاري.</li>
+            <li>اضغط على زر المشاركة السفلي (مربع بسهم لأعلى ⎋).</li>
+            <li>انزل لأسفل واختر <strong>«إضافة إلى الشاشة الرئيسية» (Add to Home Screen)</strong>.</li>
+            <li>اضغط <strong>إضافة (Add)</strong>، وسيفتح معك كتطبيق كامل بدون شريط المتصفح.</li>
+          </ol>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-wood-950 text-slate-400 py-6 border-t border-wood-800 text-xs text-center">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p class="font-bold text-slate-300">منظومة الأخشاب والدواليب — Hussain OS 2026</p>
+      <p>تصميم وإعداد السكرتير أحمد لدعم وتشغيل مشاريع أبي الزبير والأستاذ محمود مصطفى</p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
