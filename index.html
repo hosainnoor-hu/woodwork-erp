@@ -130,6 +130,14 @@
         <i data-lucide="clock-alert" class="w-4 h-4"></i>
         الديون غير المسددة (الآجل)
       </button>
+      <button onclick="switchTab('monthly-settlement')" id="tab-btn-monthly-settlement" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
+        <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i>
+        ميزان التسوية الشهرية (2026)
+      </button>
+      <button onclick="switchTab('timber-reconciliation')" id="tab-btn-timber-reconciliation" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
+        <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
+        مطابقة موردي الأخشاب (زاهد وعواجي)
+      </button>
     </div>
   </header>
 
@@ -381,7 +389,61 @@
           </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Wage Type Selector Tabs -->
+        <div class="flex items-center gap-2 mb-4">
+          <button onclick="switchWorkerSubTab('DAILY')" id="btn-worker-daily" class="px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+            عمال المياومة الأسبوعية (ملف أ. محمود مصطفى 2026)
+          </button>
+          <button onclick="switchWorkerSubTab('MONTHLY')" id="btn-worker-monthly" class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs flex items-center gap-1.5">
+            <i data-lucide="badge-dollar-sign" class="w-3.5 h-3.5"></i>
+            عمال الراتب الشهري الثابت
+          </button>
+        </div>
+
+        <!-- Daily Wage Table from Mahmoud Mustafa's exact log -->
+        <div id="daily-workers-container" class="space-y-4">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center">
+            <div>
+              <span class="text-[11px] font-bold text-amber-800 block">إجمالي أيام العمل المسجلة</span>
+              <span class="text-xl font-black text-amber-900 font-mono">865.6 يوم</span>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-amber-800 block">المجموع اليومي لأجور الورشة</span>
+              <span class="text-xl font-black text-amber-900 font-mono">793.31 ر.س/يوم</span>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-emerald-800 block">إجمالي الدفعات المسددة للعمال</span>
+              <span class="text-xl font-black text-emerald-700 font-mono">43,100.00 ر.س</span>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-rose-800 block">إجمالي المتبقي المستحق للعمال</span>
+              <span class="text-xl font-black text-rose-700 font-mono">19,103.91 ر.س</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-900 text-white font-bold">
+                <tr>
+                  <th class="py-3 px-3">العامل (الاسم والشهرة)</th>
+                  <th class="py-3 px-3 text-center">الراتب الافتراضي</th>
+                  <th class="py-3 px-3 text-center">اليومية المحسوبة</th>
+                  <th class="py-3 px-3 text-center">مجموع الأيام المنفذة</th>
+                  <th class="py-3 px-3 text-amber-300">إجمالي الأجر المستحق</th>
+                  <th class="py-3 px-3 text-emerald-300">مجموع الدفعات المستلمة</th>
+                  <th class="py-3 px-3 text-rose-300">المتبقي الصافي للعامل</th>
+                  <th class="py-3 px-3 text-center">الإجراء</th>
+                </tr>
+              </thead>
+              <tbody id="daily-workers-tbody" class="divide-y divide-slate-100 font-medium bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Monthly Workers Table -->
+        <div id="monthly-workers-container" class="hidden overflow-x-auto">
           <table class="w-full text-right text-xs">
             <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>
@@ -475,6 +537,169 @@
             <tbody id="debts-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+  
+    <!-- TAB 9: MONTHLY SETTLEMENT (ميزان التسوية الشهرية وحساب الأرباح 2026 من ملفات أ. محمود مصطفى) -->
+    <section id="tab-monthly-settlement" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        
+        <!-- Header & Summary Cards -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-black">ملف الأستاذ محمود مصطفى المالي</span>
+              <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                <i data-lucide="calendar-check" class="w-6 h-6 text-wood-600"></i>
+                ميزان التسوية الشهرية لعام 2026 م - 2027 م
+              </h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">مقارنة الحوالات والشبكات مقابل فواتير المعارض ومصروفات الورشة لتحديد موقف الحساب (لك أو عليك)</p>
+          </div>
+          <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600">
+            <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
+            <span>إشراف وتوثيق: <strong>أبو معاذ & أبو يوسف</strong></span>
+          </div>
+        </div>
+
+        <!-- 3 KPI Cards from Mahmoud's exact header summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-200">
+            <span class="text-xs font-bold text-emerald-800 block mb-1">إجمالي الحوالات والشبكات المحصلة</span>
+            <div class="text-2xl font-black text-emerald-700 font-mono">599,653.00 ر.س</div>
+            <p class="text-[11px] text-emerald-600 mt-1 font-medium">السيولة الداخلة بحسابات المؤسسة والشبكات</p>
+          </div>
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-200">
+            <span class="text-xs font-bold text-blue-800 block mb-1">إجمالي فواتير المعارض المنفذة</span>
+            <div class="text-2xl font-black text-blue-700 font-mono">556,548.00 ر.س</div>
+            <p class="text-[11px] text-blue-600 mt-1 font-medium">معارض داريفا، ماي هوم، والألمنيوم</p>
+          </div>
+          <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-2xl border border-amber-300">
+            <span class="text-xs font-bold text-amber-900 block mb-1">صافي الفرق السنوي (لك أو عليك)</span>
+            <div class="text-2xl font-black text-amber-700 font-mono">+43,105.00 ر.س</div>
+            <p class="text-[11px] text-amber-800 mt-1 font-bold">فائض حوالات محصلة تفوق إجمالي الفواتير (لك)</p>
+          </div>
+        </div>
+
+        <!-- Monthly Breakdown Table -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-900 text-white font-bold">
+              <tr>
+                <th class="py-3.5 px-3 text-center">م</th>
+                <th class="py-3.5 px-3">الشهر</th>
+                <th class="py-3.5 px-3 text-emerald-300">الحوالات + شبكة (ر.س)</th>
+                <th class="py-3.5 px-3 text-blue-300">فواتير المعارض (ر.س)</th>
+                <th class="py-3.5 px-3 text-rose-300">مصاريف الورشة (ر.س)</th>
+                <th class="py-3.5 px-3 text-amber-300">الفرق (لك أو عليك)</th>
+                <th class="py-3.5 px-3">المشرفون</th>
+                <th class="py-3.5 px-3">ملاحظات وحالة الشهر</th>
+              </tr>
+            </thead>
+            <tbody id="monthly-settlement-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+            <tfoot class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
+              <tr>
+                <td colspan="2" class="py-3 px-3 text-center text-sm">الإجمالي التراكمي الفعلي:</td>
+                <td class="py-3 px-3 text-emerald-700 font-mono text-sm">599,653.00 ر.س</td>
+                <td class="py-3 px-3 text-blue-700 font-mono text-sm">556,548.00 ر.س</td>
+                <td class="py-3 px-3 text-rose-700 font-mono text-sm">123,538.00 ر.س</td>
+                <td class="py-3 px-3 text-amber-700 font-mono text-sm">+43,105.00 ر.س</td>
+                <td colspan="2" class="py-3 px-3 text-slate-500 text-[11px]">مطابق 100% لسجلات الأستاذ محمود مصطفى</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 10: TIMBER RECONCILIATION (مطابقة موردي الأخشاب: زاهد وعواجي وأراك من ملفات أ. محمود مصطفى) -->
+    <section id="tab-timber-reconciliation" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-wood-100 text-wood-900 px-3 py-1 rounded-full text-xs font-black">حسابات الأخشاب 2026 م</span>
+              <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                <i data-lucide="scale" class="w-6 h-6 text-wood-600"></i>
+                مطابقة حسابات كبار موردي الأخشاب والمسدد والمتبقي
+              </h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">تتبع كشف طلبات الأخشاب، سدادات الشبكة والحوالات البنكية، وخصم المردودات والألواح المرتجعة</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="filterTimberSupplier('ZAHED')" id="btn-sup-zahed" class="px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm">
+              زاهد للأخشاب
+            </button>
+            <button onclick="filterTimberSupplier('AWAJI')" id="btn-sup-awaji" class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
+              عواجي للأخشاب
+            </button>
+          </div>
+        </div>
+
+        <!-- Supplier Balance Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="supplier-reconcile-cards">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Orders & Payments Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Column 1: Timber Orders & Sizes -->
+          <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+              <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="boxes" class="w-4 h-4 text-wood-600"></i>
+                سجل طلبات الألواح والأسعار (خشب، ألمنيوم، ديكور)
+              </h3>
+              <span class="text-[11px] font-bold text-slate-500" id="timber-orders-count">0 طلب</span>
+            </div>
+            <div class="overflow-y-auto max-h-96 text-xs">
+              <table class="w-full text-right">
+                <thead class="bg-white text-slate-600 font-bold border-b border-slate-200 sticky top-0">
+                  <tr>
+                    <th class="py-2 px-2">اللون / الكود</th>
+                    <th class="py-2 px-2">المقاس والنوع</th>
+                    <th class="py-2 px-2 text-center">الألواح</th>
+                    <th class="py-2 px-2 text-center">السعر</th>
+                    <th class="py-2 px-2">الإجمالي</th>
+                    <th class="py-2 px-2">القسم</th>
+                  </tr>
+                </thead>
+                <tbody id="timber-orders-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Column 2: Payments & Returns -->
+          <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+              <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i>
+                سجل سداد الحوالات والشبكة والمردودات
+              </h3>
+              <span class="text-[11px] font-bold text-slate-500" id="timber-payments-count">0 حركة</span>
+            </div>
+            <div class="overflow-y-auto max-h-96 text-xs">
+              <table class="w-full text-right">
+                <thead class="bg-white text-slate-600 font-bold border-b border-slate-200 sticky top-0">
+                  <tr>
+                    <th class="py-2 px-2">التاريخ</th>
+                    <th class="py-2 px-2">المبلغ (ر.س)</th>
+                    <th class="py-2 px-2">البيان وطريقة السداد</th>
+                    <th class="py-2 px-2 text-center">النوع</th>
+                  </tr>
+                </thead>
+                <tbody id="timber-payments-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
 
@@ -622,6 +847,140 @@
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
     // State including Mahmoud Mustafa's exact requirements
+    
+    // Mahmoud Mustafa Real Log Data (عام 2026 م - 2027 م)
+    const MAHMOUD_LOG = {
+      monthlySettlement: [
+        { m: 1, name: 'يناير', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'بداية الدورة المالية' },
+        { m: 2, name: 'فبراير', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'بداية الدورة المالية' },
+        { m: 3, name: 'مارس', transfers: 15500, invoices: 5673, expenses: 1511, diff: 9827, managers: 'أبومعاذ / أبويوسف', note: 'بدء حركة التوريد والألمنيوم' },
+        { m: 4, name: 'أبريل', transfers: 76084, invoices: 85865, expenses: 19450, diff: -9781, managers: 'أبومعاذ / أبويوسف', note: 'نشاط مرتفع ماي هوم وورشة الألمنيوم' },
+        { m: 5, name: 'مايو', transfers: 53220, invoices: 70535, expenses: 22557, diff: -17315, managers: 'أبومعاذ / أبويوسف', note: 'سدادات وأجور عمال وإيجار' },
+        { m: 6, name: 'يونيو', transfers: 74555, invoices: 43130, expenses: 17020, diff: 31425, managers: 'أبومعاذ / أبويوسف', note: 'فائض تحصيل حوالات ملحوظ' },
+        { m: 7, name: 'يوليو', transfers: 95228, invoices: 82109, expenses: 19789, diff: 13119, managers: 'أبومعاذ / أبويوسف', note: 'توريدات أشرطة ومصنع شريط' },
+        { m: 8, name: 'أغسطس', transfers: 117833, invoices: 129616, expenses: 17468, diff: -11783, managers: 'أبومعاذ / أبويوسف', note: 'ذروة فواتير معرض داريفا' },
+        { m: 9, name: 'سبتمبر', transfers: 94604, invoices: 72610, expenses: 13903, diff: 21994, managers: 'أبومعاذ / أبويوسف', note: 'سدادات زاهد وعواجي' },
+        { m: 10, name: 'أكتوبر', transfers: 72629, invoices: 67010, expenses: 11840, diff: 5619, managers: 'أبومعاذ / أبويوسف', note: 'الميزان حتى 18 أكتوبر' },
+        { m: 11, name: 'نوفمبر (تجريبي)', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'شهر قادم غير مقفل' },
+        { m: 12, name: 'ديسمبر (تجريبي)', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'الإقفال السنوي النهائي' }
+      ],
+      timberSuppliers: {
+        ZAHED: {
+          name: 'زاهد للأخشاب',
+          invoicesTotal: 304701.50,
+          paymentsTotal: 272637.50,
+          balanceDue: 32064.00,
+          orders: [
+            { code: 'AW - 01', type: 'قصير', qty: 11, price: 88, total: 968, section: 'الألمنيوم' },
+            { code: 'AW - 03', type: 'قصير', qty: 4, price: 105, total: 420, section: 'الألمنيوم' },
+            { code: 'AW - 051', type: 'قصير', qty: 7, price: 105, total: 735, section: 'الألمنيوم' },
+            { code: '1135 أراك', type: 'قصير', qty: 10, price: 105, total: 1050, section: 'الألمنيوم' },
+            { code: '2120 جوردن', type: 'قصير', qty: 8, price: 80, total: 640, section: 'الألمنيوم' },
+            { code: '1120 أراك', type: 'قصير', qty: 1, price: 105, total: 105, section: 'الألمنيوم' },
+            { code: '1611 جوردن', type: 'قصير', qty: 7, price: 80, total: 560, section: 'الألمنيوم' },
+            { code: '1135 أراك', type: 'طويل', qty: 5, price: 145, total: 725, section: 'الألمنيوم' },
+            { code: '18754 صيني أراك', type: 'قصير', qty: 2, price: 85, total: 170, section: 'الألمنيوم' },
+            { code: '2015 أراك', type: 'قصير', qty: 30, price: 105, total: 3150, section: 'خشب' },
+            { code: 'AW - 04', type: 'طويل', qty: 4, price: 155, total: 620, section: 'خشب' },
+            { code: 'AW - 043', type: 'طويل', qty: 6, price: 155, total: 930, section: 'خشب' },
+            { code: 'AW - 043', type: 'قصير', qty: 4, price: 110, total: 440, section: 'خشب' },
+            { code: '2060 أراك', type: 'طويل', qty: 4, price: 150, total: 600, section: 'خشب' },
+            { code: 'ديكور أسود 3 مل', type: 'لوح', qty: 30, price: 25, total: 750, section: 'خشب' },
+            { code: 'ديكور أبيض 3 مل', type: 'لوح', qty: 10, price: 18, total: 180, section: 'خشب' },
+            { code: 'خشب 9 مل سادة', type: 'لوح', qty: 10, price: 30, total: 300, section: 'الألمنيوم' },
+            { code: '2120 جوردن', type: 'قصير', qty: 7, price: 80, total: 560, section: 'الألمنيوم' },
+            { code: '2070 أراك', type: 'طويل', qty: 8, price: 150, total: 1200, section: 'خشب' },
+            { code: '2055 أراك', type: 'طويل', qty: 18, price: 150, total: 2700, section: 'خشب' },
+            { code: '229 تاجكو شيبورد', type: 'طويل', qty: 20, price: 160, total: 3200, section: 'خشب' },
+            { code: '2075 أراك', type: 'طويل', qty: 22, price: 155, total: 3410, section: 'خشب' },
+            { code: '152 أراك', type: 'طويل', qty: 30, price: 150, total: 4500, section: 'الألمنيوم' },
+            { code: '1105 أراك', type: 'طويل', qty: 20, price: 155, total: 3100, section: 'خشب' },
+            { code: '1105 أراك', type: 'طويل', qty: 26, price: 150, total: 3900, section: 'خشب' },
+            { code: '1146 جورن', type: 'طويل', qty: 39, price: 120, total: 4680, section: 'خشب' },
+            { code: '10704 جوردن', type: 'طويل', qty: 30, price: 120, total: 3600, section: 'خشب' },
+            { code: 'AW - 043', type: 'طويل', qty: 62, price: 165, total: 10230, section: 'خشب' },
+            { code: '825 جوردن', type: 'طويل', qty: 34, price: 130, total: 4420, section: 'خشب' },
+            { code: '5440 جوردن', type: 'طويل', qty: 40, price: 135, total: 5400, section: 'خشب' }
+          ],
+          payments: [
+            { date: '2026-03-31', amount: 10000, desc: 'شبكة', type: 'سداد نقدي/شبكة' },
+            { date: '2026-04-02', amount: 4850, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-04-03', amount: 4000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-04-06', amount: 5000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-04-14', amount: 10, desc: 'خصم شريط بلال', type: 'خصم مردودات' },
+            { date: '2026-04-14', amount: 5100, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-04-17', amount: 8000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-04-23', amount: 310, desc: 'خصم 2 لوح 152 أراك', type: 'خصم مردودات' },
+            { date: '2026-04-25', amount: 7700, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-05-13', amount: 9000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-05-25', amount: 210, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-06-03', amount: 9000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-06-08', amount: 5000, desc: 'شبكة', type: 'سداد نقدي/شبكة' },
+            { date: '2026-06-13', amount: 9000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-06-23', amount: 1085, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-06-30', amount: 1155, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-07-06', amount: 10200, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-07-08', amount: 4480, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-08-18', amount: 8000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-08-23', amount: 8300, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-08-27', amount: 1530, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-08-30', amount: 2365, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-09-02', amount: 15000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-09-03', amount: 1475, desc: 'ترجيع لوح', type: 'مرتجع ألواح' },
+            { date: '2026-09-22', amount: 5200, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-09-29', amount: 5000, desc: 'شبكة', type: 'سداد نقدي/شبكة' },
+            { date: '2026-09-30', amount: 4000, desc: 'حوالة', type: 'حوالة بنكية' }
+          ]
+        },
+        AWAJI: {
+          name: 'عواجي للأخشاب',
+          invoicesTotal: 23015.00,
+          paymentsTotal: 19930.00,
+          balanceDue: 3085.00,
+          orders: [
+            { code: '2696', type: 'طويل', qty: 2, price: 150, total: 300, section: 'الألمنيوم' },
+            { code: '1126', type: 'طويل', qty: 2, price: 160, total: 320, section: 'الألمنيوم' },
+            { code: '103', type: 'قصير', qty: 1, price: 110, total: 110, section: 'خشب' },
+            { code: '1126', type: 'طويل', qty: 15, price: 160, total: 2400, section: 'خشب' },
+            { code: '1146', type: 'طويل', qty: 2, price: 160, total: 320, section: 'الألمنيوم' },
+            { code: '3126', type: 'طويل', qty: 2, price: 160, total: 320, section: 'الألمنيوم' },
+            { code: '1404', type: 'قصير', qty: 8, price: 113, total: 904, section: 'خشب' },
+            { code: 'ديكور 1404', type: 'لوح', qty: 4, price: 55, total: 220, section: 'خشب' },
+            { code: '808', type: 'قصير', qty: 4, price: 113, total: 452, section: 'خشب' },
+            { code: '203', type: 'طويل', qty: 6, price: 160, total: 960, section: 'خشب' },
+            { code: '77', type: 'قصير', qty: 16, price: 88, total: 1408, section: 'خشب' },
+            { code: '10707', type: 'طويل', qty: 10, price: 160, total: 1600, section: 'خشب' },
+            { code: '5829', type: 'طويل', qty: 8, price: 160, total: 1280, section: 'خشب' },
+            { code: '2551', type: 'قصير', qty: 19, price: 115, total: 2185, section: 'خشب' },
+            { code: '1611', type: 'طويل', qty: 12, price: 175, total: 2100, section: 'خشب' },
+            { code: '825', type: 'طويل', qty: 12, price: 175, total: 2100, section: 'خشب' },
+            { code: 'تسوية', type: 'بند', qty: 1, price: 918, total: 918, section: 'عام' },
+            { code: '6754', type: 'طويل', qty: 6, price: 185, total: 1110, section: 'خشب' },
+            { code: '4225', type: 'لوح', qty: 8, price: 210, total: 1680, section: 'خشب' }
+          ],
+          payments: [
+            { date: '2026-08-23', amount: 3500, desc: 'شبكة', type: 'سداد نقدي/شبكة' },
+            { date: '2026-08-23', amount: 270, desc: 'مسدد', type: 'سداد نقدي' },
+            { date: '2026-08-30', amount: 8000, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-09-01', amount: 160, desc: 'مرتجع', type: 'خصم مردودات' },
+            { date: '2026-09-03', amount: 300, desc: 'مرتجع', type: 'خصم مردودات' },
+            { date: '2026-09-09', amount: 2500, desc: 'حوالة', type: 'حوالة بنكية' },
+            { date: '2026-09-20', amount: 5200, desc: 'حوالة', type: 'حوالة بنكية' }
+          ]
+        }
+      },
+      dailyWorkers: [
+        { id: 'DW-1', name: 'عمر فاروق (مروان)', baseSalary: 3500, dailyRate: 116.66, totalDays: 107, totalEarned: 12482.62, totalPaid: 6700, remainingDue: 5782.62 },
+        { id: 'DW-2', name: 'عالم جير', baseSalary: 4000, dailyRate: 133.33, totalDays: 87.5, totalEarned: 11666.38, totalPaid: 9300, remainingDue: 2366.38 },
+        { id: 'DW-3', name: 'أبو البشر (مروان)', baseSalary: 1500, dailyRate: 50.00, totalDays: 101, totalEarned: 5050.00, totalPaid: 3900, remainingDue: 1150.00 },
+        { id: 'DW-4', name: 'أبو الحسين (مروان)', baseSalary: 1500, dailyRate: 50.00, totalDays: 104.5, totalEarned: 5225.00, totalPaid: 3400, remainingDue: 1825.00 },
+        { id: 'DW-5', name: 'رفيق', baseSalary: 1500, dailyRate: 50.00, totalDays: 190.5, totalEarned: 9525.00, totalPaid: 7000, remainingDue: 2525.00 },
+        { id: 'DW-6', name: 'ميزان', baseSalary: 2000, dailyRate: 66.66, totalDays: 181.6, totalEarned: 12105.46, totalPaid: 9300, remainingDue: 2805.46 },
+        { id: 'DW-7', name: 'عبد المحسن (مروان)', baseSalary: 1800, dailyRate: 60.00, totalDays: 12.5, totalEarned: 750.00, totalPaid: 0, remainingDue: 750.00 },
+        { id: 'DW-8', name: 'محمد أمين (مروان)', baseSalary: 2000, dailyRate: 66.66, totalDays: 81, totalEarned: 5399.46, totalPaid: 3500, remainingDue: 1899.46 }
+      ]
+    };
+
     const DB = {
       settings: { mode: 'FULL' },
       suppliers: [
@@ -1397,9 +1756,172 @@
     function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
 
+    
+    let currentTimberSupplier = 'ZAHED';
+
+    function switchWorkerSubTab(type) {
+      const dailyBox = document.getElementById('daily-workers-container');
+      const monthlyBox = document.getElementById('monthly-workers-container');
+      const btnDaily = document.getElementById('btn-worker-daily');
+      const btnMonthly = document.getElementById('btn-worker-monthly');
+
+      if (type === 'DAILY') {
+        dailyBox.classList.remove('hidden');
+        monthlyBox.classList.add('hidden');
+        btnDaily.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5';
+        btnMonthly.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs flex items-center gap-1.5';
+      } else {
+        dailyBox.classList.add('hidden');
+        monthlyBox.classList.remove('hidden');
+        btnMonthly.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5';
+        btnDaily.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs flex items-center gap-1.5';
+      }
+    }
+
+    function renderMonthlySettlement() {
+      const tbody = document.getElementById('monthly-settlement-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      MAHMOUD_LOG.monthlySettlement.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        const isSurplus = item.diff >= 0;
+        const diffDisplay = item.diff === 0 ? '0.00 ر.س' : (isSurplus ? `+${item.diff.toLocaleString()} ر.س (لك)` : `${item.diff.toLocaleString()} ر.س (عليك)`);
+        const diffColor = item.diff === 0 ? 'text-slate-500' : (isSurplus ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold');
+
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-center font-bold text-slate-500">${item.m}</td>
+          <td class="py-3 px-3 font-black text-slate-800">${item.name}</td>
+          <td class="py-3 px-3 font-mono font-bold text-emerald-700">${item.transfers ? item.transfers.toLocaleString() + ' ر.س' : '0.00'}</td>
+          <td class="py-3 px-3 font-mono font-bold text-blue-700">${item.invoices ? item.invoices.toLocaleString() + ' ر.س' : '0.00'}</td>
+          <td class="py-3 px-3 font-mono font-bold text-rose-700">${item.expenses ? item.expenses.toLocaleString() + ' ر.س' : '0.00'}</td>
+          <td class="py-3 px-3 font-mono ${diffColor}">${diffDisplay}</td>
+          <td class="py-3 px-3 text-[11px] text-slate-600">${item.managers}</td>
+          <td class="py-3 px-3 text-[11px] text-slate-500">${item.note}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterTimberSupplier(supKey) {
+      currentTimberSupplier = supKey;
+      const btnZahed = document.getElementById('btn-sup-zahed');
+      const btnAwaji = document.getElementById('btn-sup-awaji');
+
+      if (supKey === 'ZAHED') {
+        btnZahed.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm';
+        btnAwaji.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs';
+      } else {
+        btnAwaji.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm';
+        btnZahed.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs';
+      }
+      renderTimberReconciliation();
+    }
+
+    function renderTimberReconciliation() {
+      const sup = MAHMOUD_LOG.timberSuppliers[currentTimberSupplier];
+      if (!sup) return;
+
+      // Cards
+      const cardsBox = document.getElementById('supplier-reconcile-cards');
+      if (cardsBox) {
+        cardsBox.innerHTML = `
+          <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200">
+            <span class="text-xs font-bold text-blue-800 block mb-1">إجمالي فواتير طلبات خشب ${sup.name}</span>
+            <div class="text-xl font-black text-blue-900 font-mono">${sup.invoicesTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
+            <p class="text-[11px] text-blue-600 mt-1">كشف طلبيات الألواح لعام 2026 م</p>
+          </div>
+          <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+            <span class="text-xs font-bold text-emerald-800 block mb-1">إجمالي السداد المسجل (حوالات + مردودات)</span>
+            <div class="text-xl font-black text-emerald-700 font-mono">${sup.paymentsTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
+            <p class="text-[11px] text-emerald-600 mt-1">مسدد بشبكة وحوالات بنكية وخصم رجيع</p>
+          </div>
+          <div class="bg-rose-50 p-4 rounded-2xl border border-rose-300">
+            <span class="text-xs font-bold text-rose-800 block mb-1">صافي الرصيد المتبقي بذمتنا للمورد</span>
+            <div class="text-xl font-black text-rose-700 font-mono">${sup.balanceDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
+            <p class="text-[11px] text-rose-600 mt-1">مستحق السداد وفق المطابقة الدقيقة</p>
+          </div>
+        `;
+      }
+
+      // Orders
+      const ordersTbody = document.getElementById('timber-orders-tbody');
+      const ordersCount = document.getElementById('timber-orders-count');
+      if (ordersTbody && sup.orders) {
+        ordersCount.textContent = `${sup.orders.length} طلب موثق`;
+        ordersTbody.innerHTML = '';
+        sup.orders.forEach(o => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-100 transition-colors';
+          tr.innerHTML = `
+            <td class="py-2 px-2 font-bold text-slate-800">${o.code}</td>
+            <td class="py-2 px-2 text-slate-500">${o.type}</td>
+            <td class="py-2 px-2 text-center font-mono font-bold">${o.qty}</td>
+            <td class="py-2 px-2 text-center font-mono">${o.price}</td>
+            <td class="py-2 px-2 font-mono font-bold text-wood-900">${o.total.toLocaleString()} ر.س</td>
+            <td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${o.section === 'الألمنيوم' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${o.section}</span></td>
+          `;
+          ordersTbody.appendChild(tr);
+        });
+      }
+
+      // Payments
+      const paymentsTbody = document.getElementById('timber-payments-tbody');
+      const paymentsCount = document.getElementById('timber-payments-count');
+      if (paymentsTbody && sup.payments) {
+        paymentsCount.textContent = `${sup.payments.length} حركة مسجلة`;
+        paymentsTbody.innerHTML = '';
+        sup.payments.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-100 transition-colors';
+          const isReturn = p.type.includes('مرتجع') || p.type.includes('مردودات');
+          tr.innerHTML = `
+            <td class="py-2 px-2 font-mono text-slate-500">${p.date}</td>
+            <td class="py-2 px-2 font-mono font-bold ${isReturn ? 'text-amber-700' : 'text-emerald-700'}">${p.amount.toLocaleString()} ر.س</td>
+            <td class="py-2 px-2 text-slate-700 font-medium">${p.desc}</td>
+            <td class="py-2 px-2 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isReturn ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">${p.type}</span></td>
+          `;
+          paymentsTbody.appendChild(tr);
+        });
+      }
+    }
+
+    function renderDailyWorkers() {
+      const tbody = document.getElementById('daily-workers-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      MAHMOUD_LOG.dailyWorkers.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-wood-100 text-wood-800 flex items-center justify-center text-[10px] font-bold shrink-0">${w.id.split('-')[1]}</span>
+            <span>${w.name}</span>
+          </td>
+          <td class="py-3 px-3 text-center font-mono text-slate-600">${w.baseSalary.toLocaleString()} ر.س</td>
+          <td class="py-3 px-3 text-center font-mono font-bold text-wood-800">${w.dailyRate.toFixed(2)} ر.س</td>
+          <td class="py-3 px-3 text-center font-mono font-black text-blue-700">${w.totalDays} يوم</td>
+          <td class="py-3 px-3 font-mono font-bold text-amber-700">${w.totalEarned.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
+          <td class="py-3 px-3 font-mono font-bold text-emerald-700">${w.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
+          <td class="py-3 px-3 font-mono font-black text-rose-700">${w.remainingDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="alert('صرف دفعة أو سلفة للعامل: ' + '${w.name}')" class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shadow-sm">
+              صرف دفعة
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
     // Render All
     function renderAll() {
       reconcileDailyCash();
+      renderMonthlySettlement();
+      renderTimberReconciliation();
+      renderDailyWorkers();
       renderTransactions();
       renderContracts();
       renderSuppliers();

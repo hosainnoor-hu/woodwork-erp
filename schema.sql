@@ -207,3 +207,56 @@ CREATE TABLE IF NOT EXISTS daily_cash_closings (
     closed_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- ============================================================================
+-- إضافات مستندة إلى ملفات الأستاذ محمود مصطفى (عام 2026 م - 2027 م)
+-- ============================================================================
+
+-- 11. جدول ميزان التسوية الشهرية وحساب الأرباح (Monthly Financial Settlements)
+-- لمطابقة الحوالات والشبكة مقابل فواتير المعارض ومصروفات الورشة وتحديد موقف الحساب (لك أو عليك)
+CREATE TABLE IF NOT EXISTS monthly_settlements (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    fiscal_year INT NOT NULL DEFAULT 2026,
+    month_number INT NOT NULL CHECK (month_number BETWEEN 1 AND 12),
+    month_name VARCHAR(50) NOT NULL,
+    total_transfers_pos NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- الحوالات + شبكة
+    total_showroom_invoices NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- فواتير المعارض (داريفا، ماي هوم، ألمنيوم)
+    total_workshop_expenses NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- مصاريف الورشة (إعاشة، ماء، صيانة، كفيل)
+    net_difference NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- الفرق (لك أو عليك)
+    supervisors VARCHAR(255) DEFAULT 'أبومعاذ / أبويوسف',
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_monthly_settlement UNIQUE (fiscal_year, month_number)
+);
+
+-- 12. جدول كشف حسابات ومطابقة موردي الأخشاب (Timber Supplier Reconciliations)
+-- لمطابقة طلبات الأخشاب مع الحوالات والشبكات والمردودات (مثل زاهد وعواجي)
+CREATE TABLE IF NOT EXISTS timber_supplier_reconciliations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    supplier_code VARCHAR(50) NOT NULL,
+    supplier_name VARCHAR(100) NOT NULL,
+    fiscal_year INT NOT NULL DEFAULT 2026,
+    total_orders_amount NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- إجمالي فواتير طلبات الخشب
+    total_payments_amount NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- إجمالي السداد (حوالات + شبكة)
+    total_returns_amount NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- إجمالي المردودات والترجيع
+    net_balance_due NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- المتبقي في الذمة للمورد
+    notes TEXT,
+    last_reconciled_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 13. جدول كشف عمال المياومة الأسبوعية (Daily Wage Workers Attendance & Ledger)
+-- لحساب أيام العمل، اليومية المعتمدة، إجمالي المستحق، الدفعات، والصافي المتبقي للعامل
+CREATE TABLE IF NOT EXISTS worker_daily_wages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    worker_name VARCHAR(100) NOT NULL,
+    alias_name VARCHAR(100), -- مثل: عمر فاروق (مروان)، رفيق، ميزان
+    base_salary_equivalent NUMERIC(10, 2) NOT NULL, -- الراتب الشهري الافتراضي
+    calculated_daily_rate NUMERIC(10, 2) NOT NULL, -- أجر اليومية المحسوب
+    total_days_worked NUMERIC(8, 2) NOT NULL DEFAULT 0.00, -- مجموع الأيام المنفذة
+    total_amount_earned NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- إجمالي المستحق
+    total_payments_received NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- مجموع الدفعات المستلمة
+    remaining_balance_due NUMERIC(12, 2) NOT NULL DEFAULT 0.00, -- المتبقي للعامل
+    fiscal_cycle VARCHAR(50) DEFAULT '2026-2027',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
