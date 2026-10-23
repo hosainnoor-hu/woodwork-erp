@@ -396,10 +396,16 @@
             </h2>
             <p class="text-xs text-slate-500">معلمي المنشار، فنيي القشاط، التجميع، وعمال التحميل وتتبع سلفهم من الدرج</p>
           </div>
-          <button onclick="openNewWorkerAdvanceModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
-            <i data-lucide="hand-coins" class="w-4 h-4"></i>
-            صرف سلفة لعامل
-          </button>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="openAddWorkDaysModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+              تسجيل أيام عمل (مياومة)
+            </button>
+            <button onclick="openNewWorkerAdvanceModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
+              <i data-lucide="hand-coins" class="w-4 h-4"></i>
+              صرف سلفة / دفعة لعامل
+            </button>
+          </div>
         </div>
 
         <!-- Wage Type Selector Tabs -->
@@ -420,19 +426,19 @@
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center">
             <div>
               <span class="text-[11px] font-bold text-amber-800 block">إجمالي أيام العمل المسجلة</span>
-              <span class="text-xl font-black text-amber-900 font-mono">865.6 يوم</span>
+              <span id="dw-stat-days" class="text-xl font-black text-amber-900 font-mono">865.6 يوم</span>
             </div>
             <div>
               <span class="text-[11px] font-bold text-amber-800 block">المجموع اليومي لأجور الورشة</span>
-              <span class="text-xl font-black text-amber-900 font-mono">793.31 ر.س/يوم</span>
+              <span id="dw-stat-daily-rate" class="text-xl font-black text-amber-900 font-mono">693.31 ر.س/يوم</span>
             </div>
             <div>
               <span class="text-[11px] font-bold text-emerald-800 block">إجمالي الدفعات المسددة للعمال</span>
-              <span class="text-xl font-black text-emerald-700 font-mono">43,100.00 ر.س</span>
+              <span id="dw-stat-paid" class="text-xl font-black text-emerald-700 font-mono">43,100.00 ر.س</span>
             </div>
             <div>
               <span class="text-[11px] font-bold text-rose-800 block">إجمالي المتبقي المستحق للعمال</span>
-              <span class="text-xl font-black text-rose-700 font-mono">19,103.91 ر.س</span>
+              <span id="dw-stat-due" class="text-xl font-black text-rose-700 font-mono">19,103.92 ر.س</span>
             </div>
           </div>
 
@@ -570,9 +576,15 @@
             </div>
             <p class="text-xs text-slate-500 mt-1">مقارنة الحوالات والشبكات مقابل فواتير المعارض ومصروفات الورشة لتحديد موقف الحساب (لك أو عليك)</p>
           </div>
-          <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600">
-            <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
-            <span>إشراف وتوثيق: <strong>أبو معاذ & أبو يوسف</strong></span>
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600">
+              <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
+              <span>إشراف وتوثيق: <strong>أبو معاذ & أبو يوسف</strong></span>
+            </div>
+            <button onclick="openMonthlySettlementModal()" class="bg-wood-800 hover:bg-wood-900 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              تحديث تسوية شهر
+            </button>
           </div>
         </div>
 
@@ -580,17 +592,17 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-200">
             <span class="text-xs font-bold text-emerald-800 block mb-1">إجمالي الحوالات والشبكات المحصلة</span>
-            <div class="text-2xl font-black text-emerald-700 font-mono">599,653.00 ر.س</div>
+            <div id="ms-stat-transfers" class="text-2xl font-black text-emerald-700 font-mono">599,653.00 ر.س</div>
             <p class="text-[11px] text-emerald-600 mt-1 font-medium">السيولة الداخلة بحسابات المؤسسة والشبكات</p>
           </div>
           <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-200">
             <span class="text-xs font-bold text-blue-800 block mb-1">إجمالي فواتير المعارض المنفذة</span>
-            <div class="text-2xl font-black text-blue-700 font-mono">556,548.00 ر.س</div>
+            <div id="ms-stat-invoices" class="text-2xl font-black text-blue-700 font-mono">556,548.00 ر.س</div>
             <p class="text-[11px] text-blue-600 mt-1 font-medium">معارض داريفا، ماي هوم، والألمنيوم</p>
           </div>
           <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-2xl border border-amber-300">
             <span class="text-xs font-bold text-amber-900 block mb-1">صافي الفرق السنوي (لك أو عليك)</span>
-            <div class="text-2xl font-black text-amber-700 font-mono">+43,105.00 ر.س</div>
+            <div id="ms-stat-diff" class="text-2xl font-black text-amber-700 font-mono">+43,105.00 ر.س</div>
             <p class="text-[11px] text-amber-800 mt-1 font-bold">فائض حوالات محصلة تفوق إجمالي الفواتير (لك)</p>
           </div>
         </div>
@@ -614,10 +626,10 @@
             <tfoot class="bg-slate-100 font-black text-slate-900 border-t-2 border-slate-300">
               <tr>
                 <td colspan="2" class="py-3 px-3 text-center text-sm">الإجمالي التراكمي الفعلي:</td>
-                <td class="py-3 px-3 text-emerald-700 font-mono text-sm">599,653.00 ر.س</td>
-                <td class="py-3 px-3 text-blue-700 font-mono text-sm">556,548.00 ر.س</td>
-                <td class="py-3 px-3 text-rose-700 font-mono text-sm">123,538.00 ر.س</td>
-                <td class="py-3 px-3 text-amber-700 font-mono text-sm">+43,105.00 ر.س</td>
+                <td id="ms-foot-transfers" class="py-3 px-3 text-emerald-700 font-mono text-sm">599,653.00 ر.س</td>
+                <td id="ms-foot-invoices" class="py-3 px-3 text-blue-700 font-mono text-sm">556,548.00 ر.س</td>
+                <td id="ms-foot-expenses" class="py-3 px-3 text-rose-700 font-mono text-sm">123,538.00 ر.س</td>
+                <td id="ms-foot-diff" class="py-3 px-3 text-amber-700 font-mono text-sm">+43,105.00 ر.س</td>
                 <td colspan="2" class="py-3 px-3 text-slate-500 text-[11px]">مطابق 100% لسجلات الأستاذ محمود مصطفى</td>
               </tr>
             </tfoot>
@@ -643,12 +655,20 @@
             </div>
             <p class="text-xs text-slate-500 mt-1">تتبع كشف طلبات الأخشاب، سدادات الشبكة والحوالات البنكية، وخصم المردودات والألواح المرتجعة</p>
           </div>
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <button onclick="filterTimberSupplier('ZAHED')" id="btn-sup-zahed" class="px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm">
               زاهد للأخشاب
             </button>
             <button onclick="filterTimberSupplier('AWAJI')" id="btn-sup-awaji" class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
               عواجي للأخشاب
+            </button>
+            <button onclick="openTimberOrderModal()" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              إضافة طلبية ألواح
+            </button>
+            <button onclick="openTimberPaymentModal()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm">
+              <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
+              تسجيل سداد / مرتجع
             </button>
           </div>
         </div>
@@ -747,15 +767,26 @@
           <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-left" dir="ltr">
         </div>
 
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block font-bold text-slate-600 mb-1">رمز الحماية للإدارة والوضع الشامل (PIN اختياري):</label>
+          <input type="password" id="cfg-admin-pin" placeholder="اتركه فارغاً لعدم القفل أو أدخل رمزاً مثل 1234" class="w-full p-2 rounded-xl border border-slate-300 font-mono text-center">
+        </div>
+
         <div class="pt-2 flex flex-col gap-2">
           <button onclick="saveCloudConfig()" class="w-full bg-wood-800 hover:bg-wood-900 text-white py-2.5 rounded-xl font-bold shadow-md flex items-center justify-center gap-1.5">
             <i data-lucide="check-circle" class="w-4 h-4"></i>
-            حفظ المفاتيح واختبار الاتصال بالسحابة
+            حفظ الإعدادات واختبار الاتصال
           </button>
-          <button onclick="triggerManualCloudSync()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1.5">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-            مزامنة البيانات الآن فوراً
-          </button>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="pullCloudData(true)" class="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1">
+              <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
+              سحب من السحابة (Pull)
+            </button>
+            <button onclick="triggerManualCloudSync()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1">
+              <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+              رفع للسحابة (Push)
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -900,6 +931,482 @@
       </div>
     </div>
   </div>
+
+  <!-- MODAL: NEW QUOTE / CONTRACT & CROQUIS (عقد تفصيل وكروكي جديد + توجيه العربون) -->
+  <div id="modal-new-quote" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-100 my-8">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-base text-slate-800 flex items-center gap-2">
+          <i data-lucide="file-check-2" class="w-5 h-5 text-amber-600"></i>
+          إنشاء عقد تفصيل دولاب جديد ومخطط الكروكي
+        </h3>
+        <button onclick="closeModal('modal-new-quote')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">اسم العميل / المعرض *</label>
+            <input type="text" id="qt-customer-name" placeholder="مثال: خالد العتيبي / معرض داريفا" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">رقم الجوال *</label>
+            <input type="text" id="qt-phone" placeholder="05xxxxxxxx" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-left" dir="ltr">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">البائع / المشرف المسؤول</label>
+            <select id="qt-salesman" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="محمد">محمد (معرض)</option>
+              <option value="عيسى">عيسى (معرض)</option>
+              <option value="يونس">يونس (معرض)</option>
+              <option value="أبو معاذ">أبو معاذ (إشراف)</option>
+              <option value="أبو يوسف">أبو يوسف (إشراف)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-600 mb-1">عنوان ووصف العقد / التفصيل *</label>
+            <input type="text" id="qt-title" placeholder="مثال: تفصيل دولاب ملابس ماستر 4 درف سحاب مع إضاءة" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">نوع الخشب المعتمد</label>
+            <select id="qt-wood-type" onchange="recalcQuoteModal()" class="w-full p-2.5 rounded-xl border border-slate-300">
+              <option value="550">خشب تايلاندي 18مم (550 ر.س/م)</option>
+              <option value="750">خشب ألماني أصلي (750 ر.س/م)</option>
+              <option value="950">ألواح HPL مطفي فاخر (950 ر.س/م)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">إجمالي الأمتار (أو الكمية)</label>
+            <input type="number" step="0.1" id="qt-meters" value="6" oninput="recalcQuoteModal()" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">سعر المتر / الوحدة (ر.س)</label>
+            <input type="number" step="10" id="qt-unit-price" value="550" oninput="recalcQuoteModal()" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center text-wood-800">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">إجمالي قيمة العقد (ر.س) *</label>
+            <input type="number" step="1" id="qt-total-amount" value="3300" oninput="recalcQuoteRemaining()" class="w-full p-2 rounded-xl border-2 border-amber-400 bg-amber-50 font-black text-center text-amber-950 text-sm">
+          </div>
+        </div>
+
+        <!-- Araboon & Supplier Routing -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-emerald-50/70 p-3.5 rounded-2xl border border-emerald-200">
+          <div>
+            <label class="block font-bold text-emerald-900 mb-1">العربون المقبوض الآن (ر.س)</label>
+            <input type="number" id="qt-advance-paid" value="1500" oninput="recalcQuoteRemaining()" class="w-full p-2 rounded-xl border border-emerald-300 font-black text-center text-emerald-800 bg-white">
+          </div>
+          <div>
+            <label class="block font-bold text-emerald-900 mb-1">توجيه العربون (فكرة أ. محمود)</label>
+            <select id="qt-advance-dest" class="w-full p-2 rounded-xl border border-emerald-300 font-bold bg-white">
+              <option value="صندوق المؤسسة">📥 إيداع في صندوق المؤسسة (الكاش)</option>
+              <option value="أخشاب طه">🚚 توجيه لسداد: أخشاب طه</option>
+              <option value="زاهد للأخشاب">🚚 توجيه لسداد: زاهد للأخشاب</option>
+              <option value="عواجي للأخشاب">🚚 توجيه لسداد: عواجي للأخشاب</option>
+              <option value="أراك للأخشاب والإكسسوارات">🚚 توجيه لسداد: أراك للأخشاب</option>
+              <option value="مستودع عزيز">🚚 توجيه لسداد: مستودع عزيز</option>
+              <option value="المناع للقزاز">🚚 توجيه لسداد: المناع للقزاز</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-rose-800 mb-1">المتبقي على الزبون (عند التركيب)</label>
+            <input type="text" id="qt-remaining-display" value="1,800.00 ر.س" disabled class="w-full p-2 rounded-xl border border-rose-200 bg-rose-50 font-black text-center text-rose-700">
+          </div>
+        </div>
+
+        <!-- Croquis Before & Notes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">بيان / رابط كروكي قبل التنفيذ</label>
+            <input type="text" id="qt-croquis-before" placeholder="مثال: مخطط تفصيلي معتمد 240×320 سم - لون أبيض" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">تاريخ التسليم والتركيب المتوقع</label>
+            <input type="date" id="qt-delivery-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-quote')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewContract(false)" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2.5 rounded-xl font-bold shadow-md flex items-center gap-1.5">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          حفظ العقد وإرسال أمر للورشة
+        </button>
+        <button onclick="saveNewContract(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-5 py-2.5 rounded-xl font-black shadow-md flex items-center gap-1.5">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          حفظ وطباعة العقد والضمان
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW INVENTORY ITEM (إضافة لوح خشب للمستودع) -->
+  <div id="modal-new-inventory" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="boxes" class="w-4 h-4 text-wood-600"></i>
+          إضافة صنف / لوح خشب جديد للمستودع
+        </h3>
+        <button onclick="closeModal('modal-new-inventory')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">رمز / كود اللوح *</label>
+            <input type="text" id="inv-code" placeholder="مثال: AW-043 أو 1135-ARAK" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المورد المعتمد</label>
+            <input type="text" id="inv-supplier" placeholder="مثال: زاهد للأخشاب / أخشاب طه" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اسم ومواصفات اللوح *</label>
+          <input type="text" id="inv-name" placeholder="مثال: خشب شيبورد ألماني 18مم مقاس 244×122" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">الرصيد (ألواح)</label>
+            <input type="number" id="inv-stock" value="50" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">تكلفة الشراء</label>
+            <input type="number" id="inv-cost" value="130" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">سعر الجملة</label>
+            <input type="number" id="inv-wholesale" value="165" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center text-emerald-700">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">سعر التفصيل (م.ط)</label>
+            <input type="number" id="inv-retail" value="450" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">الموقع بالهنجر</label>
+          <input type="text" id="inv-location" value="هنجر A - رف 1" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-inventory')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewInventoryItem()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          إضافة للمستودع
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW SUPPLIER PURCHASE (تسجيل فاتورة مشتريات من مورد) -->
+  <div id="modal-new-purchase" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-4 h-4 text-wood-600"></i>
+          تسجيل فاتورة مشتريات جديدة من مورد
+        </h3>
+        <button onclick="closeModal('modal-new-purchase')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">المورد *</label>
+          <select id="pur-supplier-code" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold"></select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">بيان المشتريات (الألواح / الزجاج / الإكسسوارات) *</label>
+          <input type="text" id="pur-desc" placeholder="مثال: 40 لوح خشب تايلاندي + 20 مفصلات هيدروليك" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">إجمالي قيمة الفاتورة (ر.س) *</label>
+            <input type="number" id="pur-total" value="5000" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المسدد نقداً الآن (من الدرج)</label>
+            <input type="number" id="pur-paid" value="0" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-emerald-700">
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          💡 المبلغ غير المسدد سيُضاف تلقائياً إلى رصيد المورد المستحق، والمبلغ المسدد نقداً سيُخصم من صندوق الدرج.
+        </p>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-purchase')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewPurchase()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ الفاتورة وتحديث رصيد المورد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: WORKER ADVANCE / PAYMENT (صرف سلفة أو دفعة لعامل مياومة أو شهري) -->
+  <div id="modal-worker-advance" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="hand-coins" class="w-4 h-4 text-amber-600"></i>
+          صرف دفعة أو سلفة لعامل
+        </h3>
+        <button onclick="closeModal('modal-worker-advance')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">فئة العامل</label>
+          <select id="adv-worker-category" onchange="populateWorkerAdvanceSelect()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+            <option value="DAILY">عمال المياومة الأسبوعية (ملف أ. محمود)</option>
+            <option value="MONTHLY">عمال الراتب الشهري الثابت</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اختر العامل *</label>
+          <select id="adv-worker-id" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold"></select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المصروف (ر.س) *</label>
+            <input type="number" id="adv-amount" placeholder="500" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-rose-700">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">طريقة الصرف</label>
+            <select id="adv-method" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="CASH">نقد من الدرج</option>
+              <option value="BANK">حوالة بنكية</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">ملاحظات البيان</label>
+          <input type="text" id="adv-notes" placeholder="دفعة من حساب المياومة / سلفة أسبوعية" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-worker-advance')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveWorkerAdvanceModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          تأكيد الصرف وتحديث الرصيد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD DAILY WORKER DAYS (تسجيل أيام عمل لعامل مياومة) -->
+  <div id="modal-add-workdays" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="calendar-plus" class="w-4 h-4 text-blue-600"></i>
+          تسجيل أيام عمل جديدة لعامل مياومة
+        </h3>
+        <button onclick="closeModal('modal-add-workdays')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">العامل *</label>
+          <select id="wd-worker-id" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold"></select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">عدد الأيام المضافة (يقبل كسور اليوم مثل 6.5) *</label>
+          <input type="number" step="0.1" id="wd-days" value="6" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-blue-700">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-add-workdays')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveAddWorkDays()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          إضافة الأيام وحساب الأجر المستحق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: UPDATE MONTHLY SETTLEMENT (تحديث تسوية شهر 2026) -->
+  <div id="modal-monthly-settlement" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="calendar-check" class="w-4 h-4 text-wood-600"></i>
+          تحديث بيانات شهر في ميزان التسوية (2026)
+        </h3>
+        <button onclick="closeModal('modal-monthly-settlement')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اختر الشهر *</label>
+          <select id="ms-month-select" onchange="loadMonthForSettlement()" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold"></select>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block font-bold text-emerald-800 mb-1">الحوالات + شبكة</label>
+            <input type="number" id="ms-transfers" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-blue-800 mb-1">فواتير المعارض</label>
+            <input type="number" id="ms-invoices" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-rose-800 mb-1">مصاريف الورشة</label>
+            <input type="number" id="ms-expenses" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">ملاحظات وحالة الشهر</label>
+          <input type="text" id="ms-note" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-monthly-settlement')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveMonthlySettlement()" class="bg-wood-800 hover:bg-wood-900 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ وتحديث الميزان السنوي
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TIMBER SUPPLIER ORDER (إضافة طلبية ألواح لزاهد أو عواجي) -->
+  <div id="modal-timber-order" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="boxes" class="w-4 h-4 text-blue-600"></i>
+          إضافة طلبية ألواح جديدة للمورد
+        </h3>
+        <button onclick="closeModal('modal-timber-order')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المورد</label>
+            <select id="to-supplier" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+              <option value="ZAHED">زاهد للأخشاب</option>
+              <option value="AWAJI">عواجي للأخشاب</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">القسم</label>
+            <select id="to-section" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+              <option value="خشب">قسم الخشب</option>
+              <option value="الألمنيوم">قسم الألمنيوم</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">كود / لون اللوح *</label>
+            <input type="text" id="to-code" placeholder="مثال: 1135 أراك" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المقاس / النوع</label>
+            <select id="to-type" class="w-full p-2 rounded-xl border border-slate-300">
+              <option value="طويل">طويل</option>
+              <option value="قصير">قصير</option>
+              <option value="لوح">لوح قياسي</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">العدد (الألواح) *</label>
+            <input type="number" id="to-qty" value="10" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">سعر اللوح (ر.س) *</label>
+            <input type="number" id="to-price" value="150" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+          </div>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-timber-order')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveTimberOrder()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          إضافة الطلبية وتحديث المطابقة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TIMBER SUPPLIER PAYMENT / RETURN (تسجيل سداد أو مرتجع لزاهد وعواجي) -->
+  <div id="modal-timber-payment" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i>
+          تسجيل دفعة سداد أو مرتجع ألواح للمورد
+        </h3>
+        <button onclick="closeModal('modal-timber-payment')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المورد</label>
+            <select id="tp-supplier" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+              <option value="ZAHED">زاهد للأخشاب</option>
+              <option value="AWAJI">عواجي للأخشاب</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">نوع الحركة</label>
+            <select id="tp-type" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+              <option value="حوالة بنكية">حوالة بنكية</option>
+              <option value="سداد نقدي/شبكة">سداد نقدي / شبكة</option>
+              <option value="مرتجع ألواح">مرتجع ألواح (خصم)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ (ر.س) *</label>
+            <input type="number" id="tp-amount" placeholder="5000" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center text-emerald-700">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">التاريخ</label>
+            <input type="date" id="tp-date" class="w-full p-2 rounded-xl border border-slate-300 font-mono">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">البيان والتفاصيل *</label>
+          <input type="text" id="tp-desc" placeholder="مثال: حوالة بنكية / ترجيع 3 ألواح" class="w-full p-2 rounded-xl border border-slate-300">
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-timber-payment')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveTimberPayment()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ الحركة وخصمها من رصيد المورد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINTABLE CONTRACT & ZATCA INVOICE AREA (يظهر عند الطباعة فقط) -->
+  <div id="printable-area" class="hidden"></div>
 
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
@@ -1129,10 +1636,14 @@
         { id: 'DS-2024-166', buyer: 'عقد المستودع (رقم 166)', date: '2024-09-04', timber: 'توريد أخشاب المستودع', qty: 1, total: 8350.00, paid: 3000.00, unpaid: 5350.00, method: 'PARTIAL' },
         { id: 'DS-2024-171', buyer: 'عقد آسيا (رقم 171)', date: '2024-09-13', timber: 'توريد وتركيب أخشاب آسيا', qty: 1, total: 8500.00, paid: 4000.00, unpaid: 4500.00, method: 'PARTIAL' },
         { id: 'DS-2024-172', buyer: 'عقد المستودع (رقم 172)', date: '2024-09-15', timber: 'توريد أخشاب المستودع', qty: 1, total: 7800.00, paid: 2000.00, unpaid: 5800.00, method: 'PARTIAL' }
-      ]
+      ],
+      mahmoudLog: JSON.parse(JSON.stringify(MAHMOUD_LOG))
     };
 
     let appData = JSON.parse(localStorage.getItem('woodwork_os_v4_real')) || DB;
+    if (!appData.mahmoudLog) {
+      appData.mahmoudLog = JSON.parse(JSON.stringify(MAHMOUD_LOG));
+    }
 
     function saveDB() {
       localStorage.setItem('woodwork_os_v4_real', JSON.stringify(appData));
@@ -1140,7 +1651,18 @@
     }
 
     // Set Operational Mode (1. المتكامل، 2. المعرض، 3. الورشة، 4. مستودع الأخشاب)
-    function setOperationalMode(mode) {
+    function setOperationalMode(mode, skipPinCheck = false) {
+      const savedPin = localStorage.getItem('woodwork_admin_pin');
+      if (!skipPinCheck && savedPin && mode === 'FULL' && appData.settings.mode !== 'FULL') {
+        const enteredPin = prompt('أدخل رمز الحماية (PIN) للدخول إلى الوضع الشامل والإدارة:');
+        if (enteredPin !== savedPin) {
+          alert('رمز الحماية غير صحيح!');
+          const sel = document.getElementById('select-operational-mode');
+          if (sel) sel.value = appData.settings.mode;
+          return;
+        }
+      }
+
       appData.settings.mode = mode;
       
       const sel = document.getElementById('select-operational-mode');
@@ -1207,36 +1729,39 @@
       lucide.createIcons();
     }
 
-    // Reconcile Daily Cash (المعادلة المحاسبية للأستاذ محمود)
+    // Reconcile Daily Cash (المعادلة المحاسبية للأستاذ محمود: المبيعات - (المشتريات + المصروفات) = الصافي)
     function reconcileDailyCash() {
       // 1. Total Cash Sales (العربون المحصل من العقود + المقبوض من بيع الخشب المباشر)
       let totalSales = 0;
       appData.contracts.forEach(c => totalSales += (c.advancePaid || 0));
       appData.directSales.forEach(ds => totalSales += (ds.paid || 0));
 
-      // 2. Total Cash Purchases paid to suppliers
+      // 2. Total Cash Purchases paid to suppliers (العربون الموجه لمورد فعلي وليس لصندوق المؤسسة + سدادات المشتريات النقدية)
       let totalPurchases = 0;
-      // Araboon directed to suppliers (counted as supplier payment)
       appData.contracts.forEach(c => {
-        if (c.advanceDirectedTo) {
-          totalPurchases += c.advancePaid;
+        if (c.advanceDirectedTo && c.advanceDirectedTo !== 'صندوق المؤسسة') {
+          totalPurchases += (c.advancePaid || 0);
         }
       });
 
-      // 3. Total Cash Expenses (المصروفات النقدية)
+      // 3. Total Cash Expenses (المصروفات النقدية من الدرج)
       let totalExpenses = 0;
       let workshopExp = 0;
       appData.expenses.forEach(e => {
         if (e.method === 'CASH') {
-          totalExpenses += e.amount;
+          if (e.category && e.category.startsWith('سداد دفعة للمورد:')) {
+            totalPurchases += e.amount;
+          } else {
+            totalExpenses += e.amount;
+          }
         }
         if (e.costCenter === 'WORKSHOP') {
           workshopExp += e.amount;
         }
       });
 
-      // Net Cash Remaining in Drawer
-      const netCash = totalSales - totalExpenses; // (assuming araboon directed to suppliers is paid out)
+      // Net Cash Remaining in Drawer: المبيعات - (المشتريات + المصروفات)
+      const netCash = totalSales - (totalPurchases + totalExpenses);
 
       document.getElementById('dash-cash-sales').textContent = totalSales.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
       document.getElementById('dash-cash-purchases').textContent = totalPurchases.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
@@ -1249,7 +1774,11 @@
       appData.directSales.forEach(ds => unpaidDebts += (ds.unpaid || 0));
 
       let suppliersDue = 0;
-      appData.suppliers.forEach(s => suppliersDue += s.balance);
+      appData.suppliers.forEach(s => suppliersDue += (s.balance || 0));
+      if (appData.mahmoudLog && appData.mahmoudLog.timberSuppliers) {
+        suppliersDue += (appData.mahmoudLog.timberSuppliers.ZAHED?.balanceDue || 0);
+        suppliersDue += (appData.mahmoudLog.timberSuppliers.AWAJI?.balanceDue || 0);
+      }
 
       let stockVal = 0;
       appData.inventory.forEach(i => stockVal += (i.stock * i.cost));
@@ -1268,6 +1797,7 @@
       // Merge contracts, expenses, and direct sales
       const items = [];
       appData.contracts.forEach(c => {
+        const isToBox = !c.advanceDirectedTo || c.advanceDirectedTo === 'صندوق المؤسسة';
         items.push({
           date: c.signingDate,
           type: 'مبيعات تفصيل (عربون)',
@@ -1275,7 +1805,7 @@
           badge: `البائع: ${c.salesman}`,
           amount: `+${c.advancePaid.toFixed(2)} ر.س`,
           color: 'text-emerald-700 font-bold',
-          method: c.advanceDirectedTo ? `سُدد لمورد: ${c.advanceDirectedTo}` : 'كاش بالدرج'
+          method: isToBox ? 'إيداع بصندوق المؤسسة' : `وُجّه لسداد المورد: ${c.advanceDirectedTo}`
         });
       });
 
@@ -1284,10 +1814,10 @@
           date: e.date,
           type: 'مصروف تشغيلي',
           title: `${e.category} - ${e.beneficiary}`,
-          badge: e.costCenter === 'WORKSHOP' ? 'الورشة' : e.costCenter === 'SHOWROOM' ? 'المعرض' : 'مسحوبات المالك',
+          badge: e.costCenter === 'WORKSHOP' ? 'الورشة' : e.costCenter === 'SHOWROOM' ? 'المعرض' : e.costCenter === 'WAREHOUSE' ? 'المستودع' : 'مسحوبات المالك',
           amount: `-${e.amount.toFixed(2)} ر.س`,
           color: 'text-rose-700 font-bold',
-          method: e.method === 'CASH' ? 'نقد من الدرج' : 'تحويل بنكي'
+          method: e.method === 'CASH' ? 'نقد من الدرج' : e.method === 'MADA' ? 'بطاقة مدى' : 'تحويل بنكي'
         });
       });
 
@@ -1303,7 +1833,7 @@
         });
       });
 
-      items.forEach(it => {
+      items.slice(0, 25).forEach(it => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50';
         tr.innerHTML = `
@@ -1318,7 +1848,7 @@
       });
     }
 
-    // Render Contracts with Croquis & Araboon Destination
+    // Render Contracts with Croquis, Print Button & Araboon Destination
     function renderContracts() {
       const container = document.getElementById('contracts-list-container');
       container.innerHTML = '';
@@ -1329,16 +1859,23 @@
         card.innerHTML = `
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-200">
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
                 <span class="font-mono text-sm font-black text-wood-700">${c.id}</span>
                 <h3 class="font-bold text-slate-800">${c.title}</h3>
                 <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full text-xs font-bold">بإشراف البائع: ${c.salesman}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${c.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${c.status === 'COMPLETED' ? 'مكتمل ومسلّم' : 'قيد التصنيع بالورشة'}</span>
               </div>
               <p class="text-xs text-slate-500 mt-1">العميل: <strong>${c.customerName}</strong> (${c.phone}) | تاريخ العقد: ${c.signingDate}</p>
             </div>
-            <div class="text-right">
-              <span class="text-xs text-slate-500 block">إجمالي قيمة العقد</span>
-              <span class="text-base font-black text-wood-900">${c.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</span>
+            <div class="flex items-center gap-3 self-end sm:self-center">
+              <button onclick="printContract('${c.id}')" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 shadow-sm">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                طباعة العقد والضمان
+              </button>
+              <div class="text-right">
+                <span class="text-xs text-slate-500 block">إجمالي قيمة العقد</span>
+                <span class="text-base font-black text-wood-900">${c.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</span>
+              </div>
             </div>
           </div>
 
@@ -1377,8 +1914,8 @@
                   <span class="font-bold text-slate-700 block">كروكي وصور بعد التنفيذ:</span>
                   <span class="text-slate-500 text-[11px]">${c.croquisAfter}</span>
                 </div>
-                <button onclick="alert('خاصية رفع صورة الدولاب بعد التركيب بالجوال')" class="px-2 py-1 rounded bg-wood-600 hover:bg-wood-700 text-white font-bold text-[10px]">
-                  رفع صورة الإنجاز
+                <button onclick="updateContractCroquisAfter('${c.id}')" class="px-2.5 py-1 rounded bg-wood-600 hover:bg-wood-700 text-white font-bold text-[10px]">
+                  تحديث الإنجاز / الكروكي
                 </button>
               </div>
             </div>
@@ -1386,6 +1923,19 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    function updateContractCroquisAfter(contractId) {
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+      const newCroquis = prompt('أدخل بيان أو رابط صورة الكروكي بعد التركيب والتنفيذ:', c.croquisAfter || 'تم التركيب والتسليم بنجاح وفق المقاسات');
+      if (newCroquis !== null && newCroquis.trim() !== '') {
+        c.croquisAfter = newCroquis.trim();
+        if (confirm('هل تم الانتهاء من تركيب وتسليم هذا العقد بالكامل؟')) {
+          c.status = 'COMPLETED';
+        }
+        saveDB();
+      }
     }
 
     // Render Suppliers & Balances
@@ -1836,10 +2386,431 @@
       switchTab('inventory');
     }
 
-    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
+    function openModal(id) {
+      document.getElementById(id)?.classList.remove('hidden');
+      lucide.createIcons();
+    }
     function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
 
-    
+    // ==========================================
+    // PKG-01 & PKG-02: MISSING MODALS & PRINTABLE CONTRACT / ZATCA QR
+    // ==========================================
+    function openNewQuoteModal() {
+      document.getElementById('qt-customer-name').value = '';
+      document.getElementById('qt-phone').value = '';
+      document.getElementById('qt-title').value = '';
+      document.getElementById('qt-meters').value = '6';
+      document.getElementById('qt-unit-price').value = '550';
+      document.getElementById('qt-total-amount').value = '3300';
+      document.getElementById('qt-advance-paid').value = '1500';
+      document.getElementById('qt-advance-dest').value = 'صندوق المؤسسة';
+      document.getElementById('qt-croquis-before').value = 'مخطط تفصيل معتمد بالمقاسات';
+      const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+      document.getElementById('qt-delivery-date').value = nextWeek;
+      recalcQuoteRemaining();
+      openModal('modal-new-quote');
+    }
+
+    function recalcQuoteModal() {
+      const meters = parseFloat(document.getElementById('qt-meters').value) || 0;
+      const woodSel = document.getElementById('qt-wood-type');
+      const unitInput = document.getElementById('qt-unit-price');
+      if (document.activeElement === woodSel) {
+        unitInput.value = woodSel.value;
+      }
+      const unitPrice = parseFloat(unitInput.value) || 0;
+      const total = Math.round(meters * unitPrice);
+      document.getElementById('qt-total-amount').value = total;
+      recalcQuoteRemaining();
+    }
+
+    function recalcQuoteRemaining() {
+      const total = parseFloat(document.getElementById('qt-total-amount').value) || 0;
+      const adv = parseFloat(document.getElementById('qt-advance-paid').value) || 0;
+      const rem = Math.max(0, total - adv);
+      document.getElementById('qt-remaining-display').value = rem.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+    }
+
+    function saveNewContract(andPrint = false) {
+      const customerName = document.getElementById('qt-customer-name').value.trim();
+      const phone = document.getElementById('qt-phone').value.trim() || '0500000000';
+      const salesman = document.getElementById('qt-salesman').value;
+      const title = document.getElementById('qt-title').value.trim();
+      const totalAmount = parseFloat(document.getElementById('qt-total-amount').value) || 0;
+      const advancePaid = parseFloat(document.getElementById('qt-advance-paid').value) || 0;
+      const advanceDirectedTo = document.getElementById('qt-advance-dest').value;
+      const croquisBefore = document.getElementById('qt-croquis-before').value.trim() || 'مخطط تفصيلي معتمد';
+      const deliveryDate = document.getElementById('qt-delivery-date').value || new Date().toISOString().split('T')[0];
+
+      if (!customerName || !title || totalAmount <= 0) {
+        alert('يرجى إدخال اسم العميل وعنوان التفصيل وإجمالي العقد بشكل صحيح.');
+        return;
+      }
+
+      const remainingAmount = Math.max(0, totalAmount - advancePaid);
+      const newContractId = `CNT-2026-${Math.floor(100 + Math.random() * 900)}`;
+      const today = new Date().toISOString().split('T')[0];
+
+      const newContract = {
+        id: newContractId,
+        customerName,
+        phone,
+        salesman,
+        title,
+        totalAmount,
+        advancePaid,
+        advanceDirectedTo,
+        remainingAmount,
+        croquisBefore,
+        croquisAfter: 'قيد التصنيع بالورشة',
+        signingDate: today,
+        deliveryDate,
+        status: 'IN_WORKSHOP'
+      };
+
+      appData.contracts.unshift(newContract);
+
+      // Automatically generate a Work Order for the Workshop
+      appData.workOrders.unshift({
+        id: `WO-${newContractId.split('-').pop()}`,
+        contractId: newContractId,
+        customerName,
+        title,
+        stage: 'SAW_CUTTING',
+        bomCost: Math.round(totalAmount * 0.45),
+        targetDate: deliveryDate
+      });
+
+      // If advance payment was directed to a supplier, deduct from that supplier's balance
+      if (advanceDirectedTo && advanceDirectedTo !== 'صندوق المؤسسة' && advancePaid > 0) {
+        const sup = appData.suppliers.find(s => s.name.includes(advanceDirectedTo) || advanceDirectedTo.includes(s.name));
+        if (sup) {
+          sup.balance = Math.max(0, sup.balance - advancePaid);
+        }
+        if (advanceDirectedTo.includes('زاهد') && appData.mahmoudLog?.timberSuppliers?.ZAHED) {
+          appData.mahmoudLog.timberSuppliers.ZAHED.payments.unshift({
+            date: today,
+            amount: advancePaid,
+            desc: `توجيه عربون عقد ${newContractId} (${customerName})`,
+            type: 'عربون عميل محول'
+          });
+        } else if (advanceDirectedTo.includes('عواجي') && appData.mahmoudLog?.timberSuppliers?.AWAJI) {
+          appData.mahmoudLog.timberSuppliers.AWAJI.payments.unshift({
+            date: today,
+            amount: advancePaid,
+            desc: `توجيه عربون عقد ${newContractId} (${customerName})`,
+            type: 'عربون عميل محول'
+          });
+        }
+      }
+
+      saveDB();
+      closeModal('modal-new-quote');
+      switchTab('contracts');
+
+      if (andPrint) {
+        printContract(newContractId);
+      } else {
+        alert(`تم حفظ العقد (${newContractId}) وإصدار أمر تشغيل للورشة بنجاح!`);
+      }
+    }
+
+    function printContract(contractId) {
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+
+      const printArea = document.getElementById('printable-area');
+      const vatAmount = (c.totalAmount * 0.15 / 1.15);
+      const netBeforeVat = c.totalAmount - vatAmount;
+
+      printArea.innerHTML = `
+        <div class="p-6 border-2 border-slate-800 rounded-2xl space-y-6 text-right" dir="rtl">
+          <div class="flex justify-between items-start border-b-2 border-slate-800 pb-4">
+            <div>
+              <h1 class="text-2xl font-black">منظومة معارض ومناجر الأخشاب والدواليب</h1>
+              <p class="text-sm font-bold text-slate-600 mt-1">عقد تفصيل وتوريد وتركيب معتمد + فاتورة ضريبية مبسطة</p>
+              <p class="text-xs text-slate-500 mt-1">رقم العقد: <strong class="font-mono">${c.id}</strong> | التاريخ: <strong class="font-mono">${c.signingDate}</strong></p>
+            </div>
+            <div id="print-qr-box" class="w-24 h-24 border border-slate-300 p-1 rounded flex items-center justify-center"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-sm bg-slate-50 p-4 rounded-xl border border-slate-300">
+            <div><strong>العميل / الجهة:</strong> ${c.customerName}</div>
+            <div><strong>رقم الجوال:</strong> <span dir="ltr">${c.phone}</span></div>
+            <div><strong>البائع المشرف:</strong> ${c.salesman}</div>
+            <div><strong>حالة العقد:</strong> ${c.status === 'COMPLETED' ? 'مكتمل ومسلّم' : 'قيد التصنيع والتنفيذ'}</div>
+          </div>
+
+          <div class="border border-slate-300 rounded-xl p-4 space-y-2">
+            <h3 class="font-black text-base border-b pb-2">تفاصيل ومواصفات العمل والكروكي المعتمد:</h3>
+            <p class="text-sm font-bold">${c.title}</p>
+            <p class="text-xs text-slate-600"><strong>مخطط الكروكي قبل التنفيذ:</strong> ${c.croquisBefore}</p>
+            <p class="text-xs text-slate-600"><strong>مخطط الكروكي بعد التنفيذ:</strong> ${c.croquisAfter}</p>
+          </div>
+
+          <table class="w-full text-right text-sm border-collapse border border-slate-400">
+            <thead class="bg-slate-100">
+              <tr>
+                <th class="border border-slate-400 p-2">البيان المالي</th>
+                <th class="border border-slate-400 p-2">القيمة (ر.س)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-slate-400 p-2">القيمة الصافية قبل الضريبة</td>
+                <td class="border border-slate-400 p-2 font-mono font-bold">${netBeforeVat.toFixed(2)} ر.س</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-400 p-2">ضريبة القيمة المضافة (15% شاملة)</td>
+                <td class="border border-slate-400 p-2 font-mono font-bold">${vatAmount.toFixed(2)} ر.س</td>
+              </tr>
+              <tr class="bg-slate-50 font-black">
+                <td class="border border-slate-400 p-2">إجمالي قيمة العقد (شامل الضريبة)</td>
+                <td class="border border-slate-400 p-2 font-mono">${c.totalAmount.toFixed(2)} ر.س</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-400 p-2">الدفعة المقدمة (العربون المقبوض) - وُجه إلى: (${c.advanceDirectedTo || 'صندوق المؤسسة'})</td>
+                <td class="border border-slate-400 p-2 font-mono font-bold">${c.advancePaid.toFixed(2)} ر.س</td>
+              </tr>
+              <tr class="font-black">
+                <td class="border border-slate-400 p-2">المبلغ المتبقي (يُسدد عند التركيب والاستلام)</td>
+                <td class="border border-slate-400 p-2 font-mono">${c.remainingAmount.toFixed(2)} ر.س</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="p-4 border-2 border-dashed border-slate-700 rounded-xl space-y-1 text-xs">
+            <h4 class="font-black text-sm">🛡️ شهادة الضمان الذهبي (5 سنوات):</h4>
+            <p>تضمن المؤسسة جودة الأخشاب، وشريط الحواف PVC، والمفصلات الهيدروليكية وسكك السحاب لمدة خمس (5) سنوات من تاريخ التركيب ضد عيوب التصنيع والتقشير، وفق الكروكي المعتمد بين الطرفين.</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-8 pt-6 text-center text-sm font-bold">
+            <div>
+              <p>توقيع العميل بالموافقة على الكروكي والمقاسات</p>
+              <p class="mt-8 text-slate-400">....................................................</p>
+            </div>
+            <div>
+              <p>توقيع وختم المعرض / المسؤول (${c.salesman})</p>
+              <p class="mt-8 text-slate-400">....................................................</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      printArea.classList.remove('hidden');
+      const qrBox = document.getElementById('print-qr-box');
+      if (qrBox && window.QRCode) {
+        qrBox.innerHTML = '';
+        new QRCode(qrBox, {
+          text: `HussainOS|Contract:${c.id}|Total:${c.totalAmount}|VAT:${vatAmount.toFixed(2)}|Date:${c.signingDate}`,
+          width: 84,
+          height: 84
+        });
+      }
+
+      setTimeout(() => {
+        window.print();
+        printArea.classList.add('hidden');
+      }, 250);
+    }
+
+    function openNewInventoryItemModal() {
+      document.getElementById('inv-code').value = '';
+      document.getElementById('inv-name').value = '';
+      document.getElementById('inv-supplier').value = 'زاهد للأخشاب';
+      document.getElementById('inv-stock').value = '50';
+      document.getElementById('inv-cost').value = '130';
+      document.getElementById('inv-wholesale').value = '165';
+      document.getElementById('inv-retail').value = '450';
+      openModal('modal-new-inventory');
+    }
+
+    function saveNewInventoryItem() {
+      const code = document.getElementById('inv-code').value.trim();
+      const name = document.getElementById('inv-name').value.trim();
+      const supplier = document.getElementById('inv-supplier').value.trim() || 'مورد عام';
+      const stock = parseFloat(document.getElementById('inv-stock').value) || 0;
+      const cost = parseFloat(document.getElementById('inv-cost').value) || 0;
+      const wholesalePrice = parseFloat(document.getElementById('inv-wholesale').value) || 0;
+      const retailPrice = parseFloat(document.getElementById('inv-retail').value) || 0;
+      const location = document.getElementById('inv-location').value.trim() || 'المستودع الرئيسي';
+
+      if (!code || !name) {
+        alert('يرجى إدخال كود اللوح واسمه.');
+        return;
+      }
+
+      appData.inventory.unshift({
+        code, name, supplier, stock, cost, wholesalePrice, retailPrice, location
+      });
+
+      saveDB();
+      closeModal('modal-new-inventory');
+    }
+
+    function openNewPurchaseModal() {
+      const sel = document.getElementById('pur-supplier-code');
+      sel.innerHTML = '';
+      appData.suppliers.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.code;
+        opt.textContent = `${s.name} (الرصيد الحالي: ${s.balance} ر.س)`;
+        sel.appendChild(opt);
+      });
+      document.getElementById('pur-desc').value = '';
+      document.getElementById('pur-total').value = '5000';
+      document.getElementById('pur-paid').value = '0';
+      openModal('modal-new-purchase');
+    }
+
+    function saveNewPurchase() {
+      const supCode = document.getElementById('pur-supplier-code').value;
+      const desc = document.getElementById('pur-desc').value.trim();
+      const total = parseFloat(document.getElementById('pur-total').value) || 0;
+      const paid = parseFloat(document.getElementById('pur-paid').value) || 0;
+
+      if (!desc || total <= 0) {
+        alert('يرجى إدخال بيان المشتريات وإجمالي الفاتورة.');
+        return;
+      }
+
+      const sup = appData.suppliers.find(s => s.code === supCode);
+      if (!sup) return;
+
+      const remaining = Math.max(0, total - paid);
+      sup.balance += remaining;
+
+      if (paid > 0) {
+        appData.expenses.unshift({
+          id: `EXP-${Date.now().toString().slice(-4)}`,
+          date: new Date().toISOString().split('T')[0],
+          costCenter: 'WAREHOUSE',
+          category: `سداد دفعة للمورد: ${sup.name} (${desc})`,
+          amount: paid,
+          method: 'CASH',
+          beneficiary: sup.name,
+          notes: desc
+        });
+      }
+
+      saveDB();
+      closeModal('modal-new-purchase');
+      alert(`تم تسجيل فاتورة المشتريات من (${sup.name}) وتحديث رصيده بنجاح.`);
+    }
+
+    // Worker Advance & Daily Wage Actions
+    function openNewWorkerAdvanceModal(preselectCategory = 'DAILY', preselectId = '') {
+      const catSel = document.getElementById('adv-worker-category');
+      if (catSel) catSel.value = preselectCategory;
+      populateWorkerAdvanceSelect(preselectId);
+      document.getElementById('adv-amount').value = '';
+      document.getElementById('adv-notes').value = '';
+      openModal('modal-worker-advance');
+    }
+
+    function populateWorkerAdvanceSelect(preselectId = '') {
+      const cat = document.getElementById('adv-worker-category').value;
+      const workerSel = document.getElementById('adv-worker-id');
+      workerSel.innerHTML = '';
+
+      if (cat === 'DAILY') {
+        (appData.mahmoudLog?.dailyWorkers || []).forEach(w => {
+          const opt = document.createElement('option');
+          opt.value = w.id;
+          opt.textContent = `${w.name} (المتبقي له: ${w.remainingDue.toFixed(2)} ر.س)`;
+          if (w.id === preselectId) opt.selected = true;
+          workerSel.appendChild(opt);
+        });
+      } else {
+        (appData.workers || []).forEach(w => {
+          const opt = document.createElement('option');
+          opt.value = w.id;
+          opt.textContent = `${w.name} - ${w.role} (السلف: ${w.advances.toFixed(2)} ر.س)`;
+          if (w.id === preselectId) opt.selected = true;
+          workerSel.appendChild(opt);
+        });
+      }
+    }
+
+    function saveWorkerAdvanceModal() {
+      const cat = document.getElementById('adv-worker-category').value;
+      const wId = document.getElementById('adv-worker-id').value;
+      const amt = parseFloat(document.getElementById('adv-amount').value) || 0;
+      const method = document.getElementById('adv-method').value;
+      const notes = document.getElementById('adv-notes').value.trim() || 'دفعة / سلفة عامل';
+
+      if (amt <= 0) {
+        alert('يرجى إدخال مبلغ صحيح.');
+        return;
+      }
+
+      let workerName = '';
+      if (cat === 'DAILY') {
+        const dw = appData.mahmoudLog.dailyWorkers.find(w => w.id === wId);
+        if (!dw) return;
+        dw.totalPaid += amt;
+        dw.remainingDue = dw.totalEarned - dw.totalPaid;
+        workerName = dw.name;
+      } else {
+        const mw = appData.workers.find(w => w.id === wId);
+        if (!mw) return;
+        mw.advances += amt;
+        workerName = mw.name;
+      }
+
+      appData.expenses.unshift({
+        id: `EXP-${Date.now().toString().slice(-4)}`,
+        date: new Date().toISOString().split('T')[0],
+        costCenter: 'WORKSHOP',
+        category: `سلفة / دفعة عامل: ${workerName}`,
+        amount: amt,
+        method: method,
+        beneficiary: workerName,
+        notes: notes
+      });
+
+      saveDB();
+      closeModal('modal-worker-advance');
+      alert(`تم صرف ${amt} ر.س للعامل (${workerName}) وخصمها من رصيده وتسجيلها في مصروفات الورشة.`);
+    }
+
+    function openAddWorkDaysModal(preselectId = '') {
+      const sel = document.getElementById('wd-worker-id');
+      sel.innerHTML = '';
+      (appData.mahmoudLog?.dailyWorkers || []).forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w.id;
+        opt.textContent = `${w.name} (اليومية: ${w.dailyRate.toFixed(2)} ر.س | أيامه: ${w.totalDays})`;
+        if (w.id === preselectId) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      document.getElementById('wd-days').value = '6';
+      openModal('modal-add-workdays');
+    }
+
+    function saveAddWorkDays() {
+      const wId = document.getElementById('wd-worker-id').value;
+      const addedDays = parseFloat(document.getElementById('wd-days').value) || 0;
+      if (addedDays <= 0) {
+        alert('يرجى إدخال عدد أيام صحيح.');
+        return;
+      }
+
+      const dw = appData.mahmoudLog.dailyWorkers.find(w => w.id === wId);
+      if (!dw) return;
+
+      dw.totalDays = +(dw.totalDays + addedDays).toFixed(2);
+      dw.totalEarned = +(dw.totalDays * dw.dailyRate).toFixed(2);
+      dw.remainingDue = +(dw.totalEarned - dw.totalPaid).toFixed(2);
+
+      saveDB();
+      closeModal('modal-add-workdays');
+      alert(`تم إضافة ${addedDays} يوم عمل للعامل (${dw.name}) وتحديث مستحقاته تلقائياً.`);
+    }
+
+    // ==========================================
+    // PKG-04: DYNAMIC MAHMOUD LOG TABLES & MODALS
+    // ==========================================
     let currentTimberSupplier = 'ZAHED';
 
     function switchWorkerSubTab(type) {
@@ -1863,10 +2834,19 @@
 
     function renderMonthlySettlement() {
       const tbody = document.getElementById('monthly-settlement-tbody');
-      if (!tbody) return;
+      if (!tbody || !appData.mahmoudLog?.monthlySettlement) return;
       tbody.innerHTML = '';
 
-      MAHMOUD_LOG.monthlySettlement.forEach(item => {
+      let sumTransfers = 0;
+      let sumInvoices = 0;
+      let sumExpenses = 0;
+
+      appData.mahmoudLog.monthlySettlement.forEach(item => {
+        item.diff = (item.transfers || 0) - (item.invoices || 0);
+        sumTransfers += (item.transfers || 0);
+        sumInvoices += (item.invoices || 0);
+        sumExpenses += (item.expenses || 0);
+
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition-colors';
         const isSurplus = item.diff >= 0;
@@ -1885,6 +2865,55 @@
         `;
         tbody.appendChild(tr);
       });
+
+      const sumDiff = sumTransfers - sumInvoices;
+      const diffFormatted = (sumDiff >= 0 ? '+' : '') + sumDiff.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+
+      if (document.getElementById('ms-stat-transfers')) document.getElementById('ms-stat-transfers').textContent = sumTransfers.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      if (document.getElementById('ms-stat-invoices')) document.getElementById('ms-stat-invoices').textContent = sumInvoices.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      if (document.getElementById('ms-stat-diff')) document.getElementById('ms-stat-diff').textContent = diffFormatted;
+
+      if (document.getElementById('ms-foot-transfers')) document.getElementById('ms-foot-transfers').textContent = sumTransfers.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      if (document.getElementById('ms-foot-invoices')) document.getElementById('ms-foot-invoices').textContent = sumInvoices.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      if (document.getElementById('ms-foot-expenses')) document.getElementById('ms-foot-expenses').textContent = sumExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+      if (document.getElementById('ms-foot-diff')) document.getElementById('ms-foot-diff').textContent = diffFormatted;
+    }
+
+    function openMonthlySettlementModal() {
+      const sel = document.getElementById('ms-month-select');
+      sel.innerHTML = '';
+      appData.mahmoudLog.monthlySettlement.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.m;
+        opt.textContent = `${m.m} - ${m.name}`;
+        if (m.m === 10) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      loadMonthForSettlement();
+      openModal('modal-monthly-settlement');
+    }
+
+    function loadMonthForSettlement() {
+      const mNum = parseInt(document.getElementById('ms-month-select').value, 10);
+      const item = appData.mahmoudLog.monthlySettlement.find(x => x.m === mNum);
+      if (!item) return;
+      document.getElementById('ms-transfers').value = item.transfers || 0;
+      document.getElementById('ms-invoices').value = item.invoices || 0;
+      document.getElementById('ms-expenses').value = item.expenses || 0;
+      document.getElementById('ms-note').value = item.note || '';
+    }
+
+    function saveMonthlySettlement() {
+      const mNum = parseInt(document.getElementById('ms-month-select').value, 10);
+      const item = appData.mahmoudLog.monthlySettlement.find(x => x.m === mNum);
+      if (!item) return;
+      item.transfers = parseFloat(document.getElementById('ms-transfers').value) || 0;
+      item.invoices = parseFloat(document.getElementById('ms-invoices').value) || 0;
+      item.expenses = parseFloat(document.getElementById('ms-expenses').value) || 0;
+      item.diff = item.transfers - item.invoices;
+      item.note = document.getElementById('ms-note').value.trim();
+      saveDB();
+      closeModal('modal-monthly-settlement');
     }
 
     function filterTimberSupplier(supKey) {
@@ -1902,8 +2931,70 @@
       renderTimberReconciliation();
     }
 
+    function openTimberOrderModal() {
+      document.getElementById('to-supplier').value = currentTimberSupplier;
+      document.getElementById('to-code').value = '';
+      document.getElementById('to-qty').value = '10';
+      document.getElementById('to-price').value = '150';
+      openModal('modal-timber-order');
+    }
+
+    function saveTimberOrder() {
+      const supKey = document.getElementById('to-supplier').value;
+      const section = document.getElementById('to-section').value;
+      const code = document.getElementById('to-code').value.trim();
+      const type = document.getElementById('to-type').value;
+      const qty = parseFloat(document.getElementById('to-qty').value) || 0;
+      const price = parseFloat(document.getElementById('to-price').value) || 0;
+
+      if (!code || qty <= 0 || price <= 0) {
+        alert('يرجى إدخال كود اللوح والعدد والسعر بشكل صحيح.');
+        return;
+      }
+
+      const sup = appData.mahmoudLog.timberSuppliers[supKey];
+      const orderTotal = +(qty * price).toFixed(2);
+      sup.orders.unshift({ code, type, qty, price, total: orderTotal, section });
+      sup.invoicesTotal = +(sup.invoicesTotal + orderTotal).toFixed(2);
+      sup.balanceDue = +(sup.invoicesTotal - sup.paymentsTotal).toFixed(2);
+
+      currentTimberSupplier = supKey;
+      saveDB();
+      closeModal('modal-timber-order');
+    }
+
+    function openTimberPaymentModal() {
+      document.getElementById('tp-supplier').value = currentTimberSupplier;
+      document.getElementById('tp-amount').value = '';
+      document.getElementById('tp-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('tp-desc').value = '';
+      openModal('modal-timber-payment');
+    }
+
+    function saveTimberPayment() {
+      const supKey = document.getElementById('tp-supplier').value;
+      const type = document.getElementById('tp-type').value;
+      const amount = parseFloat(document.getElementById('tp-amount').value) || 0;
+      const date = document.getElementById('tp-date').value || new Date().toISOString().split('T')[0];
+      const desc = document.getElementById('tp-desc').value.trim() || type;
+
+      if (amount <= 0) {
+        alert('يرجى إدخال المبلغ بشكل صحيح.');
+        return;
+      }
+
+      const sup = appData.mahmoudLog.timberSuppliers[supKey];
+      sup.payments.unshift({ date, amount, desc, type });
+      sup.paymentsTotal = +(sup.paymentsTotal + amount).toFixed(2);
+      sup.balanceDue = +(sup.invoicesTotal - sup.paymentsTotal).toFixed(2);
+
+      currentTimberSupplier = supKey;
+      saveDB();
+      closeModal('modal-timber-payment');
+    }
+
     function renderTimberReconciliation() {
-      const sup = MAHMOUD_LOG.timberSuppliers[currentTimberSupplier];
+      const sup = appData.mahmoudLog?.timberSuppliers?.[currentTimberSupplier];
       if (!sup) return;
 
       // Cards
@@ -1972,10 +3063,21 @@
 
     function renderDailyWorkers() {
       const tbody = document.getElementById('daily-workers-tbody');
+      const list = appData.mahmoudLog?.dailyWorkers || [];
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      MAHMOUD_LOG.dailyWorkers.forEach(w => {
+      let sumDays = 0;
+      let sumDailyRate = 0;
+      let sumPaid = 0;
+      let sumDue = 0;
+
+      list.forEach(w => {
+        sumDays += (w.totalDays || 0);
+        sumDailyRate += (w.dailyRate || 0);
+        sumPaid += (w.totalPaid || 0);
+        sumDue += (w.remainingDue || 0);
+
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition-colors';
         tr.innerHTML = `
@@ -1990,18 +3092,27 @@
           <td class="py-3 px-3 font-mono font-bold text-emerald-700">${w.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
           <td class="py-3 px-3 font-mono font-black text-rose-700">${w.remainingDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
           <td class="py-3 px-3 text-center">
-            <button onclick="alert('صرف دفعة أو سلفة للعامل: ' + '${w.name}')" class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shadow-sm">
-              صرف دفعة
-            </button>
+            <div class="flex items-center justify-center gap-1">
+              <button onclick="openAddWorkDaysModal('${w.id}')" class="px-2 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold text-[10px]">
+                + يومية
+              </button>
+              <button onclick="openNewWorkerAdvanceModal('DAILY', '${w.id}')" class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shadow-sm">
+                صرف دفعة
+              </button>
+            </div>
           </td>
         `;
         tbody.appendChild(tr);
       });
+
+      if (document.getElementById('dw-stat-days')) document.getElementById('dw-stat-days').textContent = `${sumDays.toFixed(1)} يوم`;
+      if (document.getElementById('dw-stat-daily-rate')) document.getElementById('dw-stat-daily-rate').textContent = `${sumDailyRate.toFixed(2)} ر.س/يوم`;
+      if (document.getElementById('dw-stat-paid')) document.getElementById('dw-stat-paid').textContent = `${sumPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+      if (document.getElementById('dw-stat-due')) document.getElementById('dw-stat-due').textContent = `${sumDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
     }
 
-    
     // ==========================================
-    // CLOUD SYNC & SUPABASE CLIENT LAYER
+    // PKG-05: TWO-WAY CLOUD SYNC & SUPABASE CLIENT LAYER
     // ==========================================
     let supabaseClient = null;
 
@@ -2013,7 +3124,7 @@
         try {
           supabaseClient = window.supabase.createClient(savedUrl, savedKey);
           updateCloudIndicator(true, 'متصل سحابياً');
-          // Listen for Realtime updates if needed
+          pullCloudData(false);
         } catch (err) {
           console.warn('Supabase init failed:', err);
           updateCloudIndicator(false, 'خطأ بالمفتاح');
@@ -2041,27 +3152,66 @@
     function openCloudConfigModal() {
       document.getElementById('cfg-supabase-url').value = localStorage.getItem('woodwork_supabase_url') || '';
       document.getElementById('cfg-supabase-key').value = localStorage.getItem('woodwork_supabase_key') || '';
+      document.getElementById('cfg-admin-pin').value = localStorage.getItem('woodwork_admin_pin') || '';
       openModal('modal-cloud-config');
     }
 
     function saveCloudConfig() {
       const url = document.getElementById('cfg-supabase-url').value.trim();
       const key = document.getElementById('cfg-supabase-key').value.trim();
+      const pin = document.getElementById('cfg-admin-pin').value.trim();
+
+      if (pin) {
+        localStorage.setItem('woodwork_admin_pin', pin);
+      } else {
+        localStorage.removeItem('woodwork_admin_pin');
+      }
 
       if (url && key) {
         localStorage.setItem('woodwork_supabase_url', url);
         localStorage.setItem('woodwork_supabase_key', key);
         initCloudSync();
-        alert('تم حفظ مفاتيح السحابة بنجاح وجارٍ المزامنة');
-        triggerManualCloudSync();
+        alert('تم حفظ الإعدادات ومفاتيح السحابة بنجاح.');
       } else {
         localStorage.removeItem('woodwork_supabase_url');
         localStorage.removeItem('woodwork_supabase_key');
         supabaseClient = null;
         updateCloudIndicator(false, 'محلي (أوفلاين)');
-        alert('تم تفعيل النمط المحلي الأوفلاين فقط');
+        alert('تم حفظ الإعدادات وتفعيل النمط المحلي (الأوفلاين).');
       }
       closeModal('modal-cloud-config');
+    }
+
+    async function pullCloudData(showNotification = false) {
+      if (!supabaseClient) {
+        if (showNotification) alert('النظام يعمل حالياً في الوضع المحلي (أوفلاين). أدخل بيانات مشروع Supabase أولاً.');
+        return;
+      }
+
+      try {
+        updateCloudIndicator(true, 'جارٍ السحب...');
+        const { data, error } = await supabaseClient
+          .from('system_metadata')
+          .select('data_payload, last_sync_at')
+          .eq('id', 'GLOBAL_WOODWORK_STATE')
+          .maybeSingle();
+
+        if (error) throw error;
+        if (data && data.data_payload) {
+          appData = data.data_payload;
+          if (!appData.mahmoudLog) appData.mahmoudLog = JSON.parse(JSON.stringify(MAHMOUD_LOG));
+          saveDB();
+          updateCloudIndicator(true, 'متزامن سحابياً');
+          if (showNotification) alert('تم سحب أحدث البيانات من السحابة بنجاح!');
+        } else {
+          updateCloudIndicator(true, 'متصل (لا توجد نسخة سحابية بعد)');
+          if (showNotification) alert('لا توجد بيانات مرفوعة مسبقاً في السحابة؛ اضغط زر (رفع للسحابة Push) لرفع نسختك الحالية.');
+        }
+      } catch (err) {
+        console.error('Cloud Pull Error:', err);
+        updateCloudIndicator(false, 'تعذر السحب');
+        if (showNotification) alert('تعذر سحب البيانات: ' + (err.message || 'تحقق من اتصال الإنترنت'));
+      }
     }
 
     async function triggerManualCloudSync() {
@@ -2071,20 +3221,19 @@
       }
 
       try {
-        updateCloudIndicator(true, 'جارٍ المزامنة...');
-        // Upsert current state to Supabase system_metadata
+        updateCloudIndicator(true, 'جارٍ الرفع...');
         const { error } = await supabaseClient
           .from('system_metadata')
           .upsert({
             id: 'GLOBAL_WOODWORK_STATE',
-            app_version: '2.0.0',
+            app_version: '2.1.0',
             last_sync_at: new Date().toISOString(),
             data_payload: appData
           });
 
         if (error) throw error;
         updateCloudIndicator(true, 'متزامن سحابياً');
-        alert('تمت المزامنة السحابية بنجاح! جميع أجهزة الورشة والمعرض متطابقة الآن.');
+        alert('تم رفع ومزامنة البيانات السحابية بنجاح! جميع أجهزة الورشة والمعرض متطابقة الآن.');
       } catch (err) {
         console.error('Cloud Sync Error:', err);
         updateCloudIndicator(false, 'فشلت المزامنة');
@@ -2110,7 +3259,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      setOperationalMode(appData.settings.mode || 'FULL');
+      setOperationalMode(appData.settings.mode || 'FULL', true);
       initCloudSync();
     });
   </script>
