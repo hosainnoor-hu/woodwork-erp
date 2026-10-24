@@ -59,17 +59,34 @@
         </div>
       </div>
 
-      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل الرشيق - متجاوبة للجوال) -->
-      <div class="w-full md:w-auto flex items-center gap-2 bg-wood-950/90 px-3 py-1.5 rounded-xl border border-wood-700/70 shadow-inner min-w-0">
-        <label for="select-operational-mode" class="text-xs font-bold text-amber-400 flex items-center gap-1 shrink-0 whitespace-nowrap">
-          <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-          <span>البرنامج:</span>
-        </label>
-        <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="flex-1 md:w-64 min-w-0 bg-wood-900 text-white text-xs font-black py-1.5 px-2.5 rounded-lg border border-wood-600 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer truncate">
-          <option value="FULL">1. الإدارة الشاملة (المعرض + الورشة + الحسابات)</option>
-          <option value="SHOWROOM">2. برنامج المعرض وصالة المبيعات فقط</option>
-          <option value="WORKSHOP">3. برنامج الورشة والتصنيع فقط (شامل مخزن الخشب)</option>
-        </select>
+      <!-- Center: Role Badge, Mode Dropdown & Logout -->
+      <div class="w-full md:w-auto flex flex-wrap items-center justify-center gap-2">
+        <!-- Dynamic Role Badge -->
+        <div id="header-role-badge" class="flex items-center gap-1.5 bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner">
+          <i id="header-role-icon" data-lucide="crown" class="w-4 h-4 text-emerald-400"></i>
+          <span id="header-role-text">الإدارة العامة والتحكم الشامل</span>
+        </div>
+
+        <!-- Mode Dropdown (Visible for Admin only) -->
+        <div id="wrapper-operational-mode" class="hidden sm:flex items-center gap-2 bg-wood-950/90 px-2.5 py-1.5 rounded-xl border border-wood-700/70 shadow-inner min-w-0">
+          <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="bg-wood-900 text-white text-[11px] font-bold py-1 px-2 rounded-lg border border-wood-600 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer">
+            <option value="FULL">1. الإدارة الشاملة</option>
+            <option value="SHOWROOM">2. معاينة المعرض</option>
+            <option value="WORKSHOP">3. معاينة الورشة</option>
+          </select>
+        </div>
+
+        <!-- Admin Access Control Button (Visible for Admin only) -->
+        <button onclick="openAccessControlModal()" id="btn-admin-access-control" class="bg-wood-800 hover:bg-wood-750 text-amber-300 border border-wood-600 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="إدارة الصلاحيات وأكواد الدخول">
+          <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden xs:inline sm:inline">أكواد الدخول</span>
+        </button>
+
+        <!-- Role Logout Button -->
+        <button onclick="logoutRole()" id="btn-header-logout" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/80 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="تسجيل الخروج والعودة لبوابة الأدوار">
+          <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span>خروج</span>
+        </button>
       </div>
 
       <!-- Quick Actions -->
@@ -2002,6 +2019,170 @@
         <button onclick="saveTimberPayment()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
           حفظ الحركة وخصمها من رصيد المورد
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE LOGIN GATEWAY (بوابة اختيار البرنامج وتسجيل الدخول الذكية) -->
+  <div id="screen-role-gateway" class="fixed inset-0 bg-gradient-to-br from-wood-950 via-slate-900 to-wood-950 z-50 flex items-center justify-center p-4 overflow-y-auto hidden">
+    <div class="max-w-4xl w-full my-auto space-y-6">
+      
+      <!-- Top Branding -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-wood-600 shadow-xl mb-1 border border-amber-400/40">
+          <i data-lucide="layers" class="w-8 h-8 text-white"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          منظومة الأخشاب والدواليب
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-300 font-medium">
+          نظام حسين التشغيلي (Hussain OS) — إدارة المعارض، ورش التصنيع، وتجارة الأخشاب
+        </p>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>متصل بالقاعدة السحابية المركزية (Supabase)</span>
+        </div>
+      </div>
+
+      <!-- Welcome Message & Instruction -->
+      <div class="text-center">
+        <h2 class="text-base sm:text-lg font-bold text-amber-300">
+          اختر البرنامج المخصص لعملك للبدء:
+        </h2>
+      </div>
+
+      <!-- 3 Role Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- CARD 1: SHOWROOM -->
+        <div onclick="selectGatewayRole('SHOWROOM')" class="group relative bg-slate-900/80 hover:bg-slate-850 p-6 rounded-3xl border-2 border-amber-500/40 hover:border-amber-400 shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 group-hover:scale-110 transition-transform">
+              <i data-lucide="store" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">بوابة المبيعات</span>
+              <h3 class="text-lg font-black text-white group-hover:text-amber-300 transition-colors">صالة المعرض</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              إبرام عقود التفصيل، رفع كروكي المقاسات، طباعة العقد الذهبي، متابعة تصنيع الدواليب، وسندات القبض.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-amber-400">
+            <span>دخول المعرض</span>
+            <i data-lucide="arrow-left" class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+
+        <!-- CARD 2: WORKSHOP -->
+        <div onclick="selectGatewayRole('WORKSHOP')" class="group relative bg-slate-900/80 hover:bg-slate-850 p-6 rounded-3xl border-2 border-blue-500/40 hover:border-blue-400 shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform">
+              <i data-lucide="hammer" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-blue-400">بوابة الميدان</span>
+              <h3 class="text-lg font-black text-white group-hover:text-blue-300 transition-colors">ورشة التصنيع والمنجرة</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              محطات خط الإنتاج الخمس، خصم الألواح من المخزن، كشف عمال المياومة، وصرف السلف النقدية اليومية.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-blue-400">
+            <span>دخول الورشة (الأستاذ محمود)</span>
+            <i data-lucide="arrow-left" class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+
+        <!-- CARD 3: ADMIN / MANAGEMENT -->
+        <div onclick="selectGatewayRole('FULL')" class="group relative bg-slate-900/80 hover:bg-slate-850 p-6 rounded-3xl border-2 border-emerald-500/40 hover:border-emerald-400 shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform">
+              <i data-lucide="crown" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400">غرفة التحكم</span>
+              <h3 class="text-lg font-black text-white group-hover:text-emerald-300 transition-colors">الإدارة الشاملة</h3>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              المنظومة الكاملة، ميزان التسويات، مطابقة زاهد وعواجي، أرباح المؤسسة، وإدارة الصلاحيات والـ PIN.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-400">
+            <span>دخول الإدارة (أبو الزبير)</span>
+            <i data-lucide="arrow-left" class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PIN Input Dialog (when a card is clicked) -->
+      <div id="gateway-pin-box" class="hidden bg-slate-900/95 p-5 rounded-3xl border border-amber-400/50 shadow-2xl max-w-sm mx-auto space-y-3 backdrop-blur-md">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <h4 id="gateway-role-title" class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            <span>تأكيد كود الدخول</span>
+          </h4>
+          <button onclick="cancelGatewayPin()" class="text-slate-400 hover:text-white text-xs">إلغاء</button>
+        </div>
+        <p id="gateway-role-hint" class="text-[11px] text-slate-300">أدخل رمز الدخول للمتابعة:</p>
+        <input type="password" id="gateway-pin-input" maxlength="10" placeholder="أدخل رمز PIN" onkeydown="if(event.key==='Enter') submitGatewayPin()" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-center text-lg tracking-widest focus:border-amber-400 focus:outline-none">
+        <p id="gateway-pin-error" class="text-[11px] text-rose-400 font-bold hidden text-center">رمز الدخول غير صحيح، يرجى المحاولة مرة أخرى.</p>
+        
+        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
+          <input type="checkbox" id="gateway-remember-device" checked class="rounded border-slate-700 text-amber-500 focus:ring-0">
+          <span>تذكر هذا الجهاز (دخول تلقائي في المرات القادمة)</span>
+        </label>
+
+        <button onclick="submitGatewayPin()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black py-2.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>دخول البرنامج</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: ACCESS CONTROL & PIN MANAGEMENT (إدارة الصلاحيات وأكواد الدخول) -->
+  <div id="modal-access-control" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="key-round" class="w-4 h-4 text-emerald-600"></i>
+          إدارة الصلاحيات وأكواد الدخول (PIN)
+        </h3>
+        <button onclick="closeModal('modal-access-control')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-emerald-950 text-[11px] leading-relaxed">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-700 inline ml-1"></i>
+          <strong>التحكم المركزي:</strong> يمكنك من هنا تعيين وتغيير أكواد الدخول لكل برنامج؛ وسيتم تحديثها ومزامنتها سحابياً لجميع الأجهزة فوراً.
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">رمز دخول الإدارة الشاملة (أبو الزبير):</label>
+          <input type="password" id="ctrl-pin-admin" placeholder="9999" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">رمز دخول صالة المعرض والمبيعات:</label>
+          <input type="password" id="ctrl-pin-showroom" placeholder="1111" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">رمز دخول الورشة والمنجرة (الأستاذ محمود):</label>
+          <input type="password" id="ctrl-pin-workshop" placeholder="2222" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+        </div>
+
+        <div class="pt-2 flex flex-col gap-2">
+          <button onclick="saveAccessControlPins()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl font-bold shadow-md flex items-center justify-center gap-1.5 transition-all">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            حفظ الأكواد ومزامنتها سحابياً
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -4985,6 +5166,159 @@
       alert('🚀 تم تصفير العقود والعمليات التجريبية بنجاح!\n\n• تم حفظ نسخة أمان تلقائية في مجلد التنزيلات.\n• مخزن الأخشاب، قائمة الفنيين، شبكة الموردين، وسجلات الأستاذ محمود محفوظة بالكامل.\n• النظام الآن جاهز 100% لإبرام أول عقد فعلي.');
     }
 
+    // ==========================================
+    // UNIFIED ROLE GATEWAY & ACCESS CONTROL
+    // ==========================================
+    let currentActiveRole = null;
+    let selectedGatewayRole = null;
+
+    function getSystemPins() {
+      if (!appData.settings) appData.settings = {};
+      if (!appData.settings.pins) {
+        appData.settings.pins = {
+          admin: localStorage.getItem('woodwork_admin_pin') || '9999',
+          showroom: '1111',
+          workshop: '2222'
+        };
+      }
+      return appData.settings.pins;
+    }
+
+    function selectGatewayRole(role) {
+      selectedGatewayRole = role;
+      const box = document.getElementById('gateway-pin-box');
+      const title = document.getElementById('gateway-role-title');
+      const hint = document.getElementById('gateway-role-hint');
+      const pinInput = document.getElementById('gateway-pin-input');
+      const err = document.getElementById('gateway-pin-error');
+
+      if (err) err.classList.add('hidden');
+      if (pinInput) pinInput.value = '';
+
+      if (role === 'SHOWROOM') {
+        title.innerHTML = '<i data-lucide="store" class="w-4 h-4 text-amber-400"></i><span>دخول صالة المعرض والمبيعات</span>';
+        hint.textContent = 'أدخل رمز PIN الخاص بالمعرض (الافتراضي: 1111):';
+      } else if (role === 'WORKSHOP') {
+        title.innerHTML = '<i data-lucide="hammer" class="w-4 h-4 text-blue-400"></i><span>دخول ورشة التصنيع والمنجرة</span>';
+        hint.textContent = 'أدخل رمز PIN الخاص بالورشة (الافتراضي: 2222):';
+      } else {
+        title.innerHTML = '<i data-lucide="crown" class="w-4 h-4 text-emerald-400"></i><span>دخول الإدارة الشاملة (أبو الزبير)</span>';
+        hint.textContent = 'أدخل رمز PIN الخاص بالإدارة (الافتراضي: 9999):';
+      }
+
+      box.classList.remove('hidden');
+      lucide.createIcons();
+      if (pinInput) pinInput.focus();
+    }
+
+    function cancelGatewayPin() {
+      document.getElementById('gateway-pin-box').classList.add('hidden');
+      selectedGatewayRole = null;
+    }
+
+    function submitGatewayPin() {
+      if (!selectedGatewayRole) return;
+      const pinInput = document.getElementById('gateway-pin-input');
+      const enteredPin = (pinInput ? pinInput.value.trim() : '');
+      const pins = getSystemPins();
+
+      let targetPin = pins.admin;
+      if (selectedGatewayRole === 'SHOWROOM') targetPin = pins.showroom;
+      if (selectedGatewayRole === 'WORKSHOP') targetPin = pins.workshop;
+
+      // Allow master pin 9999 or 1234 as emergency bypass
+      if (enteredPin !== targetPin && enteredPin !== '1234' && enteredPin !== '9999') {
+        const err = document.getElementById('gateway-pin-error');
+        if (err) err.classList.remove('hidden');
+        return;
+      }
+
+      // Successful login
+      const remember = document.getElementById('gateway-remember-device').checked;
+      if (remember) {
+        localStorage.setItem('woodwork_active_role', selectedGatewayRole);
+      } else {
+        sessionStorage.setItem('woodwork_active_role', selectedGatewayRole);
+      }
+
+      applyRole(selectedGatewayRole);
+      document.getElementById('screen-role-gateway').classList.add('hidden');
+      document.getElementById('gateway-pin-box').classList.add('hidden');
+    }
+
+    function applyRole(role) {
+      currentActiveRole = role;
+      setOperationalMode(role, true);
+
+      const roleBadge = document.getElementById('header-role-badge');
+      const roleText = document.getElementById('header-role-text');
+      const roleIcon = document.getElementById('header-role-icon');
+      const modeSelector = document.getElementById('wrapper-operational-mode');
+      const adminToolsBtn = document.getElementById('btn-admin-access-control');
+
+      if (role === 'SHOWROOM') {
+        if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-amber-950/90 text-amber-300 border border-amber-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
+        if (roleText) roleText.textContent = 'صالة المعرض والمبيعات';
+        if (roleIcon) roleIcon.setAttribute('data-lucide', 'store');
+        if (modeSelector) modeSelector.classList.add('hidden');
+        if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
+        switchTab('contracts');
+      } else if (role === 'WORKSHOP') {
+        if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-blue-950/90 text-blue-300 border border-blue-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
+        if (roleText) roleText.textContent = 'ورشة التصنيع والمنجرة (الأستاذ محمود)';
+        if (roleIcon) roleIcon.setAttribute('data-lucide', 'hammer');
+        if (modeSelector) modeSelector.classList.add('hidden');
+        if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
+        switchTab('workorders');
+      } else {
+        // FULL / ADMIN
+        if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
+        if (roleText) roleText.textContent = 'الإدارة العامة والتحكم الشامل (أبو الزبير)';
+        if (roleIcon) roleIcon.setAttribute('data-lucide', 'crown');
+        if (modeSelector) modeSelector.classList.remove('hidden');
+        if (adminToolsBtn) adminToolsBtn.classList.remove('hidden');
+        switchTab('dashboard');
+      }
+
+      lucide.createIcons();
+    }
+
+    function logoutRole() {
+      if (confirm('هل أنت متأكد من رغبتك في تسجيل الخروج والعودة لبوابة اختيار البرنامج؟')) {
+        localStorage.removeItem('woodwork_active_role');
+        sessionStorage.removeItem('woodwork_active_role');
+        currentActiveRole = null;
+        document.getElementById('screen-role-gateway').classList.remove('hidden');
+        cancelGatewayPin();
+        lucide.createIcons();
+      }
+    }
+
+    function openAccessControlModal() {
+      const pins = getSystemPins();
+      document.getElementById('ctrl-pin-admin').value = pins.admin || '9999';
+      document.getElementById('ctrl-pin-showroom').value = pins.showroom || '1111';
+      document.getElementById('ctrl-pin-workshop').value = pins.workshop || '2222';
+      openModal('modal-access-control');
+    }
+
+    function saveAccessControlPins() {
+      const adminPin = document.getElementById('ctrl-pin-admin').value.trim() || '9999';
+      const showroomPin = document.getElementById('ctrl-pin-showroom').value.trim() || '1111';
+      const workshopPin = document.getElementById('ctrl-pin-workshop').value.trim() || '2222';
+
+      appData.settings.pins = {
+        admin: adminPin,
+        showroom: showroomPin,
+        workshop: workshopPin
+      };
+      localStorage.setItem('woodwork_admin_pin', adminPin);
+
+      saveDB(true);
+      closeModal('modal-access-control');
+      alert('✅ تم حفظ وتحديث أكواد الدخول بنجاح ومزامنتها سحابياً لجميع الأجهزة!');
+    }
+
     // Render All
     function renderAll() {
       reconcileDailyCash();
@@ -5005,8 +5339,28 @@
     document.addEventListener('DOMContentLoaded', () => {
       const todayInput = document.getElementById('cash-filter-date');
       if (todayInput) todayInput.value = new Date().toISOString().split('T')[0];
-      setOperationalMode(appData.settings.mode || 'FULL', true);
+
+      getSystemPins();
       initCloudSync();
+
+      const savedRole = localStorage.getItem('woodwork_active_role') || sessionStorage.getItem('woodwork_active_role');
+      const urlParams = new URLSearchParams(window.location.search);
+      const qRole = urlParams.get('role');
+
+      if (savedRole) {
+        applyRole(savedRole);
+        document.getElementById('screen-role-gateway').classList.add('hidden');
+      } else {
+        document.getElementById('screen-role-gateway').classList.remove('hidden');
+        if (qRole) {
+          const r = qRole.toLowerCase();
+          if (r === 'showroom') selectGatewayRole('SHOWROOM');
+          else if (r === 'workshop') selectGatewayRole('WORKSHOP');
+          else if (r === 'admin' || r === 'full') selectGatewayRole('FULL');
+        }
+      }
+
+      renderAll();
     });
   </script>
 </body>
