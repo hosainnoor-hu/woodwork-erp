@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منظومة إدارة معارض ومناجر ومستودعات الأخشاب | Hussain OS</title>
+  <title>منظومة إدارة المعارض ومصانع الدواليب والأخشاب | Hussain OS</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -55,7 +55,7 @@
           </div>
           <div class="min-w-0">
             <h1 class="text-base sm:text-lg font-black tracking-tight truncate">
-              منظومة الأخشاب والدواليب
+              منظومة إدارة المعارض ومصانع الدواليب والأخشاب
             </h1>
             <p class="text-[11px] text-wood-200 truncate hidden xs:block sm:block">إدارة المعارض، ورش التصنيع، وتجارة ومستودعات الأخشاب</p>
           </div>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Backup Download Button -->
-        <button onclick="exportSystemBackup()" class="bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/60 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="تنزيل نسخة احتياطية فورية من قاعدة البيانات بصيغة JSON">
+        <button onclick="exportSystemBackup()" id="btn-header-backup" class="bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/60 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="تنزيل نسخة احتياطية فورية من قاعدة البيانات بصيغة JSON">
           <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span class="hidden sm:inline">📥 نسخة احتياطية</span>
         </button>
@@ -2099,10 +2099,10 @@
           <i data-lucide="layers" class="w-8 h-8 text-white"></i>
         </div>
         <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
-          منظومة الأخشاب والدواليب
+          منظومة إدارة المعارض ومصانع الدواليب والأخشاب
         </h1>
         <p class="text-xs sm:text-sm text-slate-300 font-medium">
-          نظام حسين التشغيلي (Hussain OS) — إدارة المعارض، ورش التصنيع، وتجارة الأخشاب
+          نظام حسين التشغيلي (Hussain OS) — لوحة التحكم المركزية، معارض الدواليب، وورش التصنيع
         </p>
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -5427,50 +5427,6 @@
     }
 
     // ==========================================
-    // UNIFIED ROLE GATEWAY & ACCESS CONTROL
-    // ==========================================
-    let currentActiveRole = null;
-    let selectedGatewayRole = null;
-
-    function showGateway() {
-      const gw = document.getElementById('screen-role-gateway');
-      const ws = document.getElementById('app-workspace');
-      if (gw) {
-        gw.classList.remove('hidden');
-        gw.style.display = 'flex';
-      }
-      if (ws) {
-        ws.classList.add('hidden');
-        ws.style.display = 'none';
-      }
-    }
-
-    function hideGateway() {
-      const gw = document.getElementById('screen-role-gateway');
-      const ws = document.getElementById('app-workspace');
-      if (gw) {
-        gw.classList.add('hidden');
-        gw.style.display = 'none';
-      }
-      if (ws) {
-        ws.classList.remove('hidden');
-        ws.style.display = 'flex';
-      }
-    }
-
-    function getSystemPins() {
-      if (!appData.settings) appData.settings = {};
-      if (!appData.settings.pins) {
-        appData.settings.pins = {
-          admin: localStorage.getItem('woodwork_admin_pin') || '9999',
-          showroom: '1111',
-          workshop: '2222'
-        };
-      }
-      return appData.settings.pins;
-    }
-
-    // ==========================================
     // UNIFIED ROLE GATEWAY & USER ACCESS CONTROL
     // ==========================================
     let currentActiveRole = null;
@@ -5652,35 +5608,33 @@
       const adminToolsBtn = document.getElementById('btn-admin-access-control');
       const adminFiscalBtn = document.getElementById('btn-admin-fiscal');
       const adminResetBtn = document.getElementById('btn-admin-reset-prod');
+      const backupBtn = document.getElementById('btn-header-backup');
+      const adminActionsBar = document.getElementById('dash-admin-actions-bar');
+      const isFullAdmin = (role === 'FULL');
+
+      if (modeSelector) modeSelector.classList.toggle('hidden', !isFullAdmin);
+      if (adminToolsBtn) adminToolsBtn.classList.toggle('hidden', !isFullAdmin);
+      if (adminFiscalBtn) adminFiscalBtn.classList.toggle('hidden', !isFullAdmin);
+      if (adminResetBtn) adminResetBtn.classList.toggle('hidden', !isFullAdmin);
+      if (backupBtn) backupBtn.classList.toggle('hidden', !isFullAdmin);
+      if (adminActionsBar) adminActionsBar.classList.toggle('hidden', !isFullAdmin);
 
       if (role === 'SHOWROOM') {
         if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-amber-950 text-amber-300 border border-amber-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
         const salesmanTitle = appData.currentSalesman ? `صالة المعرض | البائع: ${appData.currentSalesman}` : 'صالة المعرض والمبيعات';
         if (roleText) roleText.textContent = salesmanTitle;
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'store');
-        if (modeSelector) modeSelector.classList.add('hidden');
-        if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
-        if (adminFiscalBtn) adminFiscalBtn.classList.add('hidden');
-        if (adminResetBtn) adminResetBtn.classList.add('hidden');
         switchTab('contracts');
       } else if (role === 'WORKSHOP') {
         if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-blue-950 text-blue-300 border border-blue-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
         if (roleText) roleText.textContent = 'ورشة التصنيع والمنجرة (الأستاذ محمود)';
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'hammer');
-        if (modeSelector) modeSelector.classList.add('hidden');
-        if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
-        if (adminFiscalBtn) adminFiscalBtn.classList.add('hidden');
-        if (adminResetBtn) adminResetBtn.classList.add('hidden');
         switchTab('workorders');
       } else {
-        // FULL / ADMIN
+        // FULL / ADMIN (Control Panel)
         if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border border-emerald-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
         if (roleText) roleText.textContent = 'الإدارة العامة والتحكم الشامل (أبو الزبير)';
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'crown');
-        if (modeSelector) modeSelector.classList.remove('hidden');
-        if (adminToolsBtn) adminToolsBtn.classList.remove('hidden');
-        if (adminFiscalBtn) adminFiscalBtn.classList.remove('hidden');
-        if (adminResetBtn) adminResetBtn.classList.remove('hidden');
         switchTab('dashboard');
       }
 
