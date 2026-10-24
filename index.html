@@ -59,17 +59,16 @@
         </div>
       </div>
 
-      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل - متجاوبة للجوال) -->
+      <!-- Center: Operational Mode Dropdown (قائمة منسدلة لاختيار نمط التشغيل الرشيق - متجاوبة للجوال) -->
       <div class="w-full md:w-auto flex items-center gap-2 bg-wood-950/90 px-3 py-1.5 rounded-xl border border-wood-700/70 shadow-inner min-w-0">
         <label for="select-operational-mode" class="text-xs font-bold text-amber-400 flex items-center gap-1 shrink-0 whitespace-nowrap">
           <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-          <span>النمط:</span>
+          <span>البرنامج:</span>
         </label>
         <select id="select-operational-mode" onchange="setOperationalMode(this.value)" class="flex-1 md:w-64 min-w-0 bg-wood-900 text-white text-xs font-black py-1.5 px-2.5 rounded-lg border border-wood-600 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer truncate">
-          <option value="FULL">1. الشامل (معرض + ورشة + مستودع)</option>
-          <option value="SHOWROOM">2. المعرض وصالة المبيعات فقط</option>
-          <option value="WORKSHOP">3. ورشة التصنيع والقص فقط</option>
-          <option value="WAREHOUSE">4. مستودع وتجارة الأخشاب فقط</option>
+          <option value="FULL">1. الإدارة الشاملة (المعرض + الورشة + الحسابات)</option>
+          <option value="SHOWROOM">2. برنامج المعرض وصالة المبيعات فقط</option>
+          <option value="WORKSHOP">3. برنامج الورشة والتصنيع فقط (شامل مخزن الخشب)</option>
         </select>
       </div>
 
@@ -94,6 +93,10 @@
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
           <span>عقد تفصيل</span>
         </button>
+        <button onclick="openNewWorkOrderModal()" id="btn-header-new-workorder" class="hidden flex-1 sm:flex-initial bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md flex items-center justify-center gap-1">
+          <i data-lucide="hammer" class="w-3.5 h-3.5"></i>
+          <span>+ أمر تصنيع</span>
+        </button>
         <button onclick="openDirectTimberSaleModal()" id="btn-header-timber-sale" class="hidden flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center justify-center gap-1">
           <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
           <span>بيع أخشاب مباشر</span>
@@ -105,51 +108,50 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 space-x-reverse overflow-x-auto text-xs sm:text-sm font-semibold border-t border-wood-800 custom-scrollbar">
       <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="tab-btn py-3 px-3 text-amber-400 border-b-2 border-amber-400 flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-        لوحة القيادة والصندوق
+        <span id="tab-label-dashboard">لوحة القيادة والصندوق</span>
       </button>
 
       <!-- Showroom specific tabs -->
       <button onclick="switchTab('contracts')" id="tab-btn-contracts" class="tab-btn showroom-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="file-check-2" class="w-4 h-4"></i>
-        عقود التفصيل والكروكي
+        <span>عقود التفصيل والكروكي</span>
       </button>
 
-      <!-- Warehouse & Inventory Tabs -->
-      <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
-        <i data-lucide="boxes" class="w-4 h-4"></i>
-        مستودع الأخشاب والمبيعات المباشرة
-      </button>
-      <button onclick="switchTab('suppliers')" id="tab-btn-suppliers" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
-        <i data-lucide="truck" class="w-4 h-4"></i>
-        الموردون والمشتريات
-      </button>
-
-      <!-- Workshop specific tabs -->
+      <!-- Workshop specific tabs (Includes Workshop Timber Stock & Suppliers) -->
       <button onclick="switchTab('workorders')" id="tab-btn-workorders" class="tab-btn workshop-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="hammer" class="w-4 h-4"></i>
-        محطات تصنيع الورشة الخمس
+        <span>محطات تصنيع الورشة الخمس</span>
+        <span id="badge-new-workorders" class="bg-amber-500 text-wood-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">0</span>
+      </button>
+      <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="tab-btn workshop-tab warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="boxes" class="w-4 h-4"></i>
+        <span>مخزن ألواح الورشة</span>
+      </button>
+      <button onclick="switchTab('timber-reconciliation')" id="tab-btn-timber-reconciliation" class="tab-btn workshop-tab warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
+        <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
+        <span>مطابقة موردي الأخشاب (زاهد وعواجي وطه)</span>
+      </button>
+      <button onclick="switchTab('suppliers')" id="tab-btn-suppliers" class="tab-btn workshop-tab warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="truck" class="w-4 h-4"></i>
+        <span>دليل الموردين والفواتير</span>
       </button>
       <button onclick="switchTab('workers')" id="tab-btn-workers" class="tab-btn workshop-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="users-2" class="w-4 h-4"></i>
-        كشف العمال والرواتب والسلف
+        <span>كشف العمال والرواتب والسلف</span>
       </button>
 
-      <!-- Common Core Financial Tabs -->
+      <!-- Common / Mode-Filtered Financial Tabs -->
       <button onclick="switchTab('expenses')" id="tab-btn-expenses" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="wallet-cards" class="w-4 h-4"></i>
-        المصروفات ومراكز التكلفة
+        <span id="tab-label-expenses">المصروفات ومراكز التكلفة</span>
       </button>
-      <button onclick="switchTab('debts')" id="tab-btn-debts" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
+      <button onclick="switchTab('debts')" id="tab-btn-debts" class="tab-btn showroom-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap">
         <i data-lucide="clock-alert" class="w-4 h-4"></i>
-        الديون غير المسددة (الآجل)
+        <span>الديون غير المسددة (الآجل)</span>
       </button>
-      <button onclick="switchTab('monthly-settlement')" id="tab-btn-monthly-settlement" class="tab-btn py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
+      <button onclick="switchTab('monthly-settlement')" id="tab-btn-monthly-settlement" class="tab-btn admin-only-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
         <i data-lucide="calendar-check" class="w-4 h-4 text-amber-400"></i>
-        ميزان التسوية الشهرية (2026)
-      </button>
-      <button onclick="switchTab('timber-reconciliation')" id="tab-btn-timber-reconciliation" class="tab-btn warehouse-tab py-3 px-3 text-slate-300 hover:text-white border-b-2 border-transparent flex items-center gap-1.5 transition-all whitespace-nowrap bg-wood-800/40 rounded-t-lg">
-        <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
-        مطابقة موردي الأخشاب (زاهد وعواجي)
+        <span>ميزان التسوية الشهرية (2026)</span>
       </button>
     </div>
   </header>
@@ -173,84 +175,94 @@
       
       <!-- Live Cash Drawer Closure (صندوق السيولة النقدية اليومي من ورقة أ. محمود) -->
       <div class="bg-gradient-to-r from-slate-900 via-wood-950 to-slate-900 text-white p-6 rounded-3xl shadow-xl border border-wood-700/50">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-4 border-b border-wood-800">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 pb-4 border-b border-wood-800">
           <div>
-            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span id="dash-cash-subtitle" class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
               <i data-lucide="scale" class="w-4 h-4"></i>
-              صندوق الإغلاق اليومي للدرج والسيولة
+              صندوق الإغلاق اليومي للدرج والسيولة (الإدارة الشاملة)
             </span>
             <h2 class="text-xl font-black mt-1">المعادلة المحاسبية: المبيعات - (المشتريات + المصروفات) = الصافي</h2>
           </div>
-          <button onclick="reconcileDailyCash()" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-md">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-            إعادة احتساب الصندوق اليوم
-          </button>
+
+          <!-- Date / Scope Filter for Cash Drawer -->
+          <div class="flex flex-wrap items-center gap-2 bg-wood-950/90 p-1.5 rounded-2xl border border-wood-700/70 text-xs">
+            <button onclick="setCashFilterScope('ALL')" id="btn-cash-scope-all" class="px-3 py-1.5 rounded-xl bg-amber-500 text-wood-950 font-black transition-all">
+              📊 التراكمي الكلي
+            </button>
+            <button onclick="setCashFilterScope('TODAY')" id="btn-cash-scope-today" class="px-3 py-1.5 rounded-xl text-slate-300 hover:text-white font-bold transition-all">
+              📅 حركة اليوم فقط
+            </button>
+            <div class="flex items-center gap-1 px-2">
+              <span class="text-[11px] text-amber-300 font-bold">تاريخ:</span>
+              <input type="date" id="cash-filter-date" onchange="setCashFilterScope('DATE')" class="bg-wood-900 text-white text-[11px] font-mono px-2 py-1 rounded-lg border border-wood-600 focus:outline-none">
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
           <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-            <span class="text-xs text-slate-300 font-bold block mb-1">إجمالي المبيعات المحصلة</span>
+            <span class="text-xs text-slate-300 font-bold block mb-1" id="lbl-cash-sales">إجمالي المبيعات المحصلة</span>
             <span id="dash-cash-sales" class="text-xl font-black text-emerald-400">0.00 ر.س</span>
-            <span class="text-[10px] text-slate-400 block mt-1">عربون + دفعات + بيع خشب</span>
+            <span class="text-[10px] text-slate-400 block mt-1" id="sub-cash-sales">عربون العقود + الدفعات المحصلة</span>
           </div>
           <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-            <span class="text-xs text-slate-300 font-bold block mb-1">مشتريات مسددة للموردين</span>
+            <span class="text-xs text-slate-300 font-bold block mb-1" id="lbl-cash-purchases">مشتريات مسددة للموردين</span>
             <span id="dash-cash-purchases" class="text-xl font-black text-rose-300">0.00 ر.س</span>
-            <span class="text-[10px] text-slate-400 block mt-1">أخشاب طه، أراك، المناع...</span>
+            <span class="text-[10px] text-slate-400 block mt-1">أخشاب طه، زاهد، عواجي، أراك...</span>
           </div>
           <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-            <span class="text-xs text-slate-300 font-bold block mb-1">المصروفات التشغيلية والشخصية</span>
+            <span class="text-xs text-slate-300 font-bold block mb-1" id="lbl-cash-expenses">المصروفات النقدية من الدرج</span>
             <span id="dash-cash-expenses" class="text-xl font-black text-rose-400">0.00 ر.س</span>
-            <span class="text-[10px] text-slate-400 block mt-1">إعاشة، وايت، صيانة، إيجار</span>
+            <span class="text-[10px] text-slate-400 block mt-1" id="sub-cash-expenses">إعاشة، وايت، صيانة، ضيافة معرض</span>
           </div>
           <div class="bg-amber-500/20 p-4 rounded-2xl border border-amber-500/40">
-            <span class="text-xs text-amber-300 font-black block mb-1">الصافي المتبقي في الدرج (الكاش)</span>
+            <span class="text-xs text-amber-300 font-black block mb-1" id="lbl-cash-net">الصافي المتبقي في الدرج (الكاش)</span>
             <span id="dash-cash-net" class="text-2xl font-black text-amber-400">0.00 ر.س</span>
-            <span class="text-[10px] text-amber-200 block mt-1">السيولة النقدية الفعلية</span>
+            <span class="text-[10px] text-amber-200 block mt-1" id="sub-cash-net">السيولة النقدية الفعلية بالصندوق</span>
           </div>
         </div>
       </div>
 
-      <!-- Quick KPI Stats -->
+      <!-- Quick KPI Stats (Dynamically adapted to Active Program Mode) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div id="kpi-card-debts" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500 mb-1">مبالغ غير مسددة (ديون على الزبائن)</p>
+            <p class="text-xs font-semibold text-slate-500 mb-1" id="kpi-title-1">مبالغ غير مسددة (ديون على الزبائن)</p>
             <h3 class="text-xl font-black text-rose-600" id="stat-unpaid-debts">0.00 ر.س</h3>
-            <span class="text-[11px] text-rose-500 font-bold mt-1 inline-block">ذمم مدينة قيد المتابعة</span>
+            <span class="text-[11px] text-rose-500 font-bold mt-1 inline-block" id="kpi-sub-1">ذمم مدينة قيد المتابعة والتحصيل</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
             <i data-lucide="alert-circle" class="w-6 h-6"></i>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div id="kpi-card-suppliers" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500 mb-1">أرصدة الموردين المستحقة</p>
+            <p class="text-xs font-semibold text-slate-500 mb-1" id="kpi-title-2">أرصدة موردي الأخشاب المستحقة</p>
             <h3 class="text-xl font-black text-amber-700" id="stat-suppliers-due">0.00 ر.س</h3>
-            <span class="text-[11px] text-slate-500 font-bold mt-1 inline-block">طه، أراك، عزيز، المناع</span>
+            <span class="text-[11px] text-slate-500 font-bold mt-1 inline-block" id="kpi-sub-2">زاهد، عواجي، طه، أراك، المناع</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
             <i data-lucide="truck" class="w-6 h-6"></i>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div id="kpi-card-expenses" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500 mb-1">مصروفات إعاشة الورشة والماء</p>
+            <p class="text-xs font-semibold text-slate-500 mb-1" id="kpi-title-3">مصروفات إعاشة الورشة والماء</p>
             <h3 class="text-xl font-black text-blue-700" id="stat-workshop-expenses">0.00 ر.س</h3>
-            <span class="text-[11px] text-blue-600 font-bold mt-1 inline-block">أكل، وايت، زيوت، سباكة</span>
+            <span class="text-[11px] text-blue-600 font-bold mt-1 inline-block" id="kpi-sub-3">أكل، وايت، زيوت، سباكة، وسلف</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
             <i data-lucide="utensils" class="w-6 h-6"></i>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div id="kpi-card-stock" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500 mb-1">قيمة مخزون الألواح بالمستودع</p>
+            <p class="text-xs font-semibold text-slate-500 mb-1" id="kpi-title-4">قيمة ألواح الخشب بمخزن الورشة</p>
             <h3 class="text-xl font-black text-wood-800" id="stat-stock-value">0.00 ر.س</h3>
-            <span class="text-[11px] text-wood-600 font-bold mt-1 inline-block">ألواح وقواطع متاحة للبيع</span>
+            <span class="text-[11px] text-wood-600 font-bold mt-1 inline-block" id="kpi-sub-4">ألواح جاهزة للقص والتفصيل بالورشة</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-wood-50 text-wood-700 flex items-center justify-center">
             <i data-lucide="boxes" class="w-6 h-6"></i>
@@ -262,8 +274,8 @@
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <h2 class="text-base font-bold text-slate-800">أحدث العمليات والحركات النقدية</h2>
-            <p class="text-xs text-slate-500">مبيعات، مشتريات موردين، ومصروفات مسجلة</p>
+            <h2 class="text-base font-bold text-slate-800" id="recent-tx-title">أحدث العمليات والحركات النقدية</h2>
+            <p class="text-xs text-slate-500" id="recent-tx-subtitle">مبيعات، مشتريات موردين، ومصروفات مسجلة</p>
           </div>
         </div>
         <div class="overflow-x-auto">
@@ -287,40 +299,65 @@
     <!-- TAB 2: CONTRACTS & CROQUIS (العقود وتوجيه العربون والكروكي) -->
     <section id="tab-contracts" class="tab-content hidden space-y-6">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
           <div>
             <h2 class="text-lg font-bold text-slate-800">عقود تفصيل الدواليب ومخططات الكروكي</h2>
-            <p class="text-xs text-slate-500">ربط البائعين (محمد، عيسى، يونس)، كروكي قبل وبعد التنفيذ، وتوجيه العربون لموردي الخشب</p>
+            <p class="text-xs text-slate-500">ربط البائعين (محمد، عيسى، يونس)، كروكي قبل وبعد التنفيذ، توجيه العربون، وتتبع مرحلة التصنيع بالورشة حياً</p>
           </div>
-          <button onclick="openNewQuoteModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+          <button onclick="openNewQuoteModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            عقد تفصيل وكروكي جديد
+            + عقد تفصيل وكروكي جديد
           </button>
+        </div>
+
+        <!-- Search & Filter Bar for Contracts -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6 bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs">
+          <div class="sm:col-span-2 relative">
+            <input type="text" id="contract-search-input" oninput="renderContracts()" placeholder="🔍 ابحث برقم العقد، اسم العميل أو المعرض، رقم الجوال، أو الوصف..." class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-bold focus:outline-none focus:ring-2 focus:ring-wood-500">
+          </div>
+          <div>
+            <select id="contract-status-filter" onchange="renderContracts()" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-bold">
+              <option value="ALL">جميع حالات العقود</option>
+              <option value="IN_WORKSHOP">🔨 قيد التصنيع بالورشة</option>
+              <option value="COMPLETED">✅ مكتمل ومسلّم للعميل</option>
+              <option value="CANCELLED">🚫 عقد ملغى (إشعار دائن)</option>
+            </select>
+          </div>
+          <div>
+            <select id="contract-salesman-filter" onchange="renderContracts()" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-bold">
+              <option value="ALL">جميع البائعين والمشرفين</option>
+              <option value="محمد">البائع: محمد</option>
+              <option value="عيسى">البائع: عيسى</option>
+              <option value="يونس">البائع: يونس</option>
+              <option value="أبو معاذ">إشراف: أبو معاذ</option>
+              <option value="أبو يوسف">إشراف: أبو يوسف</option>
+            </select>
+          </div>
         </div>
 
         <div class="space-y-4" id="contracts-list-container"></div>
       </div>
     </section>
 
-    <!-- TAB 3: TIMBER WAREHOUSE & DIRECT SALES (مستودع الأخشاب والمبيعات الخارجية) -->
+    <!-- TAB 3: WORKSHOP TIMBER STOCK (مخزن ألواح الورشة الداخلي) -->
     <section id="tab-inventory" class="tab-content hidden space-y-6">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="boxes" class="w-5 h-5 text-wood-600"></i>
-              مستودع وتجارة الأخشاب (تعدد وحدات القياس Multi-UOM)
+              مخزن ألواح الأخشاب بالورشة (مرتبط بطلبيات الموردين وأوامر القص)
             </h2>
-            <p class="text-xs text-slate-500">أرصدة الألواح القياسية (244×122)، المتر المكعب (م³)، والمتر المربع (م²)</p>
+            <p class="text-xs text-slate-500">متابعة الألواح المجلوبة من الموردين (زاهد، عواجي، طه، أراك) والموضوعة بالورشة لتصنيع الطلبيات</p>
           </div>
-          <div class="flex gap-2">
-            <button onclick="openDirectTimberSaleModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
-              <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-              فاتورة بيع خشب خارجي
+          <div class="flex flex-wrap gap-2">
+            <button onclick="openTimberOrderModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="truck" class="w-4 h-4"></i>
+              + طلب ألواح من مورد للورشة
             </button>
-            <button onclick="openNewInventoryItemModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+            <button onclick="openNewInventoryItemModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
               <i data-lucide="plus" class="w-4 h-4"></i>
-              إضافة لوح خشب
+              + تعريف صنف لوح جديد
             </button>
           </div>
         </div>
@@ -330,15 +367,15 @@
           <table class="w-full text-right text-xs">
             <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>
-                <th class="py-3 px-3">رمز الصنف</th>
+                <th class="py-3 px-3">رمز / كود اللوح</th>
                 <th class="py-3 px-3">اسم الصنف والمواصفات</th>
                 <th class="py-3 px-3">المورد المعتمد</th>
-                <th class="py-3 px-3">رصيد الألواح</th>
+                <th class="py-3 px-3">المتوفر بالورشة</th>
                 <th class="py-3 px-3">المعادل بالمتر المربع (م²)</th>
-                <th class="py-3 px-3">تكلفة الشراء</th>
-                <th class="py-3 px-3">سعر بيع الجملة (مستودع)</th>
-                <th class="py-3 px-3">سعر التجزئة (م.ط)</th>
-                <th class="py-3 px-3">الموقع بالهنجر</th>
+                <th class="py-3 px-3">تكلفة شراء اللوح</th>
+                <th class="py-3 px-3">إجمالي قيمة الألواح</th>
+                <th class="py-3 px-3">سعر متر التفصيل (م.ط)</th>
+                <th class="py-3 px-3">الموقع بالورشة</th>
               </tr>
             </thead>
             <tbody id="inventory-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
@@ -354,14 +391,20 @@
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="truck" class="w-5 h-5 text-wood-600"></i>
-              دليل الموردين المعتمدين والمشتريات
+              دليل الموردين المعتمدين وفواتير التوريد للورشة
             </h2>
-            <p class="text-xs text-slate-500">أخشاب طه، أراك، مستودع عزيز، ركن الخشب، المناع للقزاز، تاجكو، المنار...</p>
+            <p class="text-xs text-slate-500">زاهد للأخشاب، عواجي، أخشاب طه، أراك، مستودع عزيز، ركن الخشب، المناع للقزاز، تاجكو...</p>
           </div>
-          <button onclick="openNewPurchaseModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            تسجيل فاتورة مشتريات من مورد
-          </button>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="openNewSupplierModal()" class="bg-slate-800 hover:bg-slate-900 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              + إضافة مورد جديد
+            </button>
+            <button onclick="openNewPurchaseModal()" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              + تسجيل فاتورة مشتريات وتغذية مخزن الورشة
+            </button>
+          </div>
         </div>
 
         <!-- Suppliers Cards Grid -->
@@ -371,12 +414,29 @@
 
     <!-- TAB 5: WORKSHOP PRODUCTION STAGES (المحطات الخمس) -->
     <section id="tab-workorders" class="tab-content hidden space-y-6">
+      <!-- Live Showroom Dispatch Notification Banner -->
+      <div id="workshop-incoming-banner" class="bg-gradient-to-r from-amber-500/20 via-amber-100 to-amber-50 border border-amber-300 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-wood-950 flex items-center justify-center font-black shrink-0 shadow">
+            <i data-lucide="bell-ring" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-wood-950" id="workshop-incoming-title">الربط المباشر مع المعرض فعال: جميع أوامر التفصيل تصل هنا فور توقيع العقد</h3>
+            <p class="text-xs text-amber-900 mt-0.5" id="workshop-incoming-desc">عند انتهاء المحطة الخامسة (فحص الجودة والتوريد)، يتحدث العقد تلقائياً في شاشة المعرض إلى (مكتمل وجاهز للتركيب).</p>
+          </div>
+        </div>
+        <button onclick="openNewWorkOrderModal()" class="bg-wood-800 hover:bg-wood-900 text-white px-4 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 shrink-0 shadow-md">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-amber-400"></i>
+          + أمر تصنيع مباشر للورشة
+        </button>
+      </div>
+
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="hammer" class="w-5 h-5 text-wood-600"></i>
-              محطات خط إنتاج الورشة الخمس وتكاليف المواد (WIP)
+              محطات خط إنتاج الورشة الخمس واستهلاك الألواح (WIP)
             </h2>
             <p class="text-xs text-slate-500">1. قص الألواح ⬅️ 2. قشاط PVC ⬅️ 3. التجميع ⬅️ 4. الإكسسوارات والتشطيب ⬅️ 5. فحص الجودة والتوريد</p>
           </div>
@@ -397,6 +457,10 @@
             <p class="text-xs text-slate-500">معلمي المنشار، فنيي القشاط، التجميع، وعمال التحميل وتتبع سلفهم من الدرج</p>
           </div>
           <div class="flex flex-wrap gap-2">
+            <button onclick="openNewWorkerModal()" class="bg-slate-800 hover:bg-slate-900 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              + إضافة عامل جديد
+            </button>
             <button onclick="openAddWorkDaysModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
               <i data-lucide="calendar-plus" class="w-4 h-4"></i>
               تسجيل أيام عمل (مياومة)
@@ -488,9 +552,9 @@
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="wallet-cards" class="w-5 h-5 text-wood-600"></i>
-              شجرة المصروفات المصنفة بمراكز التكلفة الأربعة
+              شجرة المصروفات المصنفة بمراكز التكلفة
             </h2>
-            <p class="text-xs text-slate-500">المعرض | ورشة التصنيع (إعاشة، ماء، سباكة، زيوت) | المستودع | مسحوبات المالك والصدقات</p>
+            <p class="text-xs text-slate-500">المعرض | ورشة التصنيع (إعاشة، ماء، سباكة، زيوت) | مسحوبات المالك والصدقات</p>
           </div>
           <button onclick="openNewExpenseModal()" class="bg-rose-700 hover:bg-rose-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i>
@@ -499,11 +563,10 @@
         </div>
 
         <!-- Filter Cost Centers -->
-        <div class="flex flex-wrap gap-2 mb-4 text-xs font-bold">
+        <div class="flex flex-wrap gap-2 mb-4 text-xs font-bold" id="expense-filters-bar">
           <button onclick="filterExpenses('ALL')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white" id="exp-f-all">الكل</button>
           <button onclick="filterExpenses('WORKSHOP')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-workshop">🏭 ورشة التصنيع (إعاشة، وايت، صيانة)</button>
           <button onclick="filterExpenses('SHOWROOM')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-showroom">🏢 المعرض (إيجار، كهرباء، ضيافة)</button>
-          <button onclick="filterExpenses('WAREHOUSE')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-warehouse">📦 المستودع (ديزل فوركلفت، تنزيل)</button>
           <button onclick="filterExpenses('OWNER')" class="exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200" id="exp-f-owner">👤 مسحوبات شخصية وصدقة</button>
         </div>
 
@@ -535,7 +598,7 @@
               <i data-lucide="clock-alert" class="w-5 h-5 text-rose-600"></i>
               سجل المبالغ غير المسددة من قبل الزبائن (الآجل والديون)
             </h2>
-            <p class="text-xs text-slate-500">متابعة تحصيل المتبقي من عقود التفصيل وفواتير بيع الأخشاب الخارجية</p>
+            <p class="text-xs text-slate-500">متابعة تحصيل المتبقي من عقود التفصيل وإصدار سندات القبض</p>
           </div>
         </div>
 
@@ -543,13 +606,13 @@
           <table class="w-full text-right text-xs">
             <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>
-                <th class="py-3 px-3">العميل / المحل</th>
+                <th class="py-3 px-3">العميل / المعرض</th>
                 <th class="py-3 px-3">رقم الجوال</th>
                 <th class="py-3 px-3">رقم العقد / الفاتورة</th>
                 <th class="py-3 px-3">إجمالي القيمة</th>
                 <th class="py-3 px-3">المبلغ المسدد</th>
                 <th class="py-3 px-3">المبلغ المتبقي (الدين)</th>
-                <th class="py-3 px-3">تاريخ الاستحقاق</th>
+                <th class="py-3 px-3">حالة التصنيع</th>
                 <th class="py-3 px-3">إجراء التحصيل</th>
               </tr>
             </thead>
@@ -577,13 +640,13 @@
             <p class="text-xs text-slate-500 mt-1">مقارنة الحوالات والشبكات مقابل فواتير المعارض ومصروفات الورشة لتحديد موقف الحساب (لك أو عليك)</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs font-bold text-slate-600">
-              <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
-              <span>إشراف وتوثيق: <strong>أبو معاذ & أبو يوسف</strong></span>
-            </div>
+            <button onclick="syncMonthlySettlementFromLive()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm" title="تحديث الشهر الحالي تلقائياً من العقود والمصروفات المسجلة">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              احتساب آلي من العمليات الحية
+            </button>
             <button onclick="openMonthlySettlementModal()" class="bg-wood-800 hover:bg-wood-900 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
               <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-              تحديث تسوية شهر
+              تعديل يدوي لشهر
             </button>
           </div>
         </div>
@@ -639,7 +702,7 @@
       </div>
     </section>
 
-    <!-- TAB 10: TIMBER RECONCILIATION (مطابقة موردي الأخشاب: زاهد وعواجي وأراك من ملفات أ. محمود مصطفى) -->
+    <!-- TAB 10: TIMBER RECONCILIATION (مطابقة موردي الأخشاب: زاهد وعواجي وطه وأراك من ملفات أ. محمود مصطفى) -->
     <section id="tab-timber-reconciliation" class="tab-content hidden space-y-6">
       <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
         
@@ -647,24 +710,30 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
           <div>
             <div class="flex items-center gap-2">
-              <span class="bg-wood-100 text-wood-900 px-3 py-1 rounded-full text-xs font-black">حسابات الأخشاب 2026 م</span>
+              <span class="bg-wood-100 text-wood-900 px-3 py-1 rounded-full text-xs font-black">حسابات ومخزون أخشاب الورشة 2026 م</span>
               <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
                 <i data-lucide="scale" class="w-6 h-6 text-wood-600"></i>
-                مطابقة حسابات كبار موردي الأخشاب والمسدد والمتبقي
+                مطابقة حسابات كبار موردي الأخشاب وتوريد الألواح للورشة
               </h2>
             </div>
-            <p class="text-xs text-slate-500 mt-1">تتبع كشف طلبات الأخشاب، سدادات الشبكة والحوالات البنكية، وخصم المردودات والألواح المرتجعة</p>
+            <p class="text-xs text-slate-500 mt-1">أي طلبية ألواح تُسجل هنا تضاف تلقائياً إلى مخزن الورشة وتُقيد في كشف حساب المورد</p>
           </div>
           <div class="flex flex-wrap gap-2">
-            <button onclick="filterTimberSupplier('ZAHED')" id="btn-sup-zahed" class="px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm">
+            <button onclick="filterTimberSupplier('ZAHED')" id="btn-sup-zahed" class="sup-rec-btn px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm">
               زاهد للأخشاب
             </button>
-            <button onclick="filterTimberSupplier('AWAJI')" id="btn-sup-awaji" class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
+            <button onclick="filterTimberSupplier('AWAJI')" id="btn-sup-awaji" class="sup-rec-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
               عواجي للأخشاب
+            </button>
+            <button onclick="filterTimberSupplier('TAHA')" id="btn-sup-taha" class="sup-rec-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
+              أخشاب طه
+            </button>
+            <button onclick="filterTimberSupplier('ARAK')" id="btn-sup-arak" class="sup-rec-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs">
+              أراك للأخشاب
             </button>
             <button onclick="openTimberOrderModal()" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-              إضافة طلبية ألواح
+              + طلبية ألواح للمخزن
             </button>
             <button onclick="openTimberPaymentModal()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm">
               <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
@@ -932,20 +1001,21 @@
     </div>
   </div>
 
-  <!-- MODAL: NEW QUOTE / CONTRACT & CROQUIS (عقد تفصيل وكروكي جديد + توجيه العربون) -->
+  <!-- MODAL: NEW QUOTE / CONTRACT & CROQUIS (عقد تفصيل متعدد البنود + رفع صورة الكروكي + توجيه العربون + ربط الورشة) -->
   <div id="modal-new-quote" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-100 my-8">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-6 space-y-4 border border-slate-100 my-8 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
         <h3 class="font-black text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="file-check-2" class="w-5 h-5 text-amber-600"></i>
-          إنشاء عقد تفصيل دولاب جديد ومخطط الكروكي
+          إنشاء عقد تفصيل دولاب جديد ومخطط الكروكي (يرسل أمر تصنيع فوري للورشة)
         </h3>
         <button onclick="closeModal('modal-new-quote')" class="text-slate-400 hover:text-slate-600">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="space-y-3 text-xs">
+      <div class="space-y-3.5 text-xs">
+        <!-- Customer & Salesman Row -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label class="block font-bold text-slate-600 mb-1">اسم العميل / المعرض *</label>
@@ -967,33 +1037,42 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="sm:col-span-2">
-            <label class="block font-bold text-slate-600 mb-1">عنوان ووصف العقد / التفصيل *</label>
-            <input type="text" id="qt-title" placeholder="مثال: تفصيل دولاب ملابس ماستر 4 درف سحاب مع إضاءة" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">نوع الخشب المعتمد</label>
-            <select id="qt-wood-type" onchange="recalcQuoteModal()" class="w-full p-2.5 rounded-xl border border-slate-300">
-              <option value="550">خشب تايلاندي 18مم (550 ر.س/م)</option>
-              <option value="750">خشب ألماني أصلي (750 ر.س/م)</option>
-              <option value="950">ألواح HPL مطفي فاخر (950 ر.س/م)</option>
-            </select>
-          </div>
+        <!-- General Contract Title -->
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">عنوان ووصف العقد العام *</label>
+          <input type="text" id="qt-title" placeholder="مثال: تفصيل غرفة نوم ماستر (دولاب سحاب + دريسنج + تسريحة)" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">إجمالي الأمتار (أو الكمية)</label>
-            <input type="number" step="0.1" id="qt-meters" value="6" oninput="recalcQuoteModal()" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+        <!-- Multi-Item Builder Section -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+          <div class="flex justify-between items-center">
+            <label class="font-black text-slate-700 flex items-center gap-1.5">
+              <i data-lucide="list-plus" class="w-4 h-4 text-wood-600"></i>
+              بنود التفصيل والمقاسات في العقد:
+            </label>
+            <button type="button" onclick="addQuoteItemRow()" class="bg-wood-700 hover:bg-wood-800 text-white px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center gap-1">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+              + إضافة بند آخر (تسريحة / خزانة / دولاب إضافي)
+            </button>
           </div>
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">سعر المتر / الوحدة (ر.س)</label>
-            <input type="number" step="10" id="qt-unit-price" value="550" oninput="recalcQuoteModal()" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center text-wood-800">
+
+          <div id="qt-items-container" class="space-y-2">
+            <!-- Dynamically populated item rows -->
           </div>
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">إجمالي قيمة العقد (ر.س) *</label>
-            <input type="number" step="1" id="qt-total-amount" value="3300" oninput="recalcQuoteRemaining()" class="w-full p-2 rounded-xl border-2 border-amber-400 bg-amber-50 font-black text-center text-amber-950 text-sm">
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200 items-center">
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">الخشب المسحوب من مخزن الورشة</label>
+              <select id="qt-inventory-board" class="w-full p-2 rounded-xl border border-slate-300 font-bold bg-white"></select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">الألواح التقديرية المطلوبة للقص</label>
+              <input type="number" id="qt-boards-qty" value="8" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center text-wood-800 bg-white">
+            </div>
+            <div>
+              <label class="block font-bold text-amber-900 mb-1">إجمالي قيمة العقد (ر.س) *</label>
+              <input type="number" step="1" id="qt-total-amount" value="3300" oninput="recalcQuoteRemaining()" class="w-full p-2 rounded-xl border-2 border-amber-400 bg-amber-50 font-black text-center text-amber-950 text-sm">
+            </div>
           </div>
         </div>
 
@@ -1007,9 +1086,9 @@
             <label class="block font-bold text-emerald-900 mb-1">توجيه العربون (فكرة أ. محمود)</label>
             <select id="qt-advance-dest" class="w-full p-2 rounded-xl border border-emerald-300 font-bold bg-white">
               <option value="صندوق المؤسسة">📥 إيداع في صندوق المؤسسة (الكاش)</option>
-              <option value="أخشاب طه">🚚 توجيه لسداد: أخشاب طه</option>
               <option value="زاهد للأخشاب">🚚 توجيه لسداد: زاهد للأخشاب</option>
               <option value="عواجي للأخشاب">🚚 توجيه لسداد: عواجي للأخشاب</option>
+              <option value="أخشاب طه">🚚 توجيه لسداد: أخشاب طه</option>
               <option value="أراك للأخشاب والإكسسوارات">🚚 توجيه لسداد: أراك للأخشاب</option>
               <option value="مستودع عزيز">🚚 توجيه لسداد: مستودع عزيز</option>
               <option value="المناع للقزاز">🚚 توجيه لسداد: المناع للقزاز</option>
@@ -1021,15 +1100,26 @@
           </div>
         </div>
 
-        <!-- Croquis Before & Notes -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">بيان / رابط كروكي قبل التنفيذ</label>
-            <input type="text" id="qt-croquis-before" placeholder="مثال: مخطط تفصيلي معتمد 240×320 سم - لون أبيض" class="w-full p-2.5 rounded-xl border border-slate-300">
+        <!-- Croquis Before (Text + Image Upload) & Delivery Date -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-amber-50/40 p-3.5 rounded-2xl border border-amber-200/70">
+          <div class="space-y-2">
+            <label class="block font-bold text-slate-700">مخطط الكروكي قبل التنفيذ (وصف + صورة مرفقة للورشة)</label>
+            <input type="text" id="qt-croquis-before" placeholder="مثال: مخطط تفصيلي معتمد 240×320 سم - 4 درف" class="w-full p-2 rounded-xl border border-slate-300 bg-white">
+            <div class="flex items-center gap-2">
+              <label class="cursor-pointer bg-white hover:bg-slate-100 text-wood-800 border border-wood-300 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-600"></i>
+                <span>إرفاق صورة الكروكي</span>
+                <input type="file" id="qt-croquis-file" accept="image/*" onchange="previewCroquisUpload(this, 'qt-croquis-preview')" class="hidden">
+              </label>
+              <img id="qt-croquis-preview" src="" alt="معاينة الكروكي" class="hidden w-12 h-12 object-cover rounded-lg border border-amber-400">
+            </div>
           </div>
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">تاريخ التسليم والتركيب المتوقع</label>
-            <input type="date" id="qt-delivery-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono">
+          <div class="space-y-2">
+            <label class="block font-bold text-slate-700">تاريخ التسليم والتركيب المتوقع</label>
+            <input type="date" id="qt-delivery-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono bg-white">
+            <p class="text-[11px] text-slate-500">
+              🔔 فور الضغط على حفظ، ينتقل أمر التصنيع مع صورة الكروكي والألواح المطلوبة مباشرة إلى شاشة الورشة.
+            </p>
           </div>
         </div>
       </div>
@@ -1037,8 +1127,8 @@
       <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-end gap-2 text-xs">
         <button onclick="closeModal('modal-new-quote')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
         <button onclick="saveNewContract(false)" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2.5 rounded-xl font-bold shadow-md flex items-center gap-1.5">
-          <i data-lucide="save" class="w-4 h-4"></i>
-          حفظ العقد وإرسال أمر للورشة
+          <i data-lucide="send" class="w-4 h-4"></i>
+          حفظ العقد وإرسال الأمر للورشة فوراً
         </button>
         <button onclick="saveNewContract(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-5 py-2.5 rounded-xl font-black shadow-md flex items-center gap-1.5">
           <i data-lucide="printer" class="w-4 h-4"></i>
@@ -1048,13 +1138,392 @@
     </div>
   </div>
 
-  <!-- MODAL: NEW INVENTORY ITEM (إضافة لوح خشب للمستودع) -->
+  <!-- MODAL: NEW STANDALONE WORK ORDER FOR WORKSHOP (+ أمر تصنيع مباشر للورشة) -->
+  <div id="modal-new-workorder" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="hammer" class="w-4 h-4 text-amber-600"></i>
+          إضافة أمر تصنيع وقص مباشر للورشة
+        </h3>
+        <button onclick="closeModal('modal-new-workorder')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">العميل / المعرض الخارجي *</label>
+            <input type="text" id="wo-customer-name" placeholder="مثال: معرض داريفا / عميل مباشر" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">رقم العقد أو المرجع</label>
+            <input type="text" id="wo-contract-ref" placeholder="مثال: ف 340" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">تفاصيل ومقاسات أمر التصنيع *</label>
+          <input type="text" id="wo-title" placeholder="مثال: تفصيل دولاب زاوية 8 درف + مكتبة تلفزيون" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">نوع اللوح المسحوب من مخزن الورشة</label>
+            <select id="wo-board-code" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">عدد الألواح المسحوبة للقص *</label>
+            <input type="number" id="wo-boards-qty" value="10" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-wood-800">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">بيان الكروكي والملاحظات</label>
+            <input type="text" id="wo-croquis-note" placeholder="مخطط مقاسات الورشة المعتمد" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">تاريخ التسليم المستهدف</label>
+            <input type="date" id="wo-target-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-workorder')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveStandaloneWorkOrder()" class="bg-wood-800 hover:bg-wood-900 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          اعتماد الأمر وخصم الألواح من المخزن
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: COLLECT DEBT & PRINT RECEIPT VOUCHER (تحصيل دفعة من الزبون وإصدار سند قبض) -->
+  <div id="modal-collect-debt" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i>
+          تحصيل دفعة متبقية وإصدار سند قبض
+        </h3>
+        <button onclick="closeModal('modal-collect-debt')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="cd-record-id">
+      <input type="hidden" id="cd-record-type">
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+          <div class="flex justify-between"><span class="text-slate-500">العميل / الجهة:</span> <strong id="cd-customer-name" class="text-slate-800"></strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">رقم المرجع:</span> <strong id="cd-ref-id" class="font-mono text-wood-700"></strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">إجمالي المبلغ المتبقي:</span> <strong id="cd-remaining-amount" class="font-mono text-rose-600 font-black"></strong></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المقبوض الآن (ر.س) *</label>
+            <input type="number" id="cd-amount" class="w-full p-2.5 rounded-xl border-2 border-emerald-400 bg-emerald-50 font-black text-center text-emerald-900 text-sm">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">طريقة الدفع</label>
+            <select id="cd-method" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="CASH">نقد (يدخل درج الكاش)</option>
+              <option value="MADA">شبكة / مدى</option>
+              <option value="BANK">حوالة بنكية لحساب المؤسسة</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">بيان السند / ملاحظات التحصيل</label>
+          <input type="text" id="cd-notes" value="دفعة استلام وتركيب نهائي" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-collect-debt')" class="px-3 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="confirmCollectDebt(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold shadow-md">
+          حفظ التحصيل
+        </button>
+        <button onclick="confirmCollectDebt(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2 rounded-xl font-black shadow-md flex items-center gap-1">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          حفظ وطباعة سند قبض
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: UPDATE CROQUIS AFTER & COMPLETE CONTRACT (تحديث الكروكي بعد التركيب وإغلاق العقد) -->
+  <div id="modal-update-croquis" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="image" class="w-4 h-4 text-wood-600"></i>
+          تحديث الكروكي وصورة ما بعد التركيب
+        </h3>
+        <button onclick="closeModal('modal-update-croquis')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="uc-contract-id">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">بيان الإنجاز / مطابقة الكروكي بعد التنفيذ *</label>
+          <input type="text" id="uc-croquis-text" placeholder="مثال: تم التركيب والتسليم بنجاح مطابقاً للكروكي" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">إرفاق صورة الدولاب بعد التركيب (اختياري)</label>
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5">
+              <i data-lucide="camera" class="w-4 h-4 text-wood-600"></i>
+              <span>اختيار / التقاط صورة التركيب</span>
+              <input type="file" id="uc-croquis-file" accept="image/*" onchange="previewCroquisUpload(this, 'uc-croquis-preview')" class="hidden">
+            </label>
+            <img id="uc-croquis-preview" src="" alt="معاينة" class="hidden w-12 h-12 object-cover rounded-lg border border-wood-400">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">تحديث حالة العقد</label>
+          <select id="uc-status" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+            <option value="COMPLETED">✅ مكتمل ومسلّم للعميل</option>
+            <option value="IN_WORKSHOP">🔨 لا يزال قيد التصنيع / التعديل بالورشة</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-update-croquis')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveContractCroquisAfter()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ التحديث وإغلاق الأمر
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CANCEL CONTRACT & CREDIT NOTE (إلغاء العقد وإصدار إشعار دائن ADR-002) -->
+  <div id="modal-cancel-contract" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-rose-800 flex items-center gap-1.5">
+          <i data-lucide="file-x-2" class="w-4 h-4 text-rose-600"></i>
+          إلغاء وأرشفة العقد وإصدار إشعار دائن (Credit Note)
+        </h3>
+        <button onclick="closeModal('modal-cancel-contract')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="cc-contract-id">
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-rose-900 text-[11px] leading-relaxed">
+          <strong>حوكمة محاسبية (ADR-002):</strong> لا يتم حذف العقد فيزيائياً لحماية التسلسل الضريبي، بل يُؤرشف كـ «ملغى» ويُجمد أمر التصنيع بالورشة مع تسوية العربون.
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+          <div class="flex justify-between"><span class="text-slate-500">رقم العقد والعميل:</span> <strong id="cc-info" class="text-slate-800"></strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">العربون المقبوض سابقاً:</span> <strong id="cc-advance" class="font-mono text-emerald-700"></strong></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">رسوم معاينة/كروكي مستقطعة</label>
+            <input type="number" id="cc-fee" value="0" oninput="recalcCancelRefund()" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+          </div>
+          <div>
+            <label class="block font-bold text-rose-800 mb-1">صافي المسترد للعميل (ر.س)</label>
+            <input type="text" id="cc-refund" disabled class="w-full p-2 rounded-xl border border-rose-200 bg-rose-50 font-black text-center text-rose-700">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">سبب الإلغاء والتسوية *</label>
+          <input type="text" id="cc-reason" placeholder="مثال: رغبة العميل بتأجيل التفصيل قبل قص الألواح" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-cancel-contract')" class="px-4 py-2 rounded-xl font-bold text-slate-600">تراجع</button>
+        <button onclick="confirmCancelContract()" class="bg-rose-700 hover:bg-rose-800 text-white px-4 py-2 rounded-xl font-bold shadow-md flex items-center gap-1">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          اعتماد الإلغاء وطباعة إشعار دائن
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PAY SUPPLIER (سداد دفعة لمورد بدون prompt) -->
+  <div id="modal-pay-supplier" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-4 h-4 text-wood-600"></i>
+          سداد دفعة مالية لحساب المورد
+        </h3>
+        <button onclick="closeModal('modal-pay-supplier')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="ps-supplier-code">
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+          <div class="flex justify-between"><span class="text-slate-500">اسم المورد:</span> <strong id="ps-supplier-name" class="text-slate-800"></strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">الرصيد المستحق حالياً:</span> <strong id="ps-current-balance" class="font-mono text-rose-600 font-black"></strong></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المبلغ المسدد (ر.س) *</label>
+            <input type="number" id="ps-amount" class="w-full p-2.5 rounded-xl border-2 border-wood-500 font-black text-center text-wood-900">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">طريقة السداد</label>
+            <select id="ps-method" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="CASH">نقد من الدرج</option>
+              <option value="BANK">حوالة بنكية</option>
+              <option value="MADA">بطاقة مدى / شبكة</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">البيان ورقم الإيصال</label>
+          <input type="text" id="ps-notes" placeholder="مثال: دفعة تحت الحساب من فواتير الأخشاب" class="w-full p-2.5 rounded-xl border border-slate-300">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-pay-supplier')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="confirmPaySupplier()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          تأكيد السداد وخصمه من الرصيد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW WORKER (+ إضافة عامل جديد للورشة) -->
+  <div id="modal-new-worker" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="user-plus" class="w-4 h-4 text-wood-600"></i>
+          إضافة عامل أو معلم جديد للورشة
+        </h3>
+        <button onclick="closeModal('modal-new-worker')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اسم العامل والشهرة *</label>
+          <input type="text" id="nw-name" placeholder="مثال: عبد الله (معلم تجميع)" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">نظام الأجر</label>
+            <select id="nw-category" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="DAILY">مياومة أسبوعية (سجل أ. محمود)</option>
+              <option value="MONTHLY">راتب شهري ثابت</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">المهنة بالورشة</label>
+            <input type="text" id="nw-role" value="معلم نجار وتجميع" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">الراتب الشهري المرجعي (تُحسب منه اليومية آلياً ÷ 30) *</label>
+          <input type="number" id="nw-salary" value="3000" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-wood-800">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-worker')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewWorker()" class="bg-wood-800 hover:bg-wood-900 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          إضافة العامل للكشف
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW SUPPLIER (+ إضافة مورد جديد) -->
+  <div id="modal-new-supplier" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-sm text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-4 h-4 text-wood-600"></i>
+          إضافة مورد أخشاب / زجاج / إكسسوارات جديد
+        </h3>
+        <button onclick="closeModal('modal-new-supplier')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">اسم شركة / مؤسسة المورد *</label>
+          <input type="text" id="ns-name" placeholder="مثال: مؤسسة القمة للأخشاب" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">التصنيف</label>
+            <select id="ns-cat" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold">
+              <option value="أخشاب">أخشاب وألواح</option>
+              <option value="أخشاب وإكسسوارات">أخشاب وإكسسوارات</option>
+              <option value="زجاج ومرايا">زجاج ومرايا وألمنيوم</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">رقم التواصل</label>
+            <input type="text" id="ns-phone" placeholder="05xxxxxxxx" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-left" dir="ltr">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">الرصيد الافتتاحي المستحق له (ر.س)</label>
+          <input type="number" id="ns-balance" value="0" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('modal-new-supplier')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewSupplier()" class="bg-wood-800 hover:bg-wood-900 text-white px-5 py-2 rounded-xl font-bold shadow-md">
+          حفظ المورد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PIN SECURITY CHECK (نافذة إدخال رمز الحماية للإدارة الشاملة) -->
+  <div id="modal-pin-check" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-4 border border-slate-100 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+        <i data-lucide="lock" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-black text-base text-slate-800">رمز حماية لوحة الإدارة الشاملة</h3>
+      <p class="text-xs text-slate-500">أدخل رمز الحماية (PIN) للانتقال إلى وضع الإدارة الشاملة</p>
+      <input type="password" id="pin-check-input" placeholder="••••" class="w-full p-3 rounded-xl border-2 border-slate-300 font-mono text-center text-lg font-black tracking-widest focus:border-amber-500 focus:outline-none">
+      <div class="flex gap-2 pt-2 text-xs">
+        <button onclick="cancelPinCheck()" class="flex-1 py-2.5 rounded-xl font-bold text-slate-600 bg-slate-100">إلغاء</button>
+        <button onclick="confirmPinCheck()" class="flex-1 py-2.5 rounded-xl font-black text-wood-950 bg-amber-500 hover:bg-amber-600 shadow-md">دخول الإدارة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW INVENTORY ITEM (إضافة لوح خشب لمخزن الورشة) -->
   <div id="modal-new-inventory" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
         <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
           <i data-lucide="boxes" class="w-4 h-4 text-wood-600"></i>
-          إضافة صنف / لوح خشب جديد للمستودع
+          تعريف صنف / لوح خشب جديد في مخزن الورشة
         </h3>
         <button onclick="closeModal('modal-new-inventory')" class="text-slate-400 hover:text-slate-600">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -1078,44 +1547,44 @@
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <div>
-            <label class="block font-bold text-slate-600 mb-1">الرصيد (ألواح)</label>
-            <input type="number" id="inv-stock" value="50" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
+            <label class="block font-bold text-slate-600 mb-1">الرصيد بالورشة (ألواح)</label>
+            <input type="number" id="inv-stock" value="30" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
           </div>
           <div>
-            <label class="block font-bold text-slate-600 mb-1">تكلفة الشراء</label>
+            <label class="block font-bold text-slate-600 mb-1">تكلفة شراء اللوح</label>
             <input type="number" id="inv-cost" value="130" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
           </div>
           <div>
-            <label class="block font-bold text-slate-600 mb-1">سعر الجملة</label>
+            <label class="block font-bold text-slate-600 mb-1">سعر الجملة المرجعي</label>
             <input type="number" id="inv-wholesale" value="165" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center text-emerald-700">
           </div>
           <div>
             <label class="block font-bold text-slate-600 mb-1">سعر التفصيل (م.ط)</label>
-            <input type="number" id="inv-retail" value="450" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
+            <input type="number" id="inv-retail" value="550" class="w-full p-2 rounded-xl border border-slate-300 font-bold text-center">
           </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-600 mb-1">الموقع بالهنجر</label>
-          <input type="text" id="inv-location" value="هنجر A - رف 1" class="w-full p-2.5 rounded-xl border border-slate-300">
+          <label class="block font-bold text-slate-600 mb-1">الموقع داخل الورشة</label>
+          <input type="text" id="inv-location" value="مخزن الورشة - قسم القص" class="w-full p-2.5 rounded-xl border border-slate-300">
         </div>
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
         <button onclick="closeModal('modal-new-inventory')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
         <button onclick="saveNewInventoryItem()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
-          إضافة للمستودع
+          إضافة لمخزن الورشة
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: NEW SUPPLIER PURCHASE (تسجيل فاتورة مشتريات من مورد) -->
+  <!-- MODAL: NEW SUPPLIER PURCHASE (تسجيل فاتورة مشتريات من مورد وتغذية مخزن الورشة) -->
   <div id="modal-new-purchase" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-100">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
         <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
           <i data-lucide="truck" class="w-4 h-4 text-wood-600"></i>
-          تسجيل فاتورة مشتريات جديدة من مورد
+          تسجيل فاتورة مشتريات من مورد وتغذية مخزن الورشة
         </h3>
         <button onclick="closeModal('modal-new-purchase')" class="text-slate-400 hover:text-slate-600">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -1131,6 +1600,16 @@
           <label class="block font-bold text-slate-600 mb-1">بيان المشتريات (الألواح / الزجاج / الإكسسوارات) *</label>
           <input type="text" id="pur-desc" placeholder="مثال: 40 لوح خشب تايلاندي + 20 مفصلات هيدروليك" class="w-full p-2.5 rounded-xl border border-slate-300">
         </div>
+        <div class="grid grid-cols-2 gap-2 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200">
+          <div>
+            <label class="block font-bold text-amber-900 mb-1">إضافة لمخزن ألواح الورشة (اختياري)</label>
+            <select id="pur-inv-code" class="w-full p-2 rounded-lg border border-amber-300 bg-white font-bold"></select>
+          </div>
+          <div>
+            <label class="block font-bold text-amber-900 mb-1">عدد الألواح المشتراة للمخزن</label>
+            <input type="number" id="pur-inv-qty" value="20" class="w-full p-2 rounded-lg border border-amber-300 bg-white font-black text-center">
+          </div>
+        </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-600 mb-1">إجمالي قيمة الفاتورة (ر.س) *</label>
@@ -1141,15 +1620,12 @@
             <input type="number" id="pur-paid" value="0" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-emerald-700">
           </div>
         </div>
-        <p class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-          💡 المبلغ غير المسدد سيُضاف تلقائياً إلى رصيد المورد المستحق، والمبلغ المسدد نقداً سيُخصم من صندوق الدرج.
-        </p>
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
         <button onclick="closeModal('modal-new-purchase')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
         <button onclick="saveNewPurchase()" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2 rounded-xl font-bold shadow-md">
-          حفظ الفاتورة وتحديث رصيد المورد
+          حفظ الفاتورة وتحديث المخزن والمورد
         </button>
       </div>
     </div>
@@ -1288,13 +1764,13 @@
     </div>
   </div>
 
-  <!-- MODAL: TIMBER SUPPLIER ORDER (إضافة طلبية ألواح لزاهد أو عواجي) -->
+  <!-- MODAL: TIMBER SUPPLIER ORDER (إضافة طلبية ألواح للمورد وتغذية مخزن الورشة) -->
   <div id="modal-timber-order" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
         <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
           <i data-lucide="boxes" class="w-4 h-4 text-blue-600"></i>
-          إضافة طلبية ألواح جديدة للمورد
+          طلب ألواح جديدة من المورد إلى مخزن الورشة
         </h3>
         <button onclick="closeModal('modal-timber-order')" class="text-slate-400 hover:text-slate-600">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -1307,6 +1783,8 @@
             <select id="to-supplier" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
               <option value="ZAHED">زاهد للأخشاب</option>
               <option value="AWAJI">عواجي للأخشاب</option>
+              <option value="TAHA">أخشاب طه</option>
+              <option value="ARAK">أراك للأخشاب</option>
             </select>
           </div>
           <div>
@@ -1320,7 +1798,7 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-600 mb-1">كود / لون اللوح *</label>
-            <input type="text" id="to-code" placeholder="مثال: 1135 أراك" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+            <input type="text" id="to-code" placeholder="مثال: 1135 أراك أو AW-043" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
           </div>
           <div>
             <label class="block font-bold text-slate-600 mb-1">المقاس / النوع</label>
@@ -1341,17 +1819,21 @@
             <input type="number" id="to-price" value="150" class="w-full p-2 rounded-xl border border-slate-300 font-black text-center">
           </div>
         </div>
+        <label class="flex items-center gap-2 bg-blue-50 p-2.5 rounded-xl border border-blue-200 cursor-pointer">
+          <input type="checkbox" id="to-add-to-stock" checked class="w-4 h-4 accent-blue-600">
+          <span class="font-bold text-blue-900 text-[11px]">إضافة هذه الألواح تلقائياً إلى رصيد «مخزن ألواح الورشة»</span>
+        </label>
       </div>
       <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
         <button onclick="closeModal('modal-timber-order')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
         <button onclick="saveTimberOrder()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-bold shadow-md">
-          إضافة الطلبية وتحديث المطابقة
+          حفظ الطلبية وتغذية مخزن الورشة
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: TIMBER SUPPLIER PAYMENT / RETURN (تسجيل سداد أو مرتجع لزاهد وعواجي) -->
+  <!-- MODAL: TIMBER SUPPLIER PAYMENT / RETURN (تسجيل سداد أو مرتجع للمورد) -->
   <div id="modal-timber-payment" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
@@ -1370,6 +1852,8 @@
             <select id="tp-supplier" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
               <option value="ZAHED">زاهد للأخشاب</option>
               <option value="AWAJI">عواجي للأخشاب</option>
+              <option value="TAHA">أخشاب طه</option>
+              <option value="ARAK">أراك للأخشاب</option>
             </select>
           </div>
           <div>
@@ -1410,8 +1894,15 @@
 
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
-    // State including Mahmoud Mustafa's exact requirements
-    
+    // ==========================================
+    // ARCHITECTURE CONFIGURATION (الإصدار الرشيق v3.0)
+    // ==========================================
+    const ENABLE_STANDALONE_WAREHOUSE = false; // تجميد وضع المستودع التجاري المستقل ودمج مخزن الألواح في الورشة
+    let currentCashScope = 'ALL'; // 'ALL' | 'TODAY' | 'DATE'
+    let pendingOperationalMode = null;
+    let currentCroquisBeforeImgData = '';
+    let currentCroquisAfterImgData = '';
+
     // Mahmoud Mustafa Real Log Data (عام 2026 م - 2027 م)
     const MAHMOUD_LOG = {
       monthlySettlement: [
@@ -1531,6 +2022,33 @@
             { date: '2026-09-09', amount: 2500, desc: 'حوالة', type: 'حوالة بنكية' },
             { date: '2026-09-20', amount: 5200, desc: 'حوالة', type: 'حوالة بنكية' }
           ]
+        },
+        TAHA: {
+          name: 'أخشاب طه',
+          invoicesTotal: 22200.00,
+          paymentsTotal: 13800.00,
+          balanceDue: 8400.00,
+          orders: [
+            { code: 'WOOD-THAI-WHT-18', type: 'لوح', qty: 120, price: 115, total: 13800, section: 'خشب' },
+            { code: 'WOOD-MDF-THAI-9', type: 'لوح', qty: 100, price: 84, total: 8400, section: 'خشب' }
+          ],
+          payments: [
+            { date: '2026-09-12', amount: 8800, desc: 'حوالة بنكية دفعة ألواح تايلاندي', type: 'حوالة بنكية' },
+            { date: '2026-10-05', amount: 5000, desc: 'سداد نقدي من الدرج', type: 'سداد نقدي/شبكة' }
+          ]
+        },
+        ARAK: {
+          name: 'أراك للأخشاب والإكسسوارات',
+          invoicesTotal: 14300.00,
+          paymentsTotal: 9100.00,
+          balanceDue: 5200.00,
+          orders: [
+            { code: 'SHTR-HPL-MATT', type: 'لوح', qty: 55, price: 260, total: 14300, section: 'خشب' }
+          ],
+          payments: [
+            { date: '2026-09-19', amount: 5100, desc: 'حوالة بنكية لحساب أراك', type: 'حوالة بنكية' },
+            { date: '2026-10-11', amount: 4000, desc: 'دفعة شبكة', type: 'سداد نقدي/شبكة' }
+          ]
         }
       },
       dailyWorkers: [
@@ -1605,20 +2123,50 @@
       ],
       workOrders: [
         {
-          id: 'WO-2026-001',
-          contractId: 'CNT-2026-001',
-          customerName: 'عبد العزيز بن محمد الراجحي',
-          title: 'دولاب ملابس ماستر (4.2 متر طولي)',
-          stage: 'SAW_CUTTING', // SAW_CUTTING, EDGE_BANDING, ASSEMBLY, FINISHING, QA_PACKING
-          bomCost: 1733.00,
-          targetDate: '2026-10-28'
+          id: 'WO-D-19',
+          contractId: 'CNT-D-19',
+          customerName: 'معرض داريفا (ف 19)',
+          title: 'تفصيل دواليب لمعرض داريفا - ف 19',
+          stage: 'ASSEMBLY',
+          bomCost: 5940.00,
+          targetDate: '2026-10-26',
+          boardCode: 'WOOD-THAI-WHT-18',
+          boardsQty: 14,
+          croquisBefore: 'مخطط تفصيل داريفا - ف 19',
+          isNewFromShowroom: true
+        },
+        {
+          id: 'WO-D-17',
+          contractId: 'CNT-D-17',
+          customerName: 'معرض داريفا (ف 17)',
+          title: 'تفصيل دواليب لمعرض داريفا - ف 17',
+          stage: 'ASSEMBLY',
+          bomCost: 3850.00,
+          targetDate: '2026-10-25',
+          boardCode: 'WOOD-THAI-WHT-18',
+          boardsQty: 10,
+          croquisBefore: 'مخطط تفصيل داريفا - ف 17',
+          isNewFromShowroom: true
+        },
+        {
+          id: 'WO-D-22',
+          contractId: 'CNT-D-22',
+          customerName: 'معرض داريفا (ف 22)',
+          title: 'تفصيل دواليب لمعرض داريفا - ف 22',
+          stage: 'SAW_CUTTING',
+          bomCost: 3490.00,
+          targetDate: '2026-10-28',
+          boardCode: 'WOOD-GERM-WBP-18',
+          boardsQty: 9,
+          croquisBefore: 'مخطط تفصيل داريفا - ف 22',
+          isNewFromShowroom: true
         }
       ],
       workers: [
         { id: 'W1', name: 'أحمد النجار', role: 'معلم قص المنشار', wageType: 'شهري', wage: 3500.00, advances: 500.00 },
         { id: 'W2', name: 'بلال القشاط', role: 'فني قشاط حواف PVC', wageType: 'شهري', wage: 3000.00, advances: 200.00 },
         { id: 'W3', name: 'سعيد التركيبات', role: 'معلم تجميع وتركيب موقع', wageType: 'يومية', wage: 150.00, advances: 0.00 },
-        { id: 'W4', name: 'كومار', role: 'عامل تحميل ومستودع', wageType: 'شهري', wage: 2000.00, advances: 100.00 }
+        { id: 'W4', name: 'كومار', role: 'عامل تحميل ومستودع الورشة', wageType: 'شهري', wage: 2000.00, advances: 100.00 }
       ],
       expenses: [
         { id: 'EXP-101', date: '2026-10-19', costCenter: 'WORKSHOP', category: 'إعاشة عمال الورشة (أرز + زيت + أكل)', amount: 350.00, method: 'CASH', beneficiary: 'تموينات الأمانة', notes: 'وجبات وعشاء عمال الورشة' },
@@ -1641,74 +2189,116 @@
     };
 
     let appData = JSON.parse(localStorage.getItem('woodwork_os_v4_real')) || DB;
+    if (!appData.settings) appData.settings = { mode: 'FULL' };
     if (!appData.mahmoudLog) {
       appData.mahmoudLog = JSON.parse(JSON.stringify(MAHMOUD_LOG));
     }
-
-    function saveDB() {
-      localStorage.setItem('woodwork_os_v4_real', JSON.stringify(appData));
-      renderAll();
+    if (!appData.mahmoudLog.timberSuppliers) {
+      appData.mahmoudLog.timberSuppliers = JSON.parse(JSON.stringify(MAHMOUD_LOG.timberSuppliers));
+    } else {
+      if (!appData.mahmoudLog.timberSuppliers.TAHA) {
+        appData.mahmoudLog.timberSuppliers.TAHA = JSON.parse(JSON.stringify(MAHMOUD_LOG.timberSuppliers.TAHA));
+      }
+      if (!appData.mahmoudLog.timberSuppliers.ARAK) {
+        appData.mahmoudLog.timberSuppliers.ARAK = JSON.parse(JSON.stringify(MAHMOUD_LOG.timberSuppliers.ARAK));
+      }
     }
 
-    // Set Operational Mode (1. المتكامل، 2. المعرض، 3. الورشة، 4. مستودع الأخشاب)
+    let autoSyncTimer = null;
+    function saveDB(triggerCloud = true) {
+      localStorage.setItem('woodwork_os_v4_real', JSON.stringify(appData));
+      renderAll();
+      if (triggerCloud && typeof autoSyncCloud === 'function') {
+        clearTimeout(autoSyncTimer);
+        autoSyncTimer = setTimeout(() => autoSyncCloud(), 600);
+      }
+    }
+
+    // ==========================================
+    // PKG-01: LEAN 3-MODE ARCHITECTURE & PIN MODAL
+    // ==========================================
     function setOperationalMode(mode, skipPinCheck = false) {
+      if (mode === 'WAREHOUSE' && !ENABLE_STANDALONE_WAREHOUSE) {
+        mode = 'WORKSHOP';
+      }
+
       const savedPin = localStorage.getItem('woodwork_admin_pin');
       if (!skipPinCheck && savedPin && mode === 'FULL' && appData.settings.mode !== 'FULL') {
-        const enteredPin = prompt('أدخل رمز الحماية (PIN) للدخول إلى الوضع الشامل والإدارة:');
-        if (enteredPin !== savedPin) {
-          alert('رمز الحماية غير صحيح!');
-          const sel = document.getElementById('select-operational-mode');
-          if (sel) sel.value = appData.settings.mode;
-          return;
-        }
+        pendingOperationalMode = 'FULL';
+        const sel = document.getElementById('select-operational-mode');
+        if (sel) sel.value = appData.settings.mode;
+        const pinInput = document.getElementById('pin-check-input');
+        const pinErr = document.getElementById('pin-check-error');
+        if (pinInput) pinInput.value = '';
+        if (pinErr) pinErr.classList.add('hidden');
+        openModal('modal-pin-check');
+        return;
       }
 
       appData.settings.mode = mode;
-      
+
       const sel = document.getElementById('select-operational-mode');
       if (sel) sel.value = mode;
 
       const bannerText = document.getElementById('mode-alert-text');
       const quoteBtn = document.getElementById('btn-header-new-quote');
+      const workorderBtn = document.getElementById('btn-header-new-workorder');
       const timberSaleBtn = document.getElementById('btn-header-timber-sale');
 
-      // Hide or show tabs according to mode
       const showroomTabs = document.querySelectorAll('.showroom-tab');
       const workshopTabs = document.querySelectorAll('.workshop-tab');
       const warehouseTabs = document.querySelectorAll('.warehouse-tab');
 
       if (mode === 'FULL') {
-        bannerText.innerHTML = 'أنت الآن في <strong>الوضع المتكامل الشامل</strong>: مبيعات المعرض مع الكروكي، ورشة التصنيع، ومستودع الأخشاب ومشتريات الموردين.';
-        quoteBtn.classList.remove('hidden');
-        timberSaleBtn.classList.remove('hidden');
+        bannerText.innerHTML = 'أنت الآن في <strong>الوضع المتكامل الشامل (الإدارة)</strong>: عقود المعرض والكروكي، ورشة التصنيع والمخزن، وتسويات وكشوفات 2026 م.';
+        quoteBtn?.classList.remove('hidden');
+        workorderBtn?.classList.remove('hidden');
+        if (ENABLE_STANDALONE_WAREHOUSE) timberSaleBtn?.classList.remove('hidden');
+        else timberSaleBtn?.classList.add('hidden');
         showroomTabs.forEach(el => el.classList.remove('hidden'));
         workshopTabs.forEach(el => el.classList.remove('hidden'));
-        warehouseTabs.forEach(el => el.classList.remove('hidden'));
+        warehouseTabs.forEach(el => el.classList.toggle('hidden', !ENABLE_STANDALONE_WAREHOUSE));
+        currentExpenseFilter = 'ALL';
       } else if (mode === 'SHOWROOM') {
-        bannerText.innerHTML = 'أنت الآن في <strong>وضع المعرض فقط</strong>: عقود تفصيل الدواليب، ربط البائعين، والكروكي، والدفعات ومصروفات المعرض.';
-        quoteBtn.classList.remove('hidden');
-        timberSaleBtn.classList.add('hidden');
+        bannerText.innerHTML = 'أنت الآن في <strong>برنامج المعرض المستقل</strong>: إصدار عقود تفصيل الدواليب، الكروكي، تحصيل الدفعات وسندات القبض، ومصروفات المعرض.';
+        quoteBtn?.classList.remove('hidden');
+        workorderBtn?.classList.add('hidden');
+        timberSaleBtn?.classList.add('hidden');
         showroomTabs.forEach(el => el.classList.remove('hidden'));
         workshopTabs.forEach(el => el.classList.add('hidden'));
         warehouseTabs.forEach(el => el.classList.add('hidden'));
+        currentExpenseFilter = 'SHOWROOM';
       } else if (mode === 'WORKSHOP') {
-        bannerText.innerHTML = 'أنت الآن في <strong>وضع الورشة فقط</strong>: أوامر تشغيل المحطات الخمس، كشف العمال والرواتب، ومصروفات الإعاشة والماء والزيوت.';
-        quoteBtn.classList.add('hidden');
-        timberSaleBtn.classList.add('hidden');
+        bannerText.innerHTML = 'أنت الآن في <strong>برنامج الورشة المستقل</strong>: استقبال أوامر المعرض وإصدار أوامر تصنيع مباشرة، مخزن ألواح الورشة، وحسابات العمال.';
+        quoteBtn?.classList.add('hidden');
+        workorderBtn?.classList.remove('hidden');
+        timberSaleBtn?.classList.add('hidden');
         showroomTabs.forEach(el => el.classList.add('hidden'));
         workshopTabs.forEach(el => el.classList.remove('hidden'));
-        warehouseTabs.forEach(el => el.classList.remove('hidden'));
-      } else if (mode === 'WAREHOUSE') {
-        bannerText.innerHTML = 'أنت الآن في <strong>وضع مستودع وتجارة الأخشاب فقط</strong>: مشتريات الموردين، مبيعات الأخشاب بالألواح، وتتبع الذمم المدينة والديون.';
-        quoteBtn.classList.add('hidden');
-        timberSaleBtn.classList.remove('hidden');
-        showroomTabs.forEach(el => el.classList.add('hidden'));
-        workshopTabs.forEach(el => el.classList.add('hidden'));
-        warehouseTabs.forEach(el => el.classList.remove('hidden'));
+        warehouseTabs.forEach(el => el.classList.add('hidden'));
+        currentExpenseFilter = 'WORKSHOP';
       }
 
       saveDB();
       switchTab('dashboard');
+    }
+
+    function confirmPinCheck() {
+      const savedPin = localStorage.getItem('woodwork_admin_pin');
+      const entered = (document.getElementById('pin-check-input')?.value || '').trim();
+      if (entered === savedPin) {
+        closeModal('modal-pin-check');
+        setOperationalMode(pendingOperationalMode || 'FULL', true);
+      } else {
+        document.getElementById('pin-check-error')?.classList.remove('hidden');
+      }
+    }
+
+    function cancelPinCheck() {
+      pendingOperationalMode = null;
+      const sel = document.getElementById('select-operational-mode');
+      if (sel) sel.value = appData.settings.mode || 'SHOWROOM';
+      closeModal('modal-pin-check');
     }
 
     // Switch Tabs
@@ -1729,38 +2319,94 @@
       lucide.createIcons();
     }
 
+    // ==========================================
+    // PKG-04: DAILY / CUMULATIVE CASH & MODE ISOLATION
+    // ==========================================
+    function setCashFilterScope(scope) {
+      currentCashScope = scope;
+      const btnAll = document.getElementById('btn-cash-scope-all');
+      const btnToday = document.getElementById('btn-cash-scope-today');
+      const dateInput = document.getElementById('cash-filter-date');
+      const badge = document.getElementById('cash-scope-badge');
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      if (scope === 'ALL') {
+        if (btnAll) btnAll.className = 'px-3 py-1 rounded-lg bg-amber-400 text-wood-950 font-black transition-all';
+        if (btnToday) btnToday.className = 'px-3 py-1 rounded-lg text-amber-100 hover:bg-wood-800 font-bold transition-all';
+        if (badge) badge.textContent = 'النطاق: كافة الحركات المسجلة (تراكمي)';
+      } else if (scope === 'TODAY') {
+        if (dateInput) dateInput.value = todayStr;
+        if (btnToday) btnToday.className = 'px-3 py-1 rounded-lg bg-amber-400 text-wood-950 font-black transition-all';
+        if (btnAll) btnAll.className = 'px-3 py-1 rounded-lg text-amber-100 hover:bg-wood-800 font-bold transition-all';
+        if (badge) badge.textContent = `النطاق: جرد يوم (${todayStr})`;
+      } else if (scope === 'DATE') {
+        const chosen = dateInput?.value || todayStr;
+        if (btnAll) btnAll.className = 'px-3 py-1 rounded-lg text-amber-100 hover:bg-wood-800 font-bold transition-all';
+        if (btnToday) btnToday.className = 'px-3 py-1 rounded-lg text-amber-100 hover:bg-wood-800 font-bold transition-all';
+        if (badge) badge.textContent = `النطاق: جرد تاريخ (${chosen})`;
+      }
+      reconcileDailyCash();
+      renderTransactions();
+    }
+
+    function isDateInCashScope(dateStr) {
+      if (currentCashScope === 'ALL') return true;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const targetDate = currentCashScope === 'TODAY'
+        ? todayStr
+        : (document.getElementById('cash-filter-date')?.value || todayStr);
+      return dateStr === targetDate;
+    }
+
     // Reconcile Daily Cash (المعادلة المحاسبية للأستاذ محمود: المبيعات - (المشتريات + المصروفات) = الصافي)
     function reconcileDailyCash() {
-      // 1. Total Cash Sales (العربون المحصل من العقود + المقبوض من بيع الخشب المباشر)
+      const mode = appData.settings?.mode || 'FULL';
+
       let totalSales = 0;
-      appData.contracts.forEach(c => totalSales += (c.advancePaid || 0));
-      appData.directSales.forEach(ds => totalSales += (ds.paid || 0));
-
-      // 2. Total Cash Purchases paid to suppliers (العربون الموجه لمورد فعلي وليس لصندوق المؤسسة + سدادات المشتريات النقدية)
       let totalPurchases = 0;
-      appData.contracts.forEach(c => {
-        if (c.advanceDirectedTo && c.advanceDirectedTo !== 'صندوق المؤسسة') {
-          totalPurchases += (c.advancePaid || 0);
-        }
-      });
-
-      // 3. Total Cash Expenses (المصروفات النقدية من الدرج)
       let totalExpenses = 0;
       let workshopExp = 0;
+
+      // 1. Sales & Directed Advances
+      if (mode !== 'WORKSHOP') {
+        appData.contracts.forEach(c => {
+          if (c.status === 'CANCELLED') return;
+          if (isDateInCashScope(c.signingDate)) {
+            totalSales += (c.advancePaid || 0);
+            if (c.advanceDirectedTo && c.advanceDirectedTo !== 'صندوق المؤسسة') {
+              totalPurchases += (c.advancePaid || 0);
+            }
+          }
+        });
+        if (mode === 'FULL') {
+          appData.directSales.forEach(ds => {
+            if (isDateInCashScope(ds.date)) {
+              totalSales += (ds.paid || 0);
+            }
+          });
+        }
+      }
+
+      // 2. Expenses & Supplier Cash Payments
       appData.expenses.forEach(e => {
+        if (e.costCenter === 'WORKSHOP') {
+          workshopExp += (e.amount || 0);
+        }
+        if (!isDateInCashScope(e.date)) return;
+
+        // Mode isolation for cash box
+        if (mode === 'SHOWROOM' && e.costCenter !== 'SHOWROOM') return;
+        if (mode === 'WORKSHOP' && e.costCenter !== 'WORKSHOP' && e.costCenter !== 'WAREHOUSE') return;
+
         if (e.method === 'CASH') {
           if (e.category && e.category.startsWith('سداد دفعة للمورد:')) {
-            totalPurchases += e.amount;
+            totalPurchases += (e.amount || 0);
           } else {
-            totalExpenses += e.amount;
+            totalExpenses += (e.amount || 0);
           }
-        }
-        if (e.costCenter === 'WORKSHOP') {
-          workshopExp += e.amount;
         }
       });
 
-      // Net Cash Remaining in Drawer: المبيعات - (المشتريات + المصروفات)
       const netCash = totalSales - (totalPurchases + totalExpenses);
 
       document.getElementById('dash-cash-sales').textContent = totalSales.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
@@ -1770,18 +2416,26 @@
 
       // KPI stats
       let unpaidDebts = 0;
-      appData.contracts.forEach(c => unpaidDebts += (c.remainingAmount || 0));
-      appData.directSales.forEach(ds => unpaidDebts += (ds.unpaid || 0));
+      appData.contracts.forEach(c => {
+        if (c.status !== 'CANCELLED') unpaidDebts += (c.remainingAmount || 0);
+      });
+      if (mode === 'FULL') {
+        appData.directSales.forEach(ds => unpaidDebts += (ds.unpaid || 0));
+      }
 
       let suppliersDue = 0;
-      appData.suppliers.forEach(s => suppliersDue += (s.balance || 0));
+      appData.suppliers.forEach(s => {
+        if (s.code === 'SUP-TAHA' || s.code === 'SUP-ARAK') return;
+        suppliersDue += (s.balance || 0);
+      });
       if (appData.mahmoudLog && appData.mahmoudLog.timberSuppliers) {
-        suppliersDue += (appData.mahmoudLog.timberSuppliers.ZAHED?.balanceDue || 0);
-        suppliersDue += (appData.mahmoudLog.timberSuppliers.AWAJI?.balanceDue || 0);
+        Object.values(appData.mahmoudLog.timberSuppliers).forEach(ts => {
+          suppliersDue += (ts?.balanceDue || 0);
+        });
       }
 
       let stockVal = 0;
-      appData.inventory.forEach(i => stockVal += (i.stock * i.cost));
+      appData.inventory.forEach(i => stockVal += ((i.stock || 0) * (i.cost || 0)));
 
       document.getElementById('stat-unpaid-debts').textContent = unpaidDebts.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
       document.getElementById('stat-suppliers-due').textContent = suppliersDue.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
@@ -1792,48 +2446,59 @@
     // Render Recent Transactions
     function renderTransactions() {
       const tbody = document.getElementById('recent-transactions-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
+      const mode = appData.settings?.mode || 'FULL';
 
-      // Merge contracts, expenses, and direct sales
       const items = [];
-      appData.contracts.forEach(c => {
-        const isToBox = !c.advanceDirectedTo || c.advanceDirectedTo === 'صندوق المؤسسة';
-        items.push({
-          date: c.signingDate,
-          type: 'مبيعات تفصيل (عربون)',
-          title: `${c.title} (العميل: ${c.customerName})`,
-          badge: `البائع: ${c.salesman}`,
-          amount: `+${c.advancePaid.toFixed(2)} ر.س`,
-          color: 'text-emerald-700 font-bold',
-          method: isToBox ? 'إيداع بصندوق المؤسسة' : `وُجّه لسداد المورد: ${c.advanceDirectedTo}`
+      if (mode !== 'WORKSHOP') {
+        appData.contracts.forEach(c => {
+          if (!isDateInCashScope(c.signingDate)) return;
+          const isCancelled = c.status === 'CANCELLED';
+          const isToBox = !c.advanceDirectedTo || c.advanceDirectedTo === 'صندوق المؤسسة';
+          items.push({
+            date: c.signingDate,
+            type: isCancelled ? 'عقد ملغى (إشعار دائن)' : 'مبيعات تفصيل (عربون)',
+            title: `${c.title} (العميل: ${c.customerName})`,
+            badge: `البائع: ${c.salesman}`,
+            amount: isCancelled ? `0.00 ر.س (ملغى)` : `+${(c.advancePaid || 0).toFixed(2)} ر.س`,
+            color: isCancelled ? 'text-slate-400 line-through font-bold' : 'text-emerald-700 font-bold',
+            method: isToBox ? 'إيداع بصندوق المؤسسة' : `وُجّه لسداد المورد: ${c.advanceDirectedTo}`
+          });
         });
-      });
+      }
 
       appData.expenses.forEach(e => {
+        if (!isDateInCashScope(e.date)) return;
+        if (mode === 'SHOWROOM' && e.costCenter !== 'SHOWROOM') return;
+        if (mode === 'WORKSHOP' && e.costCenter !== 'WORKSHOP' && e.costCenter !== 'WAREHOUSE') return;
         items.push({
           date: e.date,
           type: 'مصروف تشغيلي',
           title: `${e.category} - ${e.beneficiary}`,
-          badge: e.costCenter === 'WORKSHOP' ? 'الورشة' : e.costCenter === 'SHOWROOM' ? 'المعرض' : e.costCenter === 'WAREHOUSE' ? 'المستودع' : 'مسحوبات المالك',
-          amount: `-${e.amount.toFixed(2)} ر.س`,
+          badge: e.costCenter === 'WORKSHOP' ? 'الورشة' : e.costCenter === 'SHOWROOM' ? 'المعرض' : e.costCenter === 'WAREHOUSE' ? 'مخزن الأخشاب' : 'مسحوبات المالك',
+          amount: `-${(e.amount || 0).toFixed(2)} ر.س`,
           color: 'text-rose-700 font-bold',
           method: e.method === 'CASH' ? 'نقد من الدرج' : e.method === 'MADA' ? 'بطاقة مدى' : 'تحويل بنكي'
         });
       });
 
-      appData.directSales.forEach(ds => {
-        items.push({
-          date: ds.date,
-          type: 'بيع أخشاب مباشر',
-          title: `${ds.timber} (${ds.qty} لوح) - ${ds.buyer}`,
-          badge: 'مستودع الأخشاب',
-          amount: `+${ds.paid.toFixed(2)} ر.س`,
-          color: 'text-emerald-700 font-bold',
-          method: ds.unpaid > 0 ? `مقبوض ${ds.paid} والباقي دين ${ds.unpaid}` : 'مسدد بالكامل'
+      if (mode === 'FULL') {
+        appData.directSales.forEach(ds => {
+          if (!isDateInCashScope(ds.date)) return;
+          items.push({
+            date: ds.date,
+            type: 'عقد سابق / بيع مباشر',
+            title: `${ds.timber} - ${ds.buyer}`,
+            badge: 'ذمم سابقة',
+            amount: `+${(ds.paid || 0).toFixed(2)} ر.س`,
+            color: 'text-emerald-700 font-bold',
+            method: ds.unpaid > 0 ? `مقبوض ${ds.paid} والباقي دين ${ds.unpaid}` : 'مسدد بالكامل'
+          });
         });
-      });
+      }
 
-      items.slice(0, 25).forEach(it => {
+      items.slice(0, 30).forEach(it => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50';
         tr.innerHTML = `
@@ -1848,50 +2513,126 @@
       });
     }
 
-    // Render Contracts with Croquis, Print Button & Araboon Destination
+    // ==========================================
+    // PKG-02 & PKG-03: CONTRACTS WITH SEARCH, LIVE WORKSHOP STAGE, MULTI-ITEMS & CROQUIS
+    // ==========================================
     function renderContracts() {
       const container = document.getElementById('contracts-list-container');
+      if (!container) return;
       container.innerHTML = '';
 
-      appData.contracts.forEach(c => {
+      const searchQ = (document.getElementById('contract-search-input')?.value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('contract-status-filter')?.value || 'ALL';
+      const salesmanFilter = document.getElementById('contract-salesman-filter')?.value || 'ALL';
+
+      const stageNamesShort = {
+        SAW_CUTTING: '1. قص الألواح بالمنشار',
+        EDGE_BANDING: '2. قشاط الحواف PVC',
+        ASSEMBLY: '3. التجميع الهيكلي',
+        FINISHING: '4. التشطيب والإكسسوارات',
+        QA_PACKING: '5. فحص الجودة وجاهز للتوريد',
+        CANCELLED: 'ملغى'
+      };
+
+      const filtered = appData.contracts.filter(c => {
+        const status = c.status || 'IN_WORKSHOP';
+        if (statusFilter !== 'ALL' && status !== statusFilter) return false;
+        if (salesmanFilter !== 'ALL' && c.salesman !== salesmanFilter) return false;
+        if (searchQ) {
+          const hay = `${c.id} ${c.customerName} ${c.phone} ${c.title} ${c.salesman}`.toLowerCase();
+          if (!hay.includes(searchQ)) return false;
+        }
+        return true;
+      });
+
+      const countBadge = document.getElementById('contracts-count-badge');
+      if (countBadge) countBadge.textContent = `${filtered.length} عقد مطابق`;
+
+      filtered.forEach(c => {
+        const linkedWO = appData.workOrders.find(w => w.contractId === c.id);
+        const isCancelled = c.status === 'CANCELLED';
+        const isCompleted = c.status === 'COMPLETED';
+
+        const statusBadgeHtml = isCancelled
+          ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800">🚫 ملغى بموجب إشعار دائن</span>'
+          : isCompleted
+          ? '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">✅ مكتمل ومسلّم للعميل</span>'
+          : '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800">🏭 قيد التصنيع بالورشة</span>';
+
+        const workshopLiveBadge = linkedWO
+          ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-wood-100 text-wood-900 border border-wood-300">محطة الورشة: ${stageNamesShort[linkedWO.stage] || linkedWO.stage}</span>`
+          : '';
+
+        const itemsHtml = (c.items && c.items.length > 0)
+          ? `<div class="bg-white p-2.5 rounded-xl border border-slate-200 text-[11px] space-y-1">
+               <span class="font-bold text-slate-600 block">بنود التفصيل المشمولة بالعقد (${c.items.length} بنود):</span>
+               <div class="flex flex-wrap gap-1.5">
+                 ${c.items.map(it => `<span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-lg font-medium">${it.desc} (${it.qty} م × ${it.price} = <strong>${(it.qty * it.price).toLocaleString()} ر.س</strong>)</span>`).join('')}
+               </div>
+             </div>`
+          : '';
+
         const card = document.createElement('div');
-        card.className = 'bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4';
+        card.className = `p-5 rounded-2xl border space-y-4 transition-all ${isCancelled ? 'bg-rose-50/40 border-rose-200 opacity-80' : 'bg-slate-50 border-slate-200'}`;
         card.innerHTML = `
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-200">
             <div>
               <div class="flex flex-wrap items-center gap-2">
                 <span class="font-mono text-sm font-black text-wood-700">${c.id}</span>
-                <h3 class="font-bold text-slate-800">${c.title}</h3>
-                <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full text-xs font-bold">بإشراف البائع: ${c.salesman}</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${c.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${c.status === 'COMPLETED' ? 'مكتمل ومسلّم' : 'قيد التصنيع بالورشة'}</span>
+                <h3 class="font-bold text-slate-800 ${isCancelled ? 'line-through text-slate-500' : ''}">${c.title}</h3>
+                <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full text-xs font-bold">البائع: ${c.salesman}</span>
+                ${statusBadgeHtml}
+                ${workshopLiveBadge}
               </div>
-              <p class="text-xs text-slate-500 mt-1">العميل: <strong>${c.customerName}</strong> (${c.phone}) | تاريخ العقد: ${c.signingDate}</p>
+              <p class="text-xs text-slate-500 mt-1">
+                العميل: <strong>${c.customerName}</strong> (<span dir="ltr">${c.phone}</span>) | تاريخ العقد: <span class="font-mono">${c.signingDate}</span>
+                ${c.boardsQty ? ` | الألواح المسحوبة: <strong>${c.boardsQty} لوح (${c.boardCode})</strong>` : ''}
+              </p>
             </div>
-            <div class="flex items-center gap-3 self-end sm:self-center">
+            <div class="flex flex-wrap items-center gap-2 self-end sm:self-center">
+              ${!isCancelled && c.remainingAmount > 0 ? `
+                <button onclick="collectDebt('${c.id}', 'CONTRACT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm">
+                  <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
+                  تحصيل دفعة
+                </button>
+              ` : ''}
               <button onclick="printContract('${c.id}')" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 shadow-sm">
                 <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-                طباعة العقد والضمان
+                طباعة العقد
               </button>
-              <div class="text-right">
+              ${!isCancelled ? `
+                <button onclick="openCancelContractModal('${c.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-800 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="file-x" class="w-3.5 h-3.5"></i>
+                  إلغاء / إشعار دائن
+                </button>
+              ` : `
+                <button onclick="printCreditNote('${c.id}')" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                  طباعة الإشعار الدائن
+                </button>
+              `}
+              <div class="text-right mr-2">
                 <span class="text-xs text-slate-500 block">إجمالي قيمة العقد</span>
                 <span class="text-base font-black text-wood-900">${c.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</span>
               </div>
             </div>
           </div>
 
-          <!-- Araboon Destination & Remaining (فكرة الأستاذ محمود مصطفى) -->
+          ${itemsHtml}
+
+          <!-- Araboon Destination & Remaining -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 space-y-1">
-              <span class="text-emerald-700 font-bold block">العربون المدفوع وتوجيهه:</span>
+              <span class="text-emerald-700 font-bold block">المدفوع / العربون وتوجيهه:</span>
               <div class="text-sm font-black text-emerald-900">${c.advancePaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
               <p class="text-[11px] text-emerald-800">
-                تم توجيهه لسداد: <strong class="bg-white px-1.5 py-0.5 rounded text-emerald-950 font-black">${c.advanceDirectedTo || 'صندوق المؤسسة'}</strong>
+                وجهة الدفعة: <strong class="bg-white px-1.5 py-0.5 rounded text-emerald-950 font-black">${c.advanceDirectedTo || 'صندوق المؤسسة'}</strong>
               </p>
             </div>
             <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 space-y-1">
-              <span class="text-amber-800 font-bold block">المبلغ المتبقي على الزبون (دين قيد الإنجاز):</span>
+              <span class="text-amber-800 font-bold block">المبلغ المتبقي على الزبون:</span>
               <div class="text-sm font-black text-amber-900">${c.remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</div>
-              <p class="text-[11px] text-amber-700">يُسدد وفق مراحل التركيب والاستلام النهائي</p>
+              <p class="text-[11px] text-amber-700">${c.remainingAmount === 0 ? 'مسدد بالكامل' : 'يُسدد وفق مراحل التركيب والاستلام النهائي'}</p>
             </div>
           </div>
 
@@ -1899,24 +2640,32 @@
           <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-xs">
             <h4 class="font-black text-slate-700 mb-2 flex items-center gap-1.5">
               <i data-lucide="image" class="w-4 h-4 text-wood-600"></i>
-              مخطط الكروكي والمطابقة (قبل وبعد التنفيذ):
+              مخطط الكروكي والمطابقة الهندسية (قبل وبعد التنفيذ):
             </h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-slate-700 block">كروكي قبل التنفيذ:</span>
-                  <span class="text-slate-500 text-[11px]">${c.croquisBefore}</span>
+              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  ${c.croquisBeforeImg ? `<img src="${c.croquisBeforeImg}" class="w-12 h-12 rounded-lg object-cover border border-slate-300 shrink-0" alt="كروكي قبل" />` : ''}
+                  <div>
+                    <span class="font-bold text-slate-700 block">كروكي قبل التنفيذ:</span>
+                    <span class="text-slate-500 text-[11px]">${c.croquisBefore}</span>
+                  </div>
                 </div>
-                <span class="px-2 py-1 rounded bg-slate-200 text-slate-700 font-bold text-[10px]">مرفق معتمد</span>
+                <span class="px-2 py-1 rounded bg-slate-200 text-slate-700 font-bold text-[10px] shrink-0">مرفق معتمد</span>
               </div>
-              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-slate-700 block">كروكي وصور بعد التنفيذ:</span>
-                  <span class="text-slate-500 text-[11px]">${c.croquisAfter}</span>
+              <div class="p-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  ${c.croquisAfterImg ? `<img src="${c.croquisAfterImg}" class="w-12 h-12 rounded-lg object-cover border border-slate-300 shrink-0" alt="كروكي بعد" />` : ''}
+                  <div>
+                    <span class="font-bold text-slate-700 block">كروكي وصور بعد التنفيذ:</span>
+                    <span class="text-slate-500 text-[11px]">${c.croquisAfter}</span>
+                  </div>
                 </div>
-                <button onclick="updateContractCroquisAfter('${c.id}')" class="px-2.5 py-1 rounded bg-wood-600 hover:bg-wood-700 text-white font-bold text-[10px]">
-                  تحديث الإنجاز / الكروكي
-                </button>
+                ${!isCancelled ? `
+                  <button onclick="updateContractCroquisAfter('${c.id}')" class="px-2.5 py-1 rounded bg-wood-600 hover:bg-wood-700 text-white font-bold text-[10px] shrink-0">
+                    تحديث الإنجاز / الكروكي
+                  </button>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -1928,22 +2677,56 @@
     function updateContractCroquisAfter(contractId) {
       const c = appData.contracts.find(item => item.id === contractId);
       if (!c) return;
-      const newCroquis = prompt('أدخل بيان أو رابط صورة الكروكي بعد التركيب والتنفيذ:', c.croquisAfter || 'تم التركيب والتسليم بنجاح وفق المقاسات');
-      if (newCroquis !== null && newCroquis.trim() !== '') {
-        c.croquisAfter = newCroquis.trim();
-        if (confirm('هل تم الانتهاء من تركيب وتسليم هذا العقد بالكامل؟')) {
-          c.status = 'COMPLETED';
-        }
-        saveDB();
+      document.getElementById('uc-contract-id').value = c.id;
+      document.getElementById('uc-contract-title').textContent = `${c.id} - ${c.title} (${c.customerName})`;
+      document.getElementById('uc-croquis-after').value = c.croquisAfter || 'تم التركيب والتسليم بنجاح وفق المقاسات المعتمدة';
+      document.getElementById('uc-status').value = 'COMPLETED';
+      currentCroquisAfterImgData = c.croquisAfterImg || '';
+      const previewBox = document.getElementById('uc-croquis-preview-box');
+      const previewImg = document.getElementById('uc-croquis-preview-img');
+      if (currentCroquisAfterImgData && previewBox && previewImg) {
+        previewImg.src = currentCroquisAfterImgData;
+        previewBox.classList.remove('hidden');
+      } else if (previewBox) {
+        previewBox.classList.add('hidden');
       }
+      openModal('modal-update-croquis');
+    }
+
+    function saveContractCroquisAfter() {
+      const contractId = document.getElementById('uc-contract-id').value;
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+      const newCroquis = document.getElementById('uc-croquis-after').value.trim();
+      const newStatus = document.getElementById('uc-status').value;
+      if (newCroquis) c.croquisAfter = newCroquis;
+      if (currentCroquisAfterImgData) c.croquisAfterImg = currentCroquisAfterImgData;
+      c.status = newStatus;
+
+      const wo = appData.workOrders.find(w => w.contractId === c.id);
+      if (wo && newStatus === 'COMPLETED') {
+        wo.stage = 'QA_PACKING';
+        wo.isNewFromShowroom = false;
+      }
+
+      saveDB();
+      closeModal('modal-update-croquis');
     }
 
     // Render Suppliers & Balances
     function renderSuppliers() {
       const container = document.getElementById('suppliers-cards-container');
+      if (!container) return;
       container.innerHTML = '';
 
       appData.suppliers.forEach(s => {
+        if (s.code === 'SUP-TAHA' && appData.mahmoudLog?.timberSuppliers?.TAHA) {
+          s.balance = appData.mahmoudLog.timberSuppliers.TAHA.balanceDue;
+        }
+        if (s.code === 'SUP-ARAK' && appData.mahmoudLog?.timberSuppliers?.ARAK) {
+          s.balance = appData.mahmoudLog.timberSuppliers.ARAK.balanceDue;
+        }
+
         const card = document.createElement('div');
         card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3';
         card.innerHTML = `
@@ -1973,50 +2756,85 @@
     function paySupplierModal(supCode) {
       const sup = appData.suppliers.find(s => s.code === supCode);
       if (!sup) return;
-      const amtStr = prompt(`أدخل المبلغ المراد سداده للمورد: ${sup.name}\n(الرصيد الحالي: ${sup.balance} ر.س)`);
-      const amt = parseFloat(amtStr);
-      if (amt && amt > 0) {
-        sup.balance = Math.max(0, sup.balance - amt);
-        appData.expenses.unshift({
-          id: `EXP-${Date.now().toString().slice(-4)}`,
-          date: new Date().toISOString().split('T')[0],
-          costCenter: 'WAREHOUSE',
-          category: `سداد دفعة للمورد: ${sup.name}`,
-          amount: amt,
-          method: 'CASH',
-          beneficiary: sup.name,
-          notes: 'سداد نقدي من الدرج لحساب المورد'
-        });
-        saveDB();
-        alert(`تم سداد ${amt} ر.س للمورد ${sup.name} وخصمها من رصيده ومن الدرج.`);
-      }
+      document.getElementById('ps-sup-code').value = sup.code;
+      document.getElementById('ps-sup-name').textContent = sup.name;
+      document.getElementById('ps-sup-balance').textContent = `${sup.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+      document.getElementById('ps-amount').value = sup.balance > 0 ? sup.balance : '';
+      document.getElementById('ps-notes').value = '';
+      openModal('modal-pay-supplier');
     }
 
-    // Render Inventory
+    function confirmPaySupplier() {
+      const supCode = document.getElementById('ps-sup-code').value;
+      const sup = appData.suppliers.find(s => s.code === supCode);
+      if (!sup) return;
+      const amt = parseFloat(document.getElementById('ps-amount').value) || 0;
+      const method = document.getElementById('ps-method').value || 'CASH';
+      const notes = document.getElementById('ps-notes').value.trim() || 'سداد لحساب المورد';
+
+      if (amt <= 0) {
+        alert('يرجى إدخال مبلغ سداد صحيح.');
+        return;
+      }
+
+      sup.balance = Math.max(0, sup.balance - amt);
+      const today = new Date().toISOString().split('T')[0];
+
+      if (sup.code === 'SUP-TAHA' && appData.mahmoudLog?.timberSuppliers?.TAHA) {
+        const ts = appData.mahmoudLog.timberSuppliers.TAHA;
+        ts.payments.unshift({ date: today, amount: amt, desc: notes, type: method === 'CASH' ? 'سداد نقدي' : 'حوالة بنكية' });
+        ts.paymentsTotal = +(ts.paymentsTotal + amt).toFixed(2);
+        ts.balanceDue = Math.max(0, +(ts.invoicesTotal - ts.paymentsTotal).toFixed(2));
+      } else if (sup.code === 'SUP-ARAK' && appData.mahmoudLog?.timberSuppliers?.ARAK) {
+        const ts = appData.mahmoudLog.timberSuppliers.ARAK;
+        ts.payments.unshift({ date: today, amount: amt, desc: notes, type: method === 'CASH' ? 'سداد نقدي' : 'حوالة بنكية' });
+        ts.paymentsTotal = +(ts.paymentsTotal + amt).toFixed(2);
+        ts.balanceDue = Math.max(0, +(ts.invoicesTotal - ts.paymentsTotal).toFixed(2));
+      }
+
+      appData.expenses.unshift({
+        id: `EXP-${Date.now().toString().slice(-4)}`,
+        date: today,
+        costCenter: 'WORKSHOP',
+        category: `سداد دفعة للمورد: ${sup.name}`,
+        amount: amt,
+        method: method,
+        beneficiary: sup.name,
+        notes: notes
+      });
+
+      saveDB();
+      closeModal('modal-pay-supplier');
+    }
+
+    // Render Inventory (مخزن ألواح الورشة)
     function renderInventory() {
       const tbody = document.getElementById('inventory-table-body');
+      if (!tbody) return;
       tbody.innerHTML = '';
       appData.inventory.forEach(item => {
+        const isLow = item.stock <= 15;
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50';
         tr.innerHTML = `
           <td class="py-3 px-3 font-mono font-bold text-wood-700">${item.code}</td>
           <td class="py-3 px-3 font-bold text-slate-800">${item.name}</td>
           <td class="py-3 px-3 text-slate-600 font-bold">${item.supplier}</td>
-          <td class="py-3 px-3 font-black text-slate-900">${item.stock} لوح</td>
+          <td class="py-3 px-3 font-black ${isLow ? 'text-rose-600' : 'text-slate-900'}">${item.stock} لوح ${isLow ? '<span class="text-[10px] bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded-full mr-1">وشك النفاد</span>' : ''}</td>
           <td class="py-3 px-3 font-bold text-blue-700">${(item.stock * 2.98).toFixed(1)} م²</td>
           <td class="py-3 px-3 font-mono">${item.cost.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 font-bold text-emerald-700">${item.wholesalePrice.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 text-slate-700">${item.retailPrice.toFixed(2)} ر.س</td>
-          <td class="py-3 px-3 text-slate-400">${item.location}</td>
+          <td class="py-3 px-3 text-slate-500">${item.location}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // Render Work Orders
+    // Render Work Orders (محطات التصنيع بالورشة + إشعار المعرض التلقائي)
     function renderWorkOrders() {
       const container = document.getElementById('workorders-cards-container');
+      if (!container) return;
       container.innerHTML = '';
       const stagesOrder = ['SAW_CUTTING', 'EDGE_BANDING', 'ASSEMBLY', 'FINISHING', 'QA_PACKING'];
       const stageNames = {
@@ -2027,31 +2845,77 @@
         QA_PACKING: '5. فحص الجودة والتغليف للتوريد'
       };
 
-      appData.workOrders.forEach(wo => {
+      const activeWOs = appData.workOrders.filter(w => w.stage !== 'CANCELLED');
+      const incomingFromShowroom = activeWOs.filter(w => w.isNewFromShowroom && w.stage !== 'QA_PACKING');
+
+      const navBadge = document.getElementById('badge-new-workorders');
+      if (navBadge) {
+        if (incomingFromShowroom.length > 0) {
+          navBadge.textContent = incomingFromShowroom.length;
+          navBadge.classList.remove('hidden');
+        } else {
+          navBadge.classList.add('hidden');
+        }
+      }
+
+      const incomingBanner = document.getElementById('workshop-incoming-banner');
+      const incomingCount = document.getElementById('workshop-incoming-count');
+      if (incomingBanner && incomingCount) {
+        if (incomingFromShowroom.length > 0) {
+          incomingCount.textContent = incomingFromShowroom.length;
+          incomingBanner.classList.remove('hidden');
+        } else {
+          incomingBanner.classList.add('hidden');
+        }
+      }
+
+      activeWOs.forEach(wo => {
         const curIdx = stagesOrder.indexOf(wo.stage);
+        const progressPct = Math.round(((curIdx + 1) / stagesOrder.length) * 100);
+        const isDirect = !wo.contractId || wo.contractId === 'DIRECT';
+
         const card = document.createElement('div');
         card.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3';
         card.innerHTML = `
-          <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200">
             <div>
-              <span class="font-mono text-xs font-black text-emerald-700">${wo.id}</span>
-              <h4 class="font-bold text-slate-800 inline mr-2">${wo.title}</h4>
-              <span class="text-xs text-slate-500">العميل: ${wo.customerName}</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-mono text-xs font-black text-emerald-700">${wo.id}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isDirect ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'}">
+                  ${isDirect ? '🛠️ أمر تصنيع مباشر بالورشة' : `🏢 وارد من المعرض (عقد ${wo.contractId})`}
+                </span>
+                ${wo.isNewFromShowroom ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white">جديد للاستلام</span>' : ''}
+              </div>
+              <h4 class="font-bold text-slate-800 mt-1">${wo.title}</h4>
+              <p class="text-xs text-slate-500">
+                العميل / الجهة: <strong>${wo.customerName}</strong>
+                ${wo.boardsQty ? ` | الألواح المخصومة: <strong>${wo.boardsQty} لوح (${wo.boardCode || 'خشب'})</strong>` : ''}
+                ${wo.croquisBefore ? ` | الكروكي: <strong>${wo.croquisBefore}</strong>` : ''}
+              </p>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black text-amber-700 bg-amber-100 px-2.5 py-1 rounded-xl">المحطة الحالية: ${stageNames[wo.stage]}</span>
+            <div class="flex flex-wrap items-center gap-2 self-end sm:self-center">
+              <span class="text-xs font-black text-amber-800 bg-amber-100 px-2.5 py-1 rounded-xl">المحطة الحالية: ${stageNames[wo.stage] || wo.stage}</span>
               ${curIdx < stagesOrder.length - 1 ? `
-                <button onclick="advanceWorkOrder('${wo.id}')" class="bg-wood-700 hover:bg-wood-800 text-white text-xs px-3 py-1 rounded-xl font-bold">
+                <button onclick="advanceWorkOrder('${wo.id}')" class="bg-wood-700 hover:bg-wood-800 text-white text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 shadow-sm">
+                  <i data-lucide="chevrons-left" class="w-3.5 h-3.5"></i>
                   ترقية للمحطة التالية
                 </button>
               ` : `
-                <span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-xl font-bold">جاهز للتوريد</span>
+                <span class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  مكتمل وجاهز للتوريد
+                </span>
               `}
             </div>
           </div>
-          <div class="text-xs text-slate-500 flex justify-between">
-            <span>تاريخ التسليم المستهدف: ${wo.targetDate}</span>
-            <span>تكلفة المواد المسحوبة من المستودع: <strong class="text-wood-900">${wo.bomCost.toFixed(2)} ر.س</strong></span>
+
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+            <div class="bg-emerald-600 h-full transition-all" style="width: ${progressPct}%"></div>
+          </div>
+
+          <div class="text-xs text-slate-500 flex flex-wrap justify-between gap-2">
+            <span>تاريخ التسليم المستهدف: <strong class="font-mono text-slate-700">${wo.targetDate}</strong></span>
+            <span>تكلفة المواد والألواح المسحوبة من مخزن الورشة: <strong class="text-wood-900">${(wo.bomCost || 0).toFixed(2)} ر.س</strong></span>
           </div>
         `;
         container.appendChild(card);
@@ -2060,18 +2924,36 @@
 
     function advanceWorkOrder(id) {
       const stagesOrder = ['SAW_CUTTING', 'EDGE_BANDING', 'ASSEMBLY', 'FINISHING', 'QA_PACKING'];
+      const stageDesc = {
+        SAW_CUTTING: 'قيد قص الألواح بالمنشار',
+        EDGE_BANDING: 'قيد قشاط الحواف PVC',
+        ASSEMBLY: 'قيد التجميع الهيكلي بالورشة',
+        FINISHING: 'قيد التشطيب وتركيب الإكسسوارات',
+        QA_PACKING: 'تم الانتهاء من التصنيع وفحص الجودة (مكتمل)'
+      };
       const wo = appData.workOrders.find(w => w.id === id);
       if (!wo) return;
+      wo.isNewFromShowroom = false;
       const idx = stagesOrder.indexOf(wo.stage);
       if (idx < stagesOrder.length - 1) {
         wo.stage = stagesOrder[idx + 1];
+        if (wo.contractId && wo.contractId !== 'DIRECT') {
+          const linkedContract = appData.contracts.find(c => c.id === wo.contractId);
+          if (linkedContract) {
+            linkedContract.croquisAfter = stageDesc[wo.stage] || linkedContract.croquisAfter;
+            if (wo.stage === 'QA_PACKING') {
+              linkedContract.status = 'COMPLETED';
+            }
+          }
+        }
         saveDB();
       }
     }
 
-    // Render Workers
+    // Render Workers (Monthly)
     function renderWorkers() {
       const tbody = document.getElementById('workers-table-body');
+      if (!tbody) return;
       tbody.innerHTML = '';
       appData.workers.forEach(w => {
         const net = w.wage - w.advances;
@@ -2085,7 +2967,7 @@
           <td class="py-3 px-3 font-bold text-rose-600">${w.advances.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 font-black text-emerald-700">${net.toFixed(2)} ر.س</td>
           <td class="py-3 px-3">
-            <button onclick="giveWorkerAdvance('${w.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2 py-1 rounded text-[11px] font-bold">
+            <button onclick="openNewWorkerAdvanceModal('MONTHLY', '${w.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1 rounded-lg text-[11px] font-bold">
               صرف سلفة
             </button>
           </td>
@@ -2095,25 +2977,7 @@
     }
 
     function giveWorkerAdvance(wId) {
-      const w = appData.workers.find(worker => worker.id === wId);
-      if (!w) return;
-      const amtStr = prompt(`أدخل مبلغ السلفة للعامل: ${w.name}`);
-      const amt = parseFloat(amtStr);
-      if (amt && amt > 0) {
-        w.advances += amt;
-        appData.expenses.unshift({
-          id: `EXP-${Date.now().toString().slice(-4)}`,
-          date: new Date().toISOString().split('T')[0],
-          costCenter: 'WORKSHOP',
-          category: `سلفة عامل: ${w.name} (${w.role})`,
-          amount: amt,
-          method: 'CASH',
-          beneficiary: w.name,
-          notes: 'سلفة نقدية من الدرج تُخصم من الراتب'
-        });
-        saveDB();
-        alert(`تم تسجيل سلفة ${amt} ر.س للعامل ${w.name} وخصمها من الكاش.`);
-      }
+      openNewWorkerAdvanceModal('MONTHLY', wId);
     }
 
     // Render Expenses & Filter
@@ -2127,14 +2991,15 @@
       if (activeBtn) activeBtn.className = 'exp-filter-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white font-bold';
 
       const tbody = document.getElementById('expenses-table-body');
+      if (!tbody) return;
       tbody.innerHTML = '';
       const list = filter === 'ALL' ? appData.expenses : appData.expenses.filter(e => e.costCenter === filter);
 
       list.forEach(e => {
-        const centerBadge = 
+        const centerBadge =
           e.costCenter === 'WORKSHOP' ? '<span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">🏭 الورشة</span>' :
           e.costCenter === 'SHOWROOM' ? '<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">🏢 المعرض</span>' :
-          e.costCenter === 'WAREHOUSE' ? '<span class="bg-wood-100 text-wood-800 px-2 py-0.5 rounded-full font-bold">📦 المستودع</span>' :
+          e.costCenter === 'WAREHOUSE' ? '<span class="bg-wood-100 text-wood-800 px-2 py-0.5 rounded-full font-bold">📦 مخزن الورشة</span>' :
           '<span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">👤 مسحوبات وصدقة</span>';
 
         const tr = document.createElement('tr');
@@ -2146,7 +3011,7 @@
           <td class="py-3 px-3 font-bold text-slate-800">${e.category}</td>
           <td class="py-3 px-3 text-slate-600">${e.beneficiary}</td>
           <td class="py-3 px-3 font-black text-rose-600">${e.amount.toFixed(2)} ر.س</td>
-          <td class="py-3 px-3 text-slate-500">${e.method === 'CASH' ? 'نقد (درج)' : 'تحويل'}</td>
+          <td class="py-3 px-3 text-slate-500">${e.method === 'CASH' ? 'نقد (درج)' : e.method === 'MADA' ? 'شبكة مدى' : 'تحويل بنكي'}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -2155,9 +3020,10 @@
     // Render Debts (مبالغ غير مسددة من قبل الزبون)
     function renderDebts() {
       const tbody = document.getElementById('debts-table-body');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      appData.contracts.filter(c => c.remainingAmount > 0).forEach(c => {
+      appData.contracts.filter(c => c.remainingAmount > 0 && c.status !== 'CANCELLED').forEach(c => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50';
         tr.innerHTML = `
@@ -2169,8 +3035,9 @@
           <td class="py-3 px-3 font-black text-rose-600">${c.remainingAmount.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 text-slate-500">عند التركيب النهائي</td>
           <td class="py-3 px-3">
-            <button onclick="collectDebt('${c.id}', 'CONTRACT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold">
-              تحصيل الآن
+            <button onclick="collectDebt('${c.id}', 'CONTRACT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
+              تحصيل وسند قبض
             </button>
           </td>
         `;
@@ -2181,7 +3048,7 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50';
         tr.innerHTML = `
-          <td class="py-3 px-3 font-bold text-slate-800">${ds.buyer} (ورشة/محل)</td>
+          <td class="py-3 px-3 font-bold text-slate-800">${ds.buyer}</td>
           <td class="py-3 px-3 text-slate-500">—</td>
           <td class="py-3 px-3 font-mono text-wood-700">${ds.id}</td>
           <td class="py-3 px-3 font-bold">${ds.total.toFixed(2)} ر.س</td>
@@ -2189,8 +3056,9 @@
           <td class="py-3 px-3 font-black text-rose-600">${ds.unpaid.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 text-slate-500">${ds.date}</td>
           <td class="py-3 px-3">
-            <button onclick="collectDebt('${ds.id}', 'DIRECT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold">
-              تحصيل الآن
+            <button onclick="collectDebt('${ds.id}', 'DIRECT')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
+              تحصيل وسند قبض
             </button>
           </td>
         `;
@@ -2199,28 +3067,75 @@
     }
 
     function collectDebt(id, type) {
+      document.getElementById('cd-target-id').value = id;
+      document.getElementById('cd-target-type').value = type;
+      document.getElementById('cd-notes').value = '';
       if (type === 'CONTRACT') {
         const c = appData.contracts.find(item => item.id === id);
         if (!c) return;
-        const amtStr = prompt(`تحصيل دفعة من العميل: ${c.customerName}\n(المتبقي: ${c.remainingAmount} ر.س)`);
-        const amt = parseFloat(amtStr);
-        if (amt && amt > 0) {
-          c.advancePaid += amt;
-          c.remainingAmount = Math.max(0, c.remainingAmount - amt);
-          saveDB();
-          alert(`تم تحصيل ${amt} ر.س بنجاح وإيداعها في الصندوق`);
-        }
+        document.getElementById('cd-customer-name').textContent = `${c.customerName} (عقد ${c.id})`;
+        document.getElementById('cd-current-balance').textContent = `${c.remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+        document.getElementById('cd-amount').value = c.remainingAmount;
       } else {
         const ds = appData.directSales.find(item => item.id === id);
         if (!ds) return;
-        const amtStr = prompt(`تحصيل دين بيع الخشب من: ${ds.buyer}\n(المتبقي: ${ds.unpaid} ر.س)`);
-        const amt = parseFloat(amtStr);
-        if (amt && amt > 0) {
-          ds.paid += amt;
-          ds.unpaid = Math.max(0, ds.unpaid - amt);
-          saveDB();
-          alert(`تم تحصيل ${amt} ر.س بنجاح وإيداعها في الصندوق`);
-        }
+        document.getElementById('cd-customer-name').textContent = `${ds.buyer} (${ds.id})`;
+        document.getElementById('cd-current-balance').textContent = `${ds.unpaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+        document.getElementById('cd-amount').value = ds.unpaid;
+      }
+      openModal('modal-collect-debt');
+    }
+
+    function confirmCollectDebt(andPrint = false) {
+      const id = document.getElementById('cd-target-id').value;
+      const type = document.getElementById('cd-target-type').value;
+      const amt = parseFloat(document.getElementById('cd-amount').value) || 0;
+      const method = document.getElementById('cd-method').value || 'CASH';
+      const notes = document.getElementById('cd-notes').value.trim() || 'دفعة تسوية ذمة عميل';
+      const today = new Date().toISOString().split('T')[0];
+
+      if (amt <= 0) {
+        alert('يرجى إدخال مبلغ التحصيل بشكل صحيح.');
+        return;
+      }
+
+      let receiptInfo = null;
+      if (type === 'CONTRACT') {
+        const c = appData.contracts.find(item => item.id === id);
+        if (!c) return;
+        c.advancePaid = +(c.advancePaid + amt).toFixed(2);
+        c.remainingAmount = Math.max(0, +(c.remainingAmount - amt).toFixed(2));
+        receiptInfo = {
+          voucherId: `RV-${Date.now().toString().slice(-5)}`,
+          date: today,
+          customerName: c.customerName,
+          refId: c.id,
+          amount: amt,
+          remaining: c.remainingAmount,
+          method,
+          notes
+        };
+      } else {
+        const ds = appData.directSales.find(item => item.id === id);
+        if (!ds) return;
+        ds.paid = +(ds.paid + amt).toFixed(2);
+        ds.unpaid = Math.max(0, +(ds.unpaid - amt).toFixed(2));
+        receiptInfo = {
+          voucherId: `RV-${Date.now().toString().slice(-5)}`,
+          date: today,
+          customerName: ds.buyer,
+          refId: ds.id,
+          amount: amt,
+          remaining: ds.unpaid,
+          method,
+          notes
+        };
+      }
+
+      saveDB();
+      closeModal('modal-collect-debt');
+      if (andPrint && receiptInfo) {
+        printReceiptVoucher(receiptInfo);
       }
     }
 
@@ -2393,34 +3308,96 @@
     function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
 
     // ==========================================
-    // PKG-01 & PKG-02: MISSING MODALS & PRINTABLE CONTRACT / ZATCA QR
+    // PKG-01, PKG-02 & PKG-03: MULTI-ITEM CONTRACT, CROQUIS UPLOAD, STANDALONE WORKORDER, VOUCHERS & CREDIT NOTE
     // ==========================================
+    function populateInventoryBoardDropdown(selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="NONE">-- بدون خصم فوري (يُحدد لاحقاً بالورشة) --</option>';
+      appData.inventory.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.code;
+        opt.textContent = `${item.name} (${item.code}) - المتوفر: ${item.stock} لوح`;
+        sel.appendChild(opt);
+      });
+    }
+
     function openNewQuoteModal() {
       document.getElementById('qt-customer-name').value = '';
       document.getElementById('qt-phone').value = '';
       document.getElementById('qt-title').value = '';
-      document.getElementById('qt-meters').value = '6';
-      document.getElementById('qt-unit-price').value = '550';
-      document.getElementById('qt-total-amount').value = '3300';
       document.getElementById('qt-advance-paid').value = '1500';
       document.getElementById('qt-advance-dest').value = 'صندوق المؤسسة';
       document.getElementById('qt-croquis-before').value = 'مخطط تفصيل معتمد بالمقاسات';
+      document.getElementById('qt-boards-qty').value = '8';
+      currentCroquisBeforeImgData = '';
+      const previewBox = document.getElementById('qt-croquis-preview-box');
+      if (previewBox) previewBox.classList.add('hidden');
+
+      populateInventoryBoardDropdown('qt-inventory-board');
+      const boardSel = document.getElementById('qt-inventory-board');
+      if (boardSel && boardSel.options.length > 1) boardSel.selectedIndex = 1;
+
+      const itemsContainer = document.getElementById('qt-items-container');
+      if (itemsContainer) {
+        itemsContainer.innerHTML = '';
+        addQuoteItemRow('دولاب ملابس ماستر تفصيل', 6, 550);
+      }
+
       const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
       document.getElementById('qt-delivery-date').value = nextWeek;
-      recalcQuoteRemaining();
+      recalcQuoteModal();
       openModal('modal-new-quote');
     }
 
-    function recalcQuoteModal() {
-      const meters = parseFloat(document.getElementById('qt-meters').value) || 0;
-      const woodSel = document.getElementById('qt-wood-type');
-      const unitInput = document.getElementById('qt-unit-price');
-      if (document.activeElement === woodSel) {
-        unitInput.value = woodSel.value;
+    function addQuoteItemRow(desc = '', qty = 1, price = 550) {
+      const container = document.getElementById('qt-items-container');
+      if (!container) return;
+      const row = document.createElement('div');
+      row.className = 'qt-item-row grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-slate-200';
+      row.innerHTML = `
+        <div class="col-span-12 sm:col-span-6">
+          <input type="text" class="qt-item-desc w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-bold" placeholder="وصف البند (مثال: دولاب سحاب / تسريحة / جزامة)" value="${desc}" />
+        </div>
+        <div class="col-span-4 sm:col-span-2">
+          <input type="number" step="0.5" class="qt-item-qty w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono font-bold text-center" placeholder="المتر/العدد" value="${qty}" oninput="recalcQuoteModal()" />
+        </div>
+        <div class="col-span-5 sm:col-span-3">
+          <input type="number" class="qt-item-price w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono font-bold text-center" placeholder="سعر الوحدة" value="${price}" oninput="recalcQuoteModal()" />
+        </div>
+        <div class="col-span-3 sm:col-span-1 flex justify-end">
+          <button type="button" onclick="removeQuoteItemRow(this)" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600" title="حذف البند">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `;
+      container.appendChild(row);
+      recalcQuoteModal();
+      lucide.createIcons();
+    }
+
+    function removeQuoteItemRow(btn) {
+      const container = document.getElementById('qt-items-container');
+      if (!container) return;
+      if (container.querySelectorAll('.qt-item-row').length <= 1) {
+        alert('يجب أن يحتوي العقد على بند تفصيل واحد على الأقل.');
+        return;
       }
-      const unitPrice = parseFloat(unitInput.value) || 0;
-      const total = Math.round(meters * unitPrice);
-      document.getElementById('qt-total-amount').value = total;
+      btn.closest('.qt-item-row')?.remove();
+      recalcQuoteModal();
+    }
+
+    function recalcQuoteModal() {
+      const rows = document.querySelectorAll('#qt-items-container .qt-item-row');
+      if (rows.length > 0) {
+        let sum = 0;
+        rows.forEach(r => {
+          const q = parseFloat(r.querySelector('.qt-item-qty')?.value) || 0;
+          const p = parseFloat(r.querySelector('.qt-item-price')?.value) || 0;
+          sum += (q * p);
+        });
+        document.getElementById('qt-total-amount').value = Math.round(sum);
+      }
       recalcQuoteRemaining();
     }
 
@@ -2429,6 +3406,33 @@
       const adv = parseFloat(document.getElementById('qt-advance-paid').value) || 0;
       const rem = Math.max(0, total - adv);
       document.getElementById('qt-remaining-display').value = rem.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
+    }
+
+    function previewCroquisUpload(input, targetType) {
+      const file = input?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64 = evt.target.result;
+        if (targetType === 'BEFORE') {
+          currentCroquisBeforeImgData = base64;
+          const img = document.getElementById('qt-croquis-preview-img');
+          const box = document.getElementById('qt-croquis-preview-box');
+          if (img && box) {
+            img.src = base64;
+            box.classList.remove('hidden');
+          }
+        } else {
+          currentCroquisAfterImgData = base64;
+          const img = document.getElementById('uc-croquis-preview-img');
+          const box = document.getElementById('uc-croquis-preview-box');
+          if (img && box) {
+            img.src = base64;
+            box.classList.remove('hidden');
+          }
+        }
+      };
+      reader.readAsDataURL(file);
     }
 
     function saveNewContract(andPrint = false) {
@@ -2441,10 +3445,30 @@
       const advanceDirectedTo = document.getElementById('qt-advance-dest').value;
       const croquisBefore = document.getElementById('qt-croquis-before').value.trim() || 'مخطط تفصيلي معتمد';
       const deliveryDate = document.getElementById('qt-delivery-date').value || new Date().toISOString().split('T')[0];
+      const boardCode = document.getElementById('qt-inventory-board')?.value || 'NONE';
+      const boardsQty = parseFloat(document.getElementById('qt-boards-qty')?.value) || 0;
 
       if (!customerName || !title || totalAmount <= 0) {
         alert('يرجى إدخال اسم العميل وعنوان التفصيل وإجمالي العقد بشكل صحيح.');
         return;
+      }
+
+      const items = [];
+      document.querySelectorAll('#qt-items-container .qt-item-row').forEach(r => {
+        const desc = (r.querySelector('.qt-item-desc')?.value || '').trim() || 'بند تفصيل';
+        const qty = parseFloat(r.querySelector('.qt-item-qty')?.value) || 1;
+        const price = parseFloat(r.querySelector('.qt-item-price')?.value) || 0;
+        items.push({ desc, qty, price });
+      });
+
+      // Deduct boards from Workshop Timber Stock if selected
+      let calculatedBomCost = Math.round(totalAmount * 0.42);
+      if (boardCode !== 'NONE' && boardsQty > 0) {
+        const invItem = appData.inventory.find(i => i.code === boardCode);
+        if (invItem) {
+          invItem.stock = Math.max(0, invItem.stock - boardsQty);
+          calculatedBomCost = Math.round(boardsQty * invItem.cost);
+        }
       }
 
       const remainingAmount = Math.max(0, totalAmount - advancePaid);
@@ -2457,12 +3481,17 @@
         phone,
         salesman,
         title,
+        items,
+        boardCode: boardCode !== 'NONE' ? boardCode : '',
+        boardsQty: boardCode !== 'NONE' ? boardsQty : 0,
         totalAmount,
         advancePaid,
         advanceDirectedTo,
         remainingAmount,
         croquisBefore,
-        croquisAfter: 'قيد التصنيع بالورشة',
+        croquisBeforeImg: currentCroquisBeforeImgData || '',
+        croquisAfter: 'قيد قص الألواح بالمنشار',
+        croquisAfterImg: '',
         signingDate: today,
         deliveryDate,
         status: 'IN_WORKSHOP'
@@ -2470,15 +3499,20 @@
 
       appData.contracts.unshift(newContract);
 
-      // Automatically generate a Work Order for the Workshop
+      // Automatically generate a Work Order for the Workshop with full Croquis & Board linkage
       appData.workOrders.unshift({
         id: `WO-${newContractId.split('-').pop()}`,
         contractId: newContractId,
         customerName,
         title,
         stage: 'SAW_CUTTING',
-        bomCost: Math.round(totalAmount * 0.45),
-        targetDate: deliveryDate
+        bomCost: calculatedBomCost,
+        targetDate: deliveryDate,
+        boardCode: boardCode !== 'NONE' ? boardCode : '',
+        boardsQty: boardCode !== 'NONE' ? boardsQty : 0,
+        croquisBefore,
+        croquisBeforeImg: currentCroquisBeforeImgData || '',
+        isNewFromShowroom: true
       });
 
       // If advance payment was directed to a supplier, deduct from that supplier's balance
@@ -2487,21 +3521,25 @@
         if (sup) {
           sup.balance = Math.max(0, sup.balance - advancePaid);
         }
-        if (advanceDirectedTo.includes('زاهد') && appData.mahmoudLog?.timberSuppliers?.ZAHED) {
-          appData.mahmoudLog.timberSuppliers.ZAHED.payments.unshift({
-            date: today,
-            amount: advancePaid,
-            desc: `توجيه عربون عقد ${newContractId} (${customerName})`,
-            type: 'عربون عميل محول'
-          });
-        } else if (advanceDirectedTo.includes('عواجي') && appData.mahmoudLog?.timberSuppliers?.AWAJI) {
-          appData.mahmoudLog.timberSuppliers.AWAJI.payments.unshift({
-            date: today,
-            amount: advancePaid,
-            desc: `توجيه عربون عقد ${newContractId} (${customerName})`,
-            type: 'عربون عميل محول'
-          });
-        }
+        const supplierMap = [
+          { kw: 'زاهد', key: 'ZAHED' },
+          { kw: 'عواجي', key: 'AWAJI' },
+          { kw: 'طه', key: 'TAHA' },
+          { kw: 'أراك', key: 'ARAK' }
+        ];
+        supplierMap.forEach(m => {
+          if (advanceDirectedTo.includes(m.kw) && appData.mahmoudLog?.timberSuppliers?.[m.key]) {
+            const ts = appData.mahmoudLog.timberSuppliers[m.key];
+            ts.payments.unshift({
+              date: today,
+              amount: advancePaid,
+              desc: `توجيه عربون عقد ${newContractId} (${customerName})`,
+              type: 'عربون عميل محول'
+            });
+            ts.paymentsTotal = +(ts.paymentsTotal + advancePaid).toFixed(2);
+            ts.balanceDue = Math.max(0, +(ts.invoicesTotal - ts.paymentsTotal).toFixed(2));
+          }
+        });
       }
 
       saveDB();
@@ -2511,8 +3549,126 @@
       if (andPrint) {
         printContract(newContractId);
       } else {
-        alert(`تم حفظ العقد (${newContractId}) وإصدار أمر تشغيل للورشة بنجاح!`);
+        alert(`تم حفظ العقد (${newContractId}) وإرسال أمر التصنيع للورشة وخصم الألواح بنجاح!`);
       }
+    }
+
+    // Standalone Workshop Work Order Modal Logic
+    function openNewWorkOrderModal() {
+      document.getElementById('wo-customer-name').value = '';
+      document.getElementById('wo-title').value = '';
+      document.getElementById('wo-boards-qty').value = '6';
+      document.getElementById('wo-bom-cost').value = '950';
+      document.getElementById('wo-croquis').value = 'مخطط تفصيل مباشر بالورشة';
+      const nextWeek = new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0];
+      document.getElementById('wo-target-date').value = nextWeek;
+      populateInventoryBoardDropdown('wo-inventory-board');
+      const sel = document.getElementById('wo-inventory-board');
+      if (sel && sel.options.length > 1) sel.selectedIndex = 1;
+      openModal('modal-new-workorder');
+    }
+
+    function saveStandaloneWorkOrder() {
+      const customerName = document.getElementById('wo-customer-name').value.trim();
+      const title = document.getElementById('wo-title').value.trim();
+      const boardCode = document.getElementById('wo-inventory-board')?.value || 'NONE';
+      const boardsQty = parseFloat(document.getElementById('wo-boards-qty').value) || 0;
+      const targetDate = document.getElementById('wo-target-date').value || new Date().toISOString().split('T')[0];
+      let bomCost = parseFloat(document.getElementById('wo-bom-cost').value) || 0;
+      const croquisBefore = document.getElementById('wo-croquis').value.trim() || 'مخطط ورشة مباشر';
+
+      if (!customerName || !title) {
+        alert('يرجى إدخال اسم العميل أو الجهة ووصف العمل المطلوب.');
+        return;
+      }
+
+      if (boardCode !== 'NONE' && boardsQty > 0) {
+        const invItem = appData.inventory.find(i => i.code === boardCode);
+        if (invItem) {
+          invItem.stock = Math.max(0, invItem.stock - boardsQty);
+          if (!bomCost || bomCost === 950) bomCost = Math.round(boardsQty * invItem.cost);
+        }
+      }
+
+      const woId = `WO-DIR-${Math.floor(100 + Math.random() * 900)}`;
+      appData.workOrders.unshift({
+        id: woId,
+        contractId: 'DIRECT',
+        customerName,
+        title,
+        stage: 'SAW_CUTTING',
+        bomCost,
+        targetDate,
+        boardCode: boardCode !== 'NONE' ? boardCode : '',
+        boardsQty: boardCode !== 'NONE' ? boardsQty : 0,
+        croquisBefore,
+        isNewFromShowroom: false
+      });
+
+      saveDB();
+      closeModal('modal-new-workorder');
+      switchTab('workorders');
+    }
+
+    // ADR-002: Cancel Contract & Issue Credit Note (إشعار دائن)
+    function openCancelContractModal(contractId) {
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+      document.getElementById('cc-contract-id').value = c.id;
+      document.getElementById('cc-contract-summary').textContent = `${c.id} - ${c.title} (العميل: ${c.customerName} | المدفوع: ${c.advancePaid} ر.س)`;
+      document.getElementById('cc-paid-amount').value = c.advancePaid || 0;
+      document.getElementById('cc-fee-amount').value = '0';
+      document.getElementById('cc-refund-amount').value = c.advancePaid || 0;
+      document.getElementById('cc-reason').value = '';
+      openModal('modal-cancel-contract');
+    }
+
+    function recalcCancelRefund() {
+      const paid = parseFloat(document.getElementById('cc-paid-amount').value) || 0;
+      const fee = parseFloat(document.getElementById('cc-fee-amount').value) || 0;
+      document.getElementById('cc-refund-amount').value = Math.max(0, +(paid - fee).toFixed(2));
+    }
+
+    function confirmCancelContract() {
+      const contractId = document.getElementById('cc-contract-id').value;
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+
+      const fee = parseFloat(document.getElementById('cc-fee-amount').value) || 0;
+      const refund = parseFloat(document.getElementById('cc-refund-amount').value) || 0;
+      const method = document.getElementById('cc-refund-method').value || 'CASH';
+      const reason = document.getElementById('cc-reason').value.trim() || 'إلغاء بناءً على طلب العميل';
+      const today = new Date().toISOString().split('T')[0];
+
+      // Restore boards to Workshop Stock if not yet cut
+      const wo = appData.workOrders.find(w => w.contractId === c.id);
+      if (wo) {
+        if (wo.stage === 'SAW_CUTTING' && wo.boardCode && wo.boardsQty > 0) {
+          const invItem = appData.inventory.find(i => i.code === wo.boardCode);
+          if (invItem) invItem.stock += wo.boardsQty;
+        }
+        wo.stage = 'CANCELLED';
+        wo.isNewFromShowroom = false;
+      }
+
+      c.status = 'CANCELLED';
+      c.cancelNote = {
+        creditNoteId: `CN-${c.id.split('-').pop()}`,
+        date: today,
+        originalTotal: c.totalAmount,
+        originalPaid: c.advancePaid,
+        feeRetained: fee,
+        refundedAmount: refund,
+        method,
+        reason
+      };
+      // Keep retained fee as net advancePaid so cash drawer remains mathematically accurate
+      c.advancePaid = fee;
+      c.remainingAmount = 0;
+
+      saveDB();
+      closeModal('modal-cancel-contract');
+      printCreditNote(c.id);
     }
 
     function printContract(contractId) {
@@ -2523,8 +3679,31 @@
       const vatAmount = (c.totalAmount * 0.15 / 1.15);
       const netBeforeVat = c.totalAmount - vatAmount;
 
+      const itemsTableHtml = (c.items && c.items.length > 0)
+        ? `<table class="w-full text-right text-xs border-collapse border border-slate-400 mt-2">
+             <thead class="bg-slate-100">
+               <tr>
+                 <th class="border border-slate-400 p-1.5">البند والمواصفات</th>
+                 <th class="border border-slate-400 p-1.5 text-center">المتر / العدد</th>
+                 <th class="border border-slate-400 p-1.5 text-center">سعر الوحدة</th>
+                 <th class="border border-slate-400 p-1.5 text-center">الإجمالي</th>
+               </tr>
+             </thead>
+             <tbody>
+               ${c.items.map(it => `
+                 <tr>
+                   <td class="border border-slate-400 p-1.5 font-bold">${it.desc}</td>
+                   <td class="border border-slate-400 p-1.5 text-center font-mono">${it.qty}</td>
+                   <td class="border border-slate-400 p-1.5 text-center font-mono">${it.price.toFixed(2)}</td>
+                   <td class="border border-slate-400 p-1.5 text-center font-mono font-bold">${(it.qty * it.price).toFixed(2)} ر.س</td>
+                 </tr>
+               `).join('')}
+             </tbody>
+           </table>`
+        : '';
+
       printArea.innerHTML = `
-        <div class="p-6 border-2 border-slate-800 rounded-2xl space-y-6 text-right" dir="rtl">
+        <div class="p-6 border-2 border-slate-800 rounded-2xl space-y-5 text-right" dir="rtl">
           <div class="flex justify-between items-start border-b-2 border-slate-800 pb-4">
             <div>
               <h1 class="text-2xl font-black">منظومة معارض ومناجر الأخشاب والدواليب</h1>
@@ -2538,13 +3717,14 @@
             <div><strong>العميل / الجهة:</strong> ${c.customerName}</div>
             <div><strong>رقم الجوال:</strong> <span dir="ltr">${c.phone}</span></div>
             <div><strong>البائع المشرف:</strong> ${c.salesman}</div>
-            <div><strong>حالة العقد:</strong> ${c.status === 'COMPLETED' ? 'مكتمل ومسلّم' : 'قيد التصنيع والتنفيذ'}</div>
+            <div><strong>حالة العقد:</strong> ${c.status === 'COMPLETED' ? 'مكتمل ومسلّم' : c.status === 'CANCELLED' ? 'ملغى بموجب إشعار دائن' : 'قيد التصنيع والتنفيذ'}</div>
           </div>
 
           <div class="border border-slate-300 rounded-xl p-4 space-y-2">
             <h3 class="font-black text-base border-b pb-2">تفاصيل ومواصفات العمل والكروكي المعتمد:</h3>
             <p class="text-sm font-bold">${c.title}</p>
-            <p class="text-xs text-slate-600"><strong>مخطط الكروكي قبل التنفيذ:</strong> ${c.croquisBefore}</p>
+            ${itemsTableHtml}
+            <p class="text-xs text-slate-600 mt-2"><strong>مخطط الكروكي قبل التنفيذ:</strong> ${c.croquisBefore}</p>
             <p class="text-xs text-slate-600"><strong>مخطط الكروكي بعد التنفيذ:</strong> ${c.croquisAfter}</p>
           </div>
 
@@ -2569,7 +3749,7 @@
                 <td class="border border-slate-400 p-2 font-mono">${c.totalAmount.toFixed(2)} ر.س</td>
               </tr>
               <tr>
-                <td class="border border-slate-400 p-2">الدفعة المقدمة (العربون المقبوض) - وُجه إلى: (${c.advanceDirectedTo || 'صندوق المؤسسة'})</td>
+                <td class="border border-slate-400 p-2">الدفعة المقدمة / المقبوض - وُجه إلى: (${c.advanceDirectedTo || 'صندوق المؤسسة'})</td>
                 <td class="border border-slate-400 p-2 font-mono font-bold">${c.advancePaid.toFixed(2)} ر.س</td>
               </tr>
               <tr class="font-black">
@@ -2614,6 +3794,87 @@
       }, 250);
     }
 
+    function printReceiptVoucher(info) {
+      const printArea = document.getElementById('printable-area');
+      const methodLabel = info.method === 'CASH' ? 'نقداً (صندوق المؤسسة)' : info.method === 'MADA' ? 'شبكة مدى' : 'حوالة بنكية';
+      printArea.innerHTML = `
+        <div class="p-6 border-2 border-slate-800 rounded-2xl space-y-5 text-right" dir="rtl">
+          <div class="flex justify-between items-center border-b-2 border-slate-800 pb-4">
+            <div>
+              <h1 class="text-2xl font-black">سند قبض مالي معتمد</h1>
+              <p class="text-sm font-bold text-slate-600">منظومة معارض ومناجر الأخشاب والدواليب</p>
+            </div>
+            <div class="text-left font-mono text-sm">
+              <div><strong>رقم السند:</strong> ${info.voucherId}</div>
+              <div><strong>التاريخ:</strong> ${info.date}</div>
+            </div>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-300 space-y-2 text-sm">
+            <div><strong>استلمنا من المكرم / الجهة:</strong> ${info.customerName}</div>
+            <div><strong>مبلغاً وقدره:</strong> <span class="font-mono font-black text-lg">${info.amount.toFixed(2)} ر.س</span></div>
+            <div><strong>طريقة الدفع:</strong> ${methodLabel}</div>
+            <div><strong>وذلك عن:</strong> ${info.notes} (مرجع: <span class="font-mono">${info.refId}</span>)</div>
+            <div><strong>المتبقي في الذمة بعد هذه الدفعة:</strong> <span class="font-mono font-bold">${info.remaining.toFixed(2)} ر.س</span></div>
+          </div>
+          <div class="grid grid-cols-2 gap-8 pt-6 text-center text-sm font-bold">
+            <div><p>توقيع المستلم (أمين الصندوق)</p><p class="mt-8 text-slate-400">....................................</p></div>
+            <div><p>توقيع العميل المسدد</p><p class="mt-8 text-slate-400">....................................</p></div>
+          </div>
+        </div>
+      `;
+      printArea.classList.remove('hidden');
+      setTimeout(() => {
+        window.print();
+        printArea.classList.add('hidden');
+      }, 250);
+    }
+
+    function printCreditNote(contractId) {
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) return;
+      const cn = c.cancelNote || {
+        creditNoteId: `CN-${c.id.split('-').pop()}`,
+        date: new Date().toISOString().split('T')[0],
+        originalTotal: c.totalAmount,
+        originalPaid: c.advancePaid,
+        feeRetained: 0,
+        refundedAmount: 0,
+        reason: 'إلغاء عقد'
+      };
+      const printArea = document.getElementById('printable-area');
+      printArea.innerHTML = `
+        <div class="p-6 border-2 border-slate-800 rounded-2xl space-y-5 text-right" dir="rtl">
+          <div class="flex justify-between items-center border-b-2 border-slate-800 pb-4">
+            <div>
+              <h1 class="text-2xl font-black">إشعار دائن ضريبي (إلغاء عقد تفصيل)</h1>
+              <p class="text-sm font-bold text-slate-600">مستند عكسي رسمي وفق القاعدة المعمارية (ADR-002)</p>
+            </div>
+            <div class="text-left font-mono text-sm">
+              <div><strong>رقم الإشعار:</strong> ${cn.creditNoteId}</div>
+              <div><strong>التاريخ:</strong> ${cn.date}</div>
+            </div>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-300 space-y-2 text-sm">
+            <div><strong>العميل:</strong> ${c.customerName} (<span dir="ltr">${c.phone}</span>)</div>
+            <div><strong>العقد المرجعي الملغى:</strong> <span class="font-mono font-bold">${c.id}</span> - ${c.title}</div>
+            <div><strong>سبب الإلغاء:</strong> ${cn.reason}</div>
+            <div><strong>قيمة العقد الأصلية:</strong> <span class="font-mono">${cn.originalTotal.toFixed(2)} ر.س</span></div>
+            <div><strong>المبلغ المسترد للعميل:</strong> <span class="font-mono font-black">${cn.refundedAmount.toFixed(2)} ر.س</span></div>
+            <div><strong>مقابل أتعاب الكروكي والقص المحتجز:</strong> <span class="font-mono">${cn.feeRetained.toFixed(2)} ر.س</span></div>
+          </div>
+          <div class="grid grid-cols-2 gap-8 pt-6 text-center text-sm font-bold">
+            <div><p>توقيع العميل باستلام المسترد</p><p class="mt-8 text-slate-400">....................................</p></div>
+            <div><p>اعتماد إدارة المعرض</p><p class="mt-8 text-slate-400">....................................</p></div>
+          </div>
+        </div>
+      `;
+      printArea.classList.remove('hidden');
+      setTimeout(() => {
+        window.print();
+        printArea.classList.add('hidden');
+      }, 250);
+    }
+
     function openNewInventoryItemModal() {
       document.getElementById('inv-code').value = '';
       document.getElementById('inv-name').value = '';
@@ -2633,7 +3894,7 @@
       const cost = parseFloat(document.getElementById('inv-cost').value) || 0;
       const wholesalePrice = parseFloat(document.getElementById('inv-wholesale').value) || 0;
       const retailPrice = parseFloat(document.getElementById('inv-retail').value) || 0;
-      const location = document.getElementById('inv-location').value.trim() || 'المستودع الرئيسي';
+      const location = document.getElementById('inv-location').value.trim() || 'مخزن الورشة الرئيسي';
 
       if (!code || !name) {
         alert('يرجى إدخال كود اللوح واسمه.');
@@ -2657,6 +3918,17 @@
         opt.textContent = `${s.name} (الرصيد الحالي: ${s.balance} ر.س)`;
         sel.appendChild(opt);
       });
+      const boardSel = document.getElementById('pur-board-code');
+      if (boardSel) {
+        boardSel.innerHTML = '<option value="NONE">-- مشتريات عامة / إكسسوارات (بدون إضافة ألواح) --</option>';
+        appData.inventory.forEach(inv => {
+          const opt = document.createElement('option');
+          opt.value = inv.code;
+          opt.textContent = `${inv.name} (${inv.code}) - الرصيد: ${inv.stock} لوح`;
+          boardSel.appendChild(opt);
+        });
+      }
+      if (document.getElementById('pur-boards-qty')) document.getElementById('pur-boards-qty').value = '0';
       document.getElementById('pur-desc').value = '';
       document.getElementById('pur-total').value = '5000';
       document.getElementById('pur-paid').value = '0';
@@ -2668,6 +3940,8 @@
       const desc = document.getElementById('pur-desc').value.trim();
       const total = parseFloat(document.getElementById('pur-total').value) || 0;
       const paid = parseFloat(document.getElementById('pur-paid').value) || 0;
+      const boardCode = document.getElementById('pur-board-code')?.value || 'NONE';
+      const boardsQty = parseFloat(document.getElementById('pur-boards-qty')?.value) || 0;
 
       if (!desc || total <= 0) {
         alert('يرجى إدخال بيان المشتريات وإجمالي الفاتورة.');
@@ -2677,14 +3951,43 @@
       const sup = appData.suppliers.find(s => s.code === supCode);
       if (!sup) return;
 
+      // Auto-increment Workshop Timber Stock if boards were purchased
+      if (boardCode !== 'NONE' && boardsQty > 0) {
+        const invItem = appData.inventory.find(i => i.code === boardCode);
+        if (invItem) {
+          invItem.stock += boardsQty;
+        }
+      }
+
       const remaining = Math.max(0, total - paid);
       sup.balance += remaining;
+      const today = new Date().toISOString().split('T')[0];
+
+      if (sup.code === 'SUP-TAHA' && appData.mahmoudLog?.timberSuppliers?.TAHA) {
+        const ts = appData.mahmoudLog.timberSuppliers.TAHA;
+        ts.orders.unshift({ code: boardCode !== 'NONE' ? boardCode : desc, type: 'فاتورة', qty: boardsQty || 1, price: boardsQty > 0 ? +(total / boardsQty).toFixed(2) : total, total, section: 'خشب' });
+        ts.invoicesTotal = +(ts.invoicesTotal + total).toFixed(2);
+        if (paid > 0) {
+          ts.payments.unshift({ date: today, amount: paid, desc, type: 'دفعة مع الفاتورة' });
+          ts.paymentsTotal = +(ts.paymentsTotal + paid).toFixed(2);
+        }
+        ts.balanceDue = Math.max(0, +(ts.invoicesTotal - ts.paymentsTotal).toFixed(2));
+      } else if (sup.code === 'SUP-ARAK' && appData.mahmoudLog?.timberSuppliers?.ARAK) {
+        const ts = appData.mahmoudLog.timberSuppliers.ARAK;
+        ts.orders.unshift({ code: boardCode !== 'NONE' ? boardCode : desc, type: 'فاتورة', qty: boardsQty || 1, price: boardsQty > 0 ? +(total / boardsQty).toFixed(2) : total, total, section: 'خشب' });
+        ts.invoicesTotal = +(ts.invoicesTotal + total).toFixed(2);
+        if (paid > 0) {
+          ts.payments.unshift({ date: today, amount: paid, desc, type: 'دفعة مع الفاتورة' });
+          ts.paymentsTotal = +(ts.paymentsTotal + paid).toFixed(2);
+        }
+        ts.balanceDue = Math.max(0, +(ts.invoicesTotal - ts.paymentsTotal).toFixed(2));
+      }
 
       if (paid > 0) {
         appData.expenses.unshift({
           id: `EXP-${Date.now().toString().slice(-4)}`,
-          date: new Date().toISOString().split('T')[0],
-          costCenter: 'WAREHOUSE',
+          date: today,
+          costCenter: 'WORKSHOP',
           category: `سداد دفعة للمورد: ${sup.name} (${desc})`,
           amount: paid,
           method: 'CASH',
@@ -2695,7 +3998,7 @@
 
       saveDB();
       closeModal('modal-new-purchase');
-      alert(`تم تسجيل فاتورة المشتريات من (${sup.name}) وتحديث رصيده بنجاح.`);
+      alert(`تم تسجيل فاتورة المشتريات من (${sup.name}) وتحديث رصيده ومخزن الورشة بنجاح.`);
     }
 
     // Worker Advance & Daily Wage Actions
@@ -2808,6 +4111,94 @@
       alert(`تم إضافة ${addedDays} يوم عمل للعامل (${dw.name}) وتحديث مستحقاته تلقائياً.`);
     }
 
+    // Add New Worker & Add New Supplier Modals
+    function openNewWorkerModal() {
+      document.getElementById('nw-category').value = 'DAILY';
+      document.getElementById('nw-name').value = '';
+      document.getElementById('nw-role').value = '';
+      document.getElementById('nw-salary').value = '2500';
+      document.getElementById('nw-initial-days').value = '0';
+      toggleNewWorkerFields();
+      openModal('modal-new-worker');
+    }
+
+    function toggleNewWorkerFields() {
+      const cat = document.getElementById('nw-category')?.value || 'DAILY';
+      const daysBox = document.getElementById('nw-daily-days-box');
+      if (daysBox) {
+        daysBox.classList.toggle('hidden', cat !== 'DAILY');
+      }
+    }
+
+    function saveNewWorker() {
+      const cat = document.getElementById('nw-category').value;
+      const name = document.getElementById('nw-name').value.trim();
+      const role = document.getElementById('nw-role').value.trim() || 'نجار وفني ورشة';
+      const salary = parseFloat(document.getElementById('nw-salary').value) || 0;
+      const initialDays = parseFloat(document.getElementById('nw-initial-days')?.value) || 0;
+
+      if (!name || salary <= 0) {
+        alert('يرجى إدخال اسم العامل والراتب التعاقدي بشكل صحيح.');
+        return;
+      }
+
+      if (cat === 'DAILY') {
+        const nextIdx = (appData.mahmoudLog.dailyWorkers?.length || 0) + 1;
+        const dailyRate = +(salary / 30).toFixed(2);
+        const totalEarned = +(initialDays * dailyRate).toFixed(2);
+        appData.mahmoudLog.dailyWorkers.push({
+          id: `DW-${nextIdx}`,
+          name,
+          baseSalary: salary,
+          dailyRate,
+          totalDays: initialDays,
+          totalEarned,
+          totalPaid: 0,
+          remainingDue: totalEarned
+        });
+        switchWorkerSubTab('DAILY');
+      } else {
+        const nextIdx = (appData.workers?.length || 0) + 1;
+        appData.workers.push({
+          id: `W${nextIdx}`,
+          name,
+          role,
+          wageType: 'شهري',
+          wage: salary,
+          advances: 0
+        });
+        switchWorkerSubTab('MONTHLY');
+      }
+
+      saveDB();
+      closeModal('modal-new-worker');
+    }
+
+    function openNewSupplierModal() {
+      document.getElementById('ns-name').value = '';
+      document.getElementById('ns-cat').value = 'أخشاب وألواح';
+      document.getElementById('ns-phone').value = '';
+      document.getElementById('ns-balance').value = '0';
+      openModal('modal-new-supplier');
+    }
+
+    function saveNewSupplier() {
+      const name = document.getElementById('ns-name').value.trim();
+      const cat = document.getElementById('ns-cat').value;
+      const phone = document.getElementById('ns-phone').value.trim() || '0500000000';
+      const balance = parseFloat(document.getElementById('ns-balance').value) || 0;
+
+      if (!name) {
+        alert('يرجى إدخال اسم المورد.');
+        return;
+      }
+
+      const code = `SUP-${Math.floor(100 + Math.random() * 900)}`;
+      appData.suppliers.push({ code, name, cat, phone, balance });
+      saveDB();
+      closeModal('modal-new-supplier');
+    }
+
     // ==========================================
     // PKG-04: DYNAMIC MAHMOUD LOG TABLES & MODALS
     // ==========================================
@@ -2879,6 +4270,41 @@
       if (document.getElementById('ms-foot-diff')) document.getElementById('ms-foot-diff').textContent = diffFormatted;
     }
 
+    function syncMonthlySettlementFromLive() {
+      const currentMonth = new Date().getMonth() + 1;
+      let liveInvoices = 0;
+      let liveTransfers = 0;
+      let liveExpenses = 0;
+
+      appData.contracts.forEach(c => {
+        if (c.status === 'CANCELLED') return;
+        const m = parseInt((c.signingDate || '').split('-')[1], 10);
+        if (m === currentMonth) {
+          liveInvoices += (c.totalAmount || 0);
+          liveTransfers += (c.advancePaid || 0);
+        }
+      });
+
+      appData.expenses.forEach(e => {
+        const m = parseInt((e.date || '').split('-')[1], 10);
+        if (m === currentMonth && e.costCenter === 'WORKSHOP') {
+          liveExpenses += (e.amount || 0);
+        }
+      });
+
+      const targetItem = appData.mahmoudLog.monthlySettlement.find(x => x.m === currentMonth);
+      if (targetItem) {
+        if (liveInvoices > targetItem.invoices) targetItem.invoices = liveInvoices;
+        if (liveTransfers > targetItem.transfers) targetItem.transfers = liveTransfers;
+        if (liveExpenses > targetItem.expenses) targetItem.expenses = liveExpenses;
+        targetItem.diff = targetItem.transfers - targetItem.invoices;
+        targetItem.note = `محدّث آلياً من عقود ومصروفات النظام بتاريخ ${new Date().toISOString().split('T')[0]}`;
+      }
+
+      saveDB();
+      alert(`تم احتساب ومزامنة بيانات الشهر الحالي (${targetItem?.name || currentMonth}) من العقود والمصروفات الحية بنجاح!`);
+    }
+
     function openMonthlySettlementModal() {
       const sel = document.getElementById('ms-month-select');
       sel.innerHTML = '';
@@ -2918,16 +4344,20 @@
 
     function filterTimberSupplier(supKey) {
       currentTimberSupplier = supKey;
-      const btnZahed = document.getElementById('btn-sup-zahed');
-      const btnAwaji = document.getElementById('btn-sup-awaji');
-
-      if (supKey === 'ZAHED') {
-        btnZahed.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm';
-        btnAwaji.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs';
-      } else {
-        btnAwaji.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm';
-        btnZahed.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs';
-      }
+      const btnMap = {
+        ZAHED: document.getElementById('btn-sup-zahed'),
+        AWAJI: document.getElementById('btn-sup-awaji'),
+        TAHA: document.getElementById('btn-sup-taha'),
+        ARAK: document.getElementById('btn-sup-arak')
+      };
+      Object.entries(btnMap).forEach(([k, btn]) => {
+        if (!btn) return;
+        if (k === supKey) {
+          btn.className = 'px-3.5 py-1.5 rounded-xl bg-wood-800 text-white font-bold text-xs shadow-sm';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs';
+        }
+      });
       renderTimberReconciliation();
     }
 
@@ -2936,6 +4366,7 @@
       document.getElementById('to-code').value = '';
       document.getElementById('to-qty').value = '10';
       document.getElementById('to-price').value = '150';
+      if (document.getElementById('to-add-to-stock')) document.getElementById('to-add-to-stock').checked = true;
       openModal('modal-timber-order');
     }
 
@@ -2946,6 +4377,7 @@
       const type = document.getElementById('to-type').value;
       const qty = parseFloat(document.getElementById('to-qty').value) || 0;
       const price = parseFloat(document.getElementById('to-price').value) || 0;
+      const addToStock = document.getElementById('to-add-to-stock')?.checked ?? true;
 
       if (!code || qty <= 0 || price <= 0) {
         alert('يرجى إدخال كود اللوح والعدد والسعر بشكل صحيح.');
@@ -2958,7 +4390,28 @@
       sup.invoicesTotal = +(sup.invoicesTotal + orderTotal).toFixed(2);
       sup.balanceDue = +(sup.invoicesTotal - sup.paymentsTotal).toFixed(2);
 
+      // Automatically add boards to Workshop Timber Stock (inventory) if checked
+      if (addToStock) {
+        const existingBoard = appData.inventory.find(i => i.code.toLowerCase() === code.toLowerCase() || i.name.includes(code));
+        if (existingBoard) {
+          existingBoard.stock += qty;
+          existingBoard.cost = price;
+        } else {
+          appData.inventory.unshift({
+            code: code,
+            name: `ألواح ${code} (${type} - ${section})`,
+            supplier: sup.name,
+            stock: qty,
+            cost: price,
+            wholesalePrice: Math.round(price * 1.25),
+            retailPrice: Math.round(price * 2.8),
+            location: 'مخزن الورشة الرئيسي'
+          });
+        }
+      }
+
       currentTimberSupplier = supKey;
+      filterTimberSupplier(supKey);
       saveDB();
       closeModal('modal-timber-order');
     }
@@ -2989,6 +4442,7 @@
       sup.balanceDue = +(sup.invoicesTotal - sup.paymentsTotal).toFixed(2);
 
       currentTimberSupplier = supKey;
+      filterTimberSupplier(supKey);
       saveDB();
       closeModal('modal-timber-payment');
     }
@@ -2997,7 +4451,6 @@
       const sup = appData.mahmoudLog?.timberSuppliers?.[currentTimberSupplier];
       if (!sup) return;
 
-      // Cards
       const cardsBox = document.getElementById('supplier-reconcile-cards');
       if (cardsBox) {
         cardsBox.innerHTML = `
@@ -3019,7 +4472,6 @@
         `;
       }
 
-      // Orders
       const ordersTbody = document.getElementById('timber-orders-tbody');
       const ordersCount = document.getElementById('timber-orders-count');
       if (ordersTbody && sup.orders) {
@@ -3040,7 +4492,6 @@
         });
       }
 
-      // Payments
       const paymentsTbody = document.getElementById('timber-payments-tbody');
       const paymentsCount = document.getElementById('timber-payments-count');
       if (paymentsTbody && sup.payments) {
@@ -3082,7 +4533,7 @@
         tr.className = 'hover:bg-slate-50 transition-colors';
         tr.innerHTML = `
           <td class="py-3 px-3 font-bold text-slate-800 flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-wood-100 text-wood-800 flex items-center justify-center text-[10px] font-bold shrink-0">${w.id.split('-')[1]}</span>
+            <span class="w-6 h-6 rounded-full bg-wood-100 text-wood-800 flex items-center justify-center text-[10px] font-bold shrink-0">${w.id.split('-')[1] || w.id}</span>
             <span>${w.name}</span>
           </td>
           <td class="py-3 px-3 text-center font-mono text-slate-600">${w.baseSalary.toLocaleString()} ر.س</td>
@@ -3112,7 +4563,7 @@
     }
 
     // ==========================================
-    // PKG-05: TWO-WAY CLOUD SYNC & SUPABASE CLIENT LAYER
+    // PKG-05: TWO-WAY CLOUD SYNC & AUTO BACKGROUND PUSH
     // ==========================================
     let supabaseClient = null;
 
@@ -3182,6 +4633,26 @@
       closeModal('modal-cloud-config');
     }
 
+    async function autoSyncCloud() {
+      if (!supabaseClient) return;
+      try {
+        updateCloudIndicator(true, 'مزامنة تلقائية...');
+        const { error } = await supabaseClient
+          .from('system_metadata')
+          .upsert({
+            id: 'GLOBAL_WOODWORK_STATE',
+            app_version: '3.0.0',
+            last_sync_at: new Date().toISOString(),
+            data_payload: appData
+          });
+        if (!error) {
+          updateCloudIndicator(true, 'متزامن سحابياً');
+        }
+      } catch (e) {
+        console.warn('Auto cloud sync skipped:', e);
+      }
+    }
+
     async function pullCloudData(showNotification = false) {
       if (!supabaseClient) {
         if (showNotification) alert('النظام يعمل حالياً في الوضع المحلي (أوفلاين). أدخل بيانات مشروع Supabase أولاً.');
@@ -3200,7 +4671,7 @@
         if (data && data.data_payload) {
           appData = data.data_payload;
           if (!appData.mahmoudLog) appData.mahmoudLog = JSON.parse(JSON.stringify(MAHMOUD_LOG));
-          saveDB();
+          saveDB(false);
           updateCloudIndicator(true, 'متزامن سحابياً');
           if (showNotification) alert('تم سحب أحدث البيانات من السحابة بنجاح!');
         } else {
@@ -3226,7 +4697,7 @@
           .from('system_metadata')
           .upsert({
             id: 'GLOBAL_WOODWORK_STATE',
-            app_version: '2.1.0',
+            app_version: '3.0.0',
             last_sync_at: new Date().toISOString(),
             data_payload: appData
           });
@@ -3259,6 +4730,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      const todayInput = document.getElementById('cash-filter-date');
+      if (todayInput) todayInput.value = new Date().toISOString().split('T')[0];
       setOperationalMode(appData.settings.mode || 'FULL', true);
       initCloudSync();
     });
