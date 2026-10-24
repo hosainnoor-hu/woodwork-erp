@@ -4682,11 +4682,13 @@
     // ==========================================
     // PKG-05: TWO-WAY CLOUD SYNC & AUTO BACKGROUND PUSH
     // ==========================================
+    const DEFAULT_SUPABASE_URL = 'https://klvpgdpfqlphazwawcyg.supabase.co';
+    const DEFAULT_SUPABASE_KEY = 'sb_publishable_C_A3TySd5_EQ3MGGE7-Urg_gUMiNeD2';
     let supabaseClient = null;
 
     function initCloudSync() {
-      const savedUrl = localStorage.getItem('woodwork_supabase_url');
-      const savedKey = localStorage.getItem('woodwork_supabase_key');
+      const savedUrl = localStorage.getItem('woodwork_supabase_url') || DEFAULT_SUPABASE_URL;
+      const savedKey = localStorage.getItem('woodwork_supabase_key') || DEFAULT_SUPABASE_KEY;
 
       if (savedUrl && savedKey && window.supabase) {
         try {
@@ -4718,8 +4720,8 @@
     }
 
     function openCloudConfigModal() {
-      document.getElementById('cfg-supabase-url').value = localStorage.getItem('woodwork_supabase_url') || '';
-      document.getElementById('cfg-supabase-key').value = localStorage.getItem('woodwork_supabase_key') || '';
+      document.getElementById('cfg-supabase-url').value = localStorage.getItem('woodwork_supabase_url') || DEFAULT_SUPABASE_URL;
+      document.getElementById('cfg-supabase-key').value = localStorage.getItem('woodwork_supabase_key') || DEFAULT_SUPABASE_KEY;
       document.getElementById('cfg-admin-pin').value = localStorage.getItem('woodwork_admin_pin') || '';
       openModal('modal-cloud-config');
     }
