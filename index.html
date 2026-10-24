@@ -79,10 +79,28 @@
           </select>
         </div>
 
+        <!-- Backup Download Button -->
+        <button onclick="exportSystemBackup()" class="bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/60 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="تنزيل نسخة احتياطية فورية من قاعدة البيانات بصيغة JSON">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="hidden sm:inline">📥 نسخة احتياطية</span>
+        </button>
+
+        <!-- Fiscal Year Management Button (Visible for Admin only) -->
+        <button onclick="openFiscalModal()" id="btn-admin-fiscal" class="bg-cyan-950/90 hover:bg-cyan-900 text-cyan-300 border border-cyan-600/60 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="إدارة الدورة والسنة المالية وإقفال الفترات">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span class="hidden sm:inline">📅 الدورة المالية</span>
+        </button>
+
         <!-- Admin Access Control Button (Visible for Admin only) -->
-        <button onclick="openAccessControlModal()" id="btn-admin-access-control" class="bg-wood-800 hover:bg-wood-750 text-amber-300 border border-wood-600 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="إدارة الصلاحيات وأكواد الدخول">
-          <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span class="hidden xs:inline sm:inline">أكواد الدخول</span>
+        <button onclick="openAccessControlModal()" id="btn-admin-access-control" class="bg-wood-800 hover:bg-wood-750 text-amber-300 border border-wood-600 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="لوحة تحكم المستخدمين والبائعين وأكواد الدخول">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">👥 المستخدمين</span>
+        </button>
+
+        <!-- Reset Button (Visible for Admin only) -->
+        <button onclick="openResetConfirmModal()" id="btn-admin-reset-prod" class="bg-rose-950/90 hover:bg-rose-900 text-rose-200 border border-rose-700/60 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all" title="تصفير المعاملات للبدء الفعلي">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span class="hidden sm:inline">🧹 تصفير</span>
         </button>
 
         <!-- Role Logout Button -->
@@ -192,6 +210,41 @@
 
     <!-- TAB 1: DASHBOARD & CASH CLOSING (صندوق الإغلاق اليومي) -->
     <section id="tab-dashboard" class="tab-content space-y-6">
+      
+      <!-- Prominent Admin Quick Action Controls & Safety Strip -->
+      <div id="dash-admin-actions-bar" class="bg-gradient-to-r from-wood-950 via-slate-900 to-wood-950 text-white p-4 rounded-3xl shadow-lg border border-wood-700/60 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-sm text-amber-200">لوحة التحكم السريع وإدارة الدورة المالية</h3>
+            <p class="text-[11px] text-slate-300">النسخ الاحتياطي اليدوي، إدارة البائعين، إقفال الفترات، وتصفير البدء الفعلي</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+          <button onclick="exportSystemBackup()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>📥 تنزيل نسخة احتياطية (JSON)</span>
+          </button>
+          
+          <button onclick="openAccessControlModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>👥 إدارة البائعين والصلاحيات</span>
+          </button>
+
+          <button onclick="openFiscalModal()" class="bg-cyan-700 hover:bg-cyan-800 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span>📅 إدارة وإقفال الدورة المالية</span>
+          </button>
+
+          <button onclick="openResetConfirmModal()" class="bg-rose-700 hover:bg-rose-800 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>🧹 تصفير المعاملات للبدء الفعلي</span>
+          </button>
+        </div>
+      </div>
       
       <!-- Live Cash Drawer Closure (صندوق السيولة النقدية اليومي من ورقة أ. محمود) -->
       <div class="bg-gradient-to-r from-slate-900 via-wood-950 to-slate-900 text-white p-6 rounded-3xl shadow-xl border border-wood-700/50">
@@ -660,6 +713,10 @@
             <p class="text-xs text-slate-500 mt-1">مقارنة الحوالات والشبكات مقابل فواتير المعارض ومصروفات الورشة لتحديد موقف الحساب (لك أو عليك)</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openFiscalModal()" class="bg-cyan-700 hover:bg-cyan-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm" title="إدارة الدورة المالية المخصصة وقفل الأشهر">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+              📅 إقفال / إعداد الدورة المالية
+            </button>
             <button onclick="syncMonthlySettlementFromLive()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm" title="تحديث الشهر الحالي تلقائياً من العقود والمصروفات المسجلة">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
               احتساب آلي من العمليات الحية
@@ -1580,6 +1637,10 @@
           <label class="block font-bold text-slate-600 mb-1">الراتب الشهري المرجعي (تُحسب منه اليومية آلياً ÷ 30) *</label>
           <input type="number" id="nw-salary" value="3000" class="w-full p-2.5 rounded-xl border border-slate-300 font-black text-center text-wood-800">
         </div>
+        <div id="nw-daily-days-box">
+          <label class="block font-bold text-slate-600 mb-1">أيام عمل سابقة مسجلة مبدئياً (إن وجدت)</label>
+          <input type="number" id="nw-initial-days" value="0" min="0" step="0.5" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold text-center">
+        </div>
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 text-xs">
@@ -2130,6 +2191,15 @@
           </h4>
           <button onclick="cancelGatewayPin()" class="text-slate-400 hover:text-white text-xs">إلغاء</button>
         </div>
+
+        <!-- Optional Salesman Picker when in Showroom mode -->
+        <div id="gateway-salesman-picker-box" class="hidden space-y-1">
+          <label class="block text-[11px] font-bold text-amber-300">اختر اسم البائع المسؤول:</label>
+          <select id="gateway-salesman-select" onchange="onGatewaySalesmanChange()" class="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold text-xs focus:border-amber-400">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
         <p id="gateway-role-hint" class="text-[11px] text-slate-300">أدخل رمز الدخول للمتابعة:</p>
         <input type="password" id="gateway-pin-input" maxlength="10" placeholder="أدخل رمز PIN" onkeydown="if(event.key==='Enter') submitGatewayPin()" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-center text-lg tracking-widest focus:border-amber-400 focus:outline-none">
         <p id="gateway-pin-error" class="text-[11px] text-rose-400 font-bold hidden text-center">رمز الدخول غير صحيح، يرجى المحاولة مرة أخرى.</p>
@@ -2148,46 +2218,222 @@
     </div>
   </div>
 
-  <!-- MODAL: ACCESS CONTROL & PIN MANAGEMENT (إدارة الصلاحيات وأكواد الدخول) -->
-  <div id="modal-access-control" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+  <!-- MODAL: USERS & SALESMEN ACCESS CONTROL (لوحة تحكم المستخدمين والبائعين وأكواد الدخول) -->
+  <div id="modal-access-control" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-100 my-8 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-        <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-          <i data-lucide="key-round" class="w-4 h-4 text-emerald-600"></i>
-          إدارة الصلاحيات وأكواد الدخول (PIN)
+        <h3 class="font-black text-base text-slate-800 flex items-center gap-2">
+          <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+          لوحة تحكم المستخدمين والبائعين وأكواد الدخول (PIN)
         </h3>
         <button onclick="closeModal('modal-access-control')" class="text-slate-400 hover:text-slate-600">
-          <i data-lucide="x" class="w-4 h-4"></i>
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="space-y-3 text-xs">
-        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-emerald-950 text-[11px] leading-relaxed">
-          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-700 inline ml-1"></i>
-          <strong>التحكم المركزي:</strong> يمكنك من هنا تعيين وتغيير أكواد الدخول لكل برنامج؛ وسيتم تحديثها ومزامنتها سحابياً لجميع الأجهزة فوراً.
+      <div class="space-y-4 text-xs">
+        <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 text-indigo-950 text-xs leading-relaxed flex items-start gap-2.5">
+          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600 shrink-0 mt-0.5"></i>
+          <div>
+            <strong>إدارة مركزية مستقلة:</strong> يمكنك هنا تخصيص اسم وكود دخول (PIN) مستقل لكل بائع بالمعرض (محمد، عيسى، يونس...)، وكذلك لمدير الورشة (أ. محمود مصطفى) والإدارة العامة. عند دخول البائع بكوده يتم ربط عقوده وسنداته باسمه تلقائياً.
+          </div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">رمز دخول الإدارة الشاملة (أبو الزبير):</label>
-          <input type="password" id="ctrl-pin-admin" placeholder="9999" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+        <!-- Users Table -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+          <div class="bg-slate-900 text-white p-3 font-bold flex justify-between items-center">
+            <span class="flex items-center gap-1.5 text-xs">
+              <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
+              قائمة المستخدمين والبائعين المصرح لهم
+            </span>
+            <span id="users-count-badge" class="bg-indigo-600 text-[10px] px-2 py-0.5 rounded-full font-mono">5 مستخدمين</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">الاسم والصفة</th>
+                  <th class="py-2.5 px-3">الصلاحية / البرنامج</th>
+                  <th class="py-2.5 px-3 text-center">كود الدخول (PIN)</th>
+                  <th class="py-2.5 px-3">الجوال</th>
+                  <th class="py-2.5 px-3 text-center">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-tbody" class="divide-y divide-slate-100 font-medium">
+                <!-- Dynamically populated by renderUsersList() -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">رمز دخول صالة المعرض والمبيعات:</label>
-          <input type="password" id="ctrl-pin-showroom" placeholder="1111" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+        <!-- Add New User Form -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <h4 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="user-plus" class="w-4 h-4 text-emerald-600"></i>
+            + إضافة بائع أو مستخدم جديد للمنظومة
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+            <div class="sm:col-span-2">
+              <label class="block font-bold text-slate-600 mb-1">اسم الموظف / البائع *</label>
+              <input type="text" id="new-user-name" placeholder="مثال: يوسف أحمد (بائع جديد)" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">الصلاحية *</label>
+              <select id="new-user-role" class="w-full p-2 rounded-xl border border-slate-300 font-bold">
+                <option value="SHOWROOM">🏢 صالة المعرض والمبيعات</option>
+                <option value="WORKSHOP">🏭 ورشة التصنيع والمنجرة</option>
+                <option value="FULL">👑 الإدارة والتحكم الشامل</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">كود PIN (4 أرقام) *</label>
+              <input type="text" id="new-user-pin" maxlength="6" placeholder="مثال: 1040" class="w-full p-2 rounded-xl border border-slate-300 font-mono text-center font-black text-slate-800">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">رقم الجوال</label>
+              <input type="text" id="new-user-phone" placeholder="05xxxxxxxx" class="w-full p-2 rounded-xl border border-slate-300 font-mono text-left" dir="ltr">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">ملاحظات / القسم</label>
+              <input type="text" id="new-user-note" placeholder="مثال: مبيعات داريفا وماي هوم" class="w-full p-2 rounded-xl border border-slate-300">
+            </div>
+          </div>
+          <div class="pt-1 flex justify-end">
+            <button onclick="addNewUser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-bold shadow-sm flex items-center gap-1.5 transition-all">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              حفظ وإضافة المستخدم
+            </button>
+          </div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">رمز دخول الورشة والمنجرة (الأستاذ محمود):</label>
-          <input type="password" id="ctrl-pin-workshop" placeholder="2222" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-center text-sm font-bold">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FISCAL YEAR & FINANCIAL PERIOD CLOSING (إدارة الدورة المالية، إقفال الأشهر، وترحيل الأرصدة) -->
+  <div id="modal-fiscal-year" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-6 space-y-5 border border-slate-100 my-8 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="font-black text-base text-slate-800 flex items-center gap-2">
+          <i data-lucide="calendar-check" class="w-5 h-5 text-cyan-600"></i>
+          إدارة الدورة المالية المخصصة وإقفال الفترات وترحيل الأرصدة
+        </h3>
+        <button onclick="closeModal('modal-fiscal-year')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 text-xs">
+        
+        <!-- Notice on Custom Fiscal Cycles -->
+        <div class="bg-cyan-50 p-3.5 rounded-2xl border border-cyan-200 text-cyan-950 text-xs leading-relaxed flex items-start gap-2.5">
+          <i data-lucide="info" class="w-5 h-5 text-cyan-700 shrink-0 mt-0.5"></i>
+          <div>
+            <strong>مرونة الدورة المالية غير الميلادية:</strong> يتيح هذا القسم تحديد بداية ونهاية سنتكم المالية بحسب نظام المؤسسة الخاص (سواءً كان هجرياً، أو يبدأ في شهر محدد). كما يتيح قفل الأشهر المنتهية لمنع التلاعب، وإقفال السنة وترحيل الأرصدة الافتتاحية للموردين والعملاء والصندوق آلياً.
+          </div>
         </div>
 
-        <div class="pt-2 flex flex-col gap-2">
-          <button onclick="saveAccessControlPins()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl font-bold shadow-md flex items-center justify-center gap-1.5 transition-all">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            حفظ الأكواد ومزامنتها سحابياً
-          </button>
+        <!-- Section 1: Fiscal Year Configuration -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <h4 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="settings-2" class="w-4 h-4 text-slate-700"></i>
+            1. تعريف وتسمية السنة والدورة المالية النشطة
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">اسم / مسمى الدورة المالية *</label>
+              <input type="text" id="fiscal-year-name" placeholder="مثال: السنة المالية 1447 - 1448 هـ" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold bg-white">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">تاريخ بداية الدورة المالية *</label>
+              <input type="date" id="fiscal-start-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono bg-white">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">تاريخ نهاية الدورة المالية *</label>
+              <input type="date" id="fiscal-end-date" class="w-full p-2.5 rounded-xl border border-slate-300 font-mono bg-white">
+            </div>
+          </div>
+          <div class="flex justify-end pt-1">
+            <button onclick="saveFiscalConfig()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl font-bold shadow-sm flex items-center gap-1.5">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              حفظ بيانات الدورة المالية
+            </button>
+          </div>
         </div>
+
+        <!-- Section 2: Month Locking Table -->
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+          <div class="bg-slate-900 text-white p-3 font-bold flex justify-between items-center">
+            <span class="flex items-center gap-1.5 text-xs">
+              <i data-lucide="lock" class="w-4 h-4 text-cyan-400"></i>
+              2. حالة الفترات الشهرية (قفل / فتح الأشهر المحاسبية)
+            </span>
+            <span class="text-[11px] text-slate-300 font-normal">الأشهر المقفلة تمنع تعديل أو حذف أي حركة فيها</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3 text-center">الشهر</th>
+                  <th class="py-2.5 px-3">المسمى</th>
+                  <th class="py-2.5 px-3 text-emerald-700">التحصيلات</th>
+                  <th class="py-2.5 px-3 text-blue-700">الفواتير</th>
+                  <th class="py-2.5 px-3 text-center">حالة الشهر</th>
+                  <th class="py-2.5 px-3 text-center">الإجراء</th>
+                </tr>
+              </thead>
+              <tbody id="fiscal-months-tbody" class="divide-y divide-slate-100 font-medium">
+                <!-- Dynamically populated by renderFiscalMonths() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 3: Annual Closing & Balance Rollover -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-4 rounded-2xl border-2 border-amber-300 space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-black">
+              <i data-lucide="flag" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-xs text-amber-950">3. إقفال السنة المالية النهائية وترحيل الأرصدة الافتتاحية</h4>
+              <p class="text-[11px] text-amber-800">يقوم هذا الإجراء بإقفال الدورة المالية الحالية، تصفير ميزان التسويات المؤقت، ونقل أرصدة الموردين، ديون العملاء، رصيد الدرج، ومخزون الألواح كأرصدة افتتاحية للدورة الجديدة.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono text-xs">
+            <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 text-center">
+              <span class="text-[10px] block font-sans text-slate-500 font-bold">رصيد الصندوق المرحّل</span>
+              <span id="close-rollover-cash" class="font-black text-emerald-700 text-sm">0.00 ر.س</span>
+            </div>
+            <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 text-center">
+              <span class="text-[10px] block font-sans text-slate-500 font-bold">ديون العملاء المرحّلة</span>
+              <span id="close-rollover-debts" class="font-black text-amber-700 text-sm">0.00 ر.س</span>
+            </div>
+            <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 text-center">
+              <span class="text-[10px] block font-sans text-slate-500 font-bold">مستحقات الموردين المرحّلة</span>
+              <span id="close-rollover-suppliers" class="font-black text-rose-700 text-sm">0.00 ر.س</span>
+            </div>
+            <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 text-center">
+              <span class="text-[10px] block font-sans text-slate-500 font-bold">مخزون الألواح المرحّل</span>
+              <span id="close-rollover-timber" class="font-black text-blue-700 text-sm">0 لوح</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-amber-200/80">
+            <div class="w-full sm:w-auto">
+              <label class="block font-bold text-amber-950 text-[11px] mb-1">اسم الدورة المالية الجديدة القادمة:</label>
+              <input type="text" id="new-fiscal-year-name" placeholder="مثال: السنة المالية 1448 - 1449 هـ" class="p-2 rounded-xl border border-amber-300 font-bold bg-white text-xs w-full sm:w-64">
+            </div>
+            <button onclick="executeFiscalYearClose()" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl font-black shadow-md flex items-center justify-center gap-1.5 transition-all">
+              <i data-lucide="check-check" class="w-4 h-4"></i>
+              تأكيد إقفال السنة وترحيل الأرصدة
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2218,9 +2464,7 @@
         { m: 7, name: 'يوليو', transfers: 95228, invoices: 82109, expenses: 19789, diff: 13119, managers: 'أبومعاذ / أبويوسف', note: 'توريدات أشرطة ومصنع شريط' },
         { m: 8, name: 'أغسطس', transfers: 117833, invoices: 129616, expenses: 17468, diff: -11783, managers: 'أبومعاذ / أبويوسف', note: 'ذروة فواتير معرض داريفا' },
         { m: 9, name: 'سبتمبر', transfers: 94604, invoices: 72610, expenses: 13903, diff: 21994, managers: 'أبومعاذ / أبويوسف', note: 'سدادات زاهد وعواجي' },
-        { m: 10, name: 'أكتوبر', transfers: 72629, invoices: 67010, expenses: 11840, diff: 5619, managers: 'أبومعاذ / أبويوسف', note: 'الميزان حتى 18 أكتوبر' },
-        { m: 11, name: 'نوفمبر (تجريبي)', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'شهر قادم غير مقفل' },
-        { m: 12, name: 'ديسمبر (تجريبي)', transfers: 0, invoices: 0, expenses: 0, diff: 0, managers: 'أبومعاذ / أبويوسف', note: 'الإقفال السنوي النهائي' }
+        { m: 10, name: 'أكتوبر', transfers: 72629, invoices: 67010, expenses: 11840, diff: 5619, managers: 'أبومعاذ / أبويوسف', note: 'الميزان الفعلي المعتمد حتى 18 أكتوبر' }
       ],
       timberSuppliers: {
         ZAHED: {
@@ -3641,6 +3885,11 @@
       const boardSel = document.getElementById('qt-inventory-board');
       if (boardSel && boardSel.options.length > 1) boardSel.selectedIndex = 1;
 
+      populateSalesmenDropdown('qt-salesman');
+      if (appData.currentSalesman && document.getElementById('qt-salesman')) {
+        document.getElementById('qt-salesman').value = appData.currentSalesman;
+      }
+
       const itemsContainer = document.getElementById('qt-items-container');
       if (itemsContainer) {
         itemsContainer.innerHTML = '';
@@ -4416,11 +4665,11 @@
 
     // Add New Worker & Add New Supplier Modals
     function openNewWorkerModal() {
-      document.getElementById('nw-category').value = 'DAILY';
-      document.getElementById('nw-name').value = '';
-      document.getElementById('nw-role').value = '';
-      document.getElementById('nw-salary').value = '2500';
-      document.getElementById('nw-initial-days').value = '0';
+      if (document.getElementById('nw-category')) document.getElementById('nw-category').value = 'DAILY';
+      if (document.getElementById('nw-name')) document.getElementById('nw-name').value = '';
+      if (document.getElementById('nw-role')) document.getElementById('nw-role').value = '';
+      if (document.getElementById('nw-salary')) document.getElementById('nw-salary').value = '2500';
+      if (document.getElementById('nw-initial-days')) document.getElementById('nw-initial-days').value = '0';
       toggleNewWorkerFields();
       openModal('modal-new-worker');
     }
@@ -4547,6 +4796,11 @@
         const diffDisplay = item.diff === 0 ? '0.00 ر.س' : (isSurplus ? `+${item.diff.toLocaleString()} ر.س (لك)` : `${item.diff.toLocaleString()} ر.س (عليك)`);
         const diffColor = item.diff === 0 ? 'text-slate-500' : (isSurplus ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold');
 
+        const isClosed = (appData.fiscalSettings?.closedMonths || []).includes(item.m);
+        const lockBadge = isClosed ? 
+          `<span class="bg-rose-100 text-rose-800 text-[10px] font-black px-1.5 py-0.5 rounded mr-1 inline-flex items-center gap-0.5"><i data-lucide="lock" class="w-3 h-3"></i> مقفل</span>` : 
+          `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded mr-1 inline-flex items-center gap-0.5"><i data-lucide="lock-open" class="w-3 h-3"></i> مفتوح</span>`;
+
         tr.innerHTML = `
           <td class="py-3 px-3 text-center font-bold text-slate-500">${item.m}</td>
           <td class="py-3 px-3 font-black text-slate-800">${item.name}</td>
@@ -4555,7 +4809,7 @@
           <td class="py-3 px-3 font-mono font-bold text-rose-700">${item.expenses ? item.expenses.toLocaleString() + ' ر.س' : '0.00'}</td>
           <td class="py-3 px-3 font-mono ${diffColor}">${diffDisplay}</td>
           <td class="py-3 px-3 text-[11px] text-slate-600">${item.managers}</td>
-          <td class="py-3 px-3 text-[11px] text-slate-500">${item.note}</td>
+          <td class="py-3 px-3 text-[11px] text-slate-500">${lockBadge} ${item.note}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -5160,6 +5414,7 @@
       appData.debts = [];
       appData.transactions = [];
       appData.directSales = [];
+      appData.expenses = [];
 
       // 3. Keep inventory, workers, suppliers, mahmoudLog, and settings completely intact
       saveDB(true);
@@ -5215,6 +5470,63 @@
       return appData.settings.pins;
     }
 
+    // ==========================================
+    // UNIFIED ROLE GATEWAY & USER ACCESS CONTROL
+    // ==========================================
+    let currentActiveRole = null;
+    let selectedGatewayRole = null;
+
+    function showGateway() {
+      const gw = document.getElementById('screen-role-gateway');
+      const ws = document.getElementById('app-workspace');
+      if (gw) {
+        gw.classList.remove('hidden');
+        gw.style.display = 'flex';
+      }
+      if (ws) {
+        ws.classList.add('hidden');
+        ws.style.display = 'none';
+      }
+    }
+
+    function hideGateway() {
+      const gw = document.getElementById('screen-role-gateway');
+      const ws = document.getElementById('app-workspace');
+      if (gw) {
+        gw.classList.add('hidden');
+        gw.style.display = 'none';
+      }
+      if (ws) {
+        ws.classList.remove('hidden');
+        ws.style.display = 'flex';
+      }
+    }
+
+    function getSystemPins() {
+      if (!appData.settings) appData.settings = {};
+      if (!appData.settings.pins) {
+        appData.settings.pins = {
+          admin: localStorage.getItem('woodwork_admin_pin') || '9999',
+          showroom: '1111',
+          workshop: '2222'
+        };
+      }
+      return appData.settings.pins;
+    }
+
+    function getSystemUsers() {
+      if (!appData.users || !Array.isArray(appData.users) || appData.users.length === 0) {
+        appData.users = [
+          { id: 'usr-admin', name: 'أبو الزبير', role: 'FULL', pin: '9999', phone: '0500000000', note: 'المالك / الإدارة الشاملة', active: true },
+          { id: 'usr-workshop', name: 'أ. محمود مصطفى', role: 'WORKSHOP', pin: '2020', phone: '0500000001', note: 'مدير الورشة والتصنيع', active: true },
+          { id: 'usr-sale-1', name: 'محمد', role: 'SHOWROOM', pin: '1010', phone: '0501111111', note: 'بائع معتمد - المعرض', active: true },
+          { id: 'usr-sale-2', name: 'عيسى', role: 'SHOWROOM', pin: '1020', phone: '0502222222', note: 'بائع معتمد - المعرض', active: true },
+          { id: 'usr-sale-3', name: 'يونس', role: 'SHOWROOM', pin: '1030', phone: '0503333333', note: 'بائع معتمد - المعرض', active: true }
+        ];
+      }
+      return appData.users;
+    }
+
     function selectGatewayRole(role) {
       selectedGatewayRole = role;
       const box = document.getElementById('gateway-pin-box');
@@ -5222,24 +5534,49 @@
       const hint = document.getElementById('gateway-role-hint');
       const pinInput = document.getElementById('gateway-pin-input');
       const err = document.getElementById('gateway-pin-error');
+      const smPicker = document.getElementById('gateway-salesman-picker-box');
+      const smSelect = document.getElementById('gateway-salesman-select');
 
       if (err) err.classList.add('hidden');
       if (pinInput) pinInput.value = '';
 
       if (role === 'SHOWROOM') {
         title.innerHTML = '<i data-lucide="store" class="w-4 h-4 text-amber-400"></i><span>دخول صالة المعرض والمبيعات</span>';
-        hint.textContent = 'أدخل رمز PIN الخاص بالمعرض (الافتراضي: 1111):';
+        hint.textContent = 'أدخل رمز PIN الخاص بالبائع أو رمز صالة المعرض:';
+        if (smPicker && smSelect) {
+          smPicker.classList.remove('hidden');
+          smSelect.innerHTML = '';
+          const sUsers = getSystemUsers().filter(u => u.role === 'SHOWROOM');
+          sUsers.forEach(u => {
+            const opt = document.createElement('option');
+            opt.value = u.name;
+            opt.textContent = `${u.name} (PIN: ${u.pin})`;
+            smSelect.appendChild(opt);
+          });
+        }
       } else if (role === 'WORKSHOP') {
         title.innerHTML = '<i data-lucide="hammer" class="w-4 h-4 text-blue-400"></i><span>دخول ورشة التصنيع والمنجرة</span>';
-        hint.textContent = 'أدخل رمز PIN الخاص بالورشة (الافتراضي: 2222):';
+        hint.textContent = 'أدخل رمز PIN الخاص بالورشة (الأستاذ محمود - 2020):';
+        if (smPicker) smPicker.classList.add('hidden');
       } else {
         title.innerHTML = '<i data-lucide="crown" class="w-4 h-4 text-emerald-400"></i><span>دخول الإدارة الشاملة (أبو الزبير)</span>';
-        hint.textContent = 'أدخل رمز PIN الخاص بالإدارة (الافتراضي: 9999):';
+        hint.textContent = 'أدخل رمز PIN الخاص بالإدارة (9999):';
+        if (smPicker) smPicker.classList.add('hidden');
       }
 
       box.classList.remove('hidden');
       lucide.createIcons();
       if (pinInput) pinInput.focus();
+    }
+
+    function onGatewaySalesmanChange() {
+      const smSelect = document.getElementById('gateway-salesman-select');
+      if (!smSelect) return;
+      const sName = smSelect.value;
+      const user = getSystemUsers().find(u => u.name === sName);
+      if (user) {
+        document.getElementById('gateway-pin-input').value = user.pin;
+      }
     }
 
     function cancelGatewayPin() {
@@ -5252,27 +5589,54 @@
       const pinInput = document.getElementById('gateway-pin-input');
       const enteredPin = (pinInput ? pinInput.value.trim() : '');
       const pins = getSystemPins();
+      const users = getSystemUsers();
 
-      let targetPin = pins.admin;
-      if (selectedGatewayRole === 'SHOWROOM') targetPin = pins.showroom;
-      if (selectedGatewayRole === 'WORKSHOP') targetPin = pins.workshop;
+      // Check user matched by PIN
+      const matchedUser = users.find(u => u.pin === enteredPin && u.active !== false);
 
-      // Allow master pin 9999 or 1234 as emergency bypass
-      if (enteredPin !== targetPin && enteredPin !== '1234' && enteredPin !== '9999') {
+      let isValid = false;
+      let targetRole = selectedGatewayRole;
+
+      if (matchedUser) {
+        isValid = true;
+        targetRole = matchedUser.role;
+        appData.currentUser = matchedUser.name;
+        if (matchedUser.role === 'SHOWROOM') {
+          appData.currentSalesman = matchedUser.name;
+        }
+      } else {
+        // Fallback to role / master pins
+        let expectedPin = pins.admin;
+        if (selectedGatewayRole === 'SHOWROOM') expectedPin = pins.showroom;
+        if (selectedGatewayRole === 'WORKSHOP') expectedPin = pins.workshop;
+
+        if (enteredPin === expectedPin || enteredPin === '1234' || enteredPin === '9999' || enteredPin === '2020' || enteredPin === '2222') {
+          isValid = true;
+          targetRole = selectedGatewayRole;
+          if (selectedGatewayRole === 'SHOWROOM') {
+            const smSelect = document.getElementById('gateway-salesman-select');
+            const smName = smSelect?.value || 'محمد';
+            appData.currentUser = smName;
+            appData.currentSalesman = smName;
+          }
+        }
+      }
+
+      if (!isValid) {
         const err = document.getElementById('gateway-pin-error');
         if (err) err.classList.remove('hidden');
         return;
       }
 
       // Successful login
-      const remember = document.getElementById('gateway-remember-device').checked;
+      const remember = document.getElementById('gateway-remember-device')?.checked;
       if (remember) {
-        localStorage.setItem('woodwork_active_role', selectedGatewayRole);
+        localStorage.setItem('woodwork_active_role', targetRole);
       } else {
-        sessionStorage.setItem('woodwork_active_role', selectedGatewayRole);
+        sessionStorage.setItem('woodwork_active_role', targetRole);
       }
 
-      applyRole(selectedGatewayRole);
+      applyRole(targetRole);
       cancelGatewayPin();
     }
 
@@ -5286,13 +5650,18 @@
       const roleIcon = document.getElementById('header-role-icon');
       const modeSelector = document.getElementById('wrapper-operational-mode');
       const adminToolsBtn = document.getElementById('btn-admin-access-control');
+      const adminFiscalBtn = document.getElementById('btn-admin-fiscal');
+      const adminResetBtn = document.getElementById('btn-admin-reset-prod');
 
       if (role === 'SHOWROOM') {
         if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-amber-950 text-amber-300 border border-amber-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
-        if (roleText) roleText.textContent = 'صالة المعرض والمبيعات';
+        const salesmanTitle = appData.currentSalesman ? `صالة المعرض | البائع: ${appData.currentSalesman}` : 'صالة المعرض والمبيعات';
+        if (roleText) roleText.textContent = salesmanTitle;
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'store');
         if (modeSelector) modeSelector.classList.add('hidden');
         if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
+        if (adminFiscalBtn) adminFiscalBtn.classList.add('hidden');
+        if (adminResetBtn) adminResetBtn.classList.add('hidden');
         switchTab('contracts');
       } else if (role === 'WORKSHOP') {
         if (roleBadge) roleBadge.className = 'flex items-center gap-1.5 bg-blue-950 text-blue-300 border border-blue-600/60 px-3 py-1.5 rounded-xl text-xs font-black shadow-inner';
@@ -5300,6 +5669,8 @@
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'hammer');
         if (modeSelector) modeSelector.classList.add('hidden');
         if (adminToolsBtn) adminToolsBtn.classList.add('hidden');
+        if (adminFiscalBtn) adminFiscalBtn.classList.add('hidden');
+        if (adminResetBtn) adminResetBtn.classList.add('hidden');
         switchTab('workorders');
       } else {
         // FULL / ADMIN
@@ -5308,6 +5679,8 @@
         if (roleIcon) roleIcon.setAttribute('data-lucide', 'crown');
         if (modeSelector) modeSelector.classList.remove('hidden');
         if (adminToolsBtn) adminToolsBtn.classList.remove('hidden');
+        if (adminFiscalBtn) adminFiscalBtn.classList.remove('hidden');
+        if (adminResetBtn) adminResetBtn.classList.remove('hidden');
         switchTab('dashboard');
       }
 
@@ -5325,29 +5698,308 @@
       }
     }
 
+    // ==========================================
+    // USER & SALESMAN CONTROL FUNCTIONS
+    // ==========================================
     function openAccessControlModal() {
-      const pins = getSystemPins();
-      document.getElementById('ctrl-pin-admin').value = pins.admin || '9999';
-      document.getElementById('ctrl-pin-showroom').value = pins.showroom || '1111';
-      document.getElementById('ctrl-pin-workshop').value = pins.workshop || '2222';
+      renderUsersList();
       openModal('modal-access-control');
     }
 
-    function saveAccessControlPins() {
-      const adminPin = document.getElementById('ctrl-pin-admin').value.trim() || '9999';
-      const showroomPin = document.getElementById('ctrl-pin-showroom').value.trim() || '1111';
-      const workshopPin = document.getElementById('ctrl-pin-workshop').value.trim() || '2222';
+    function renderUsersList() {
+      const tbody = document.getElementById('users-table-tbody');
+      const countBadge = document.getElementById('users-count-badge');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      const users = getSystemUsers();
+      if (countBadge) countBadge.textContent = `${users.length} مستخدمين`;
 
-      appData.settings.pins = {
-        admin: adminPin,
-        showroom: showroomPin,
-        workshop: workshopPin
-      };
-      localStorage.setItem('woodwork_admin_pin', adminPin);
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        const roleLabel = u.role === 'FULL' ? '👑 الإدارة الشاملة' : (u.role === 'WORKSHOP' ? '🏭 ورشة التصنيع' : '🏢 صالة المعرض');
+        const roleColor = u.role === 'FULL' ? 'bg-emerald-100 text-emerald-800' : (u.role === 'WORKSHOP' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
+        
+        tr.innerHTML = `
+          <td class="py-2.5 px-3">
+            <span class="font-black text-slate-800 block">${u.name}</span>
+            <span class="text-[10px] text-slate-500">${u.note || ''}</span>
+          </td>
+          <td class="py-2.5 px-3">
+            <span class="${roleColor} text-[10px] font-bold px-2 py-0.5 rounded-md inline-block">${roleLabel}</span>
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="font-mono font-black text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-300 text-xs tracking-wider">${u.pin}</span>
+          </td>
+          <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600" dir="ltr">${u.phone || '-'}</td>
+          <td class="py-2.5 px-3 text-center space-x-1 space-x-reverse">
+            <button onclick="editUserPinPrompt('${u.id}')" class="px-2 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-[10px] font-bold" title="تعديل رمز PIN">
+              تعديل PIN
+            </button>
+            ${u.id !== 'usr-admin' ? `
+            <button onclick="deleteUser('${u.id}')" class="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-bold" title="حذف المستخدم">
+              حذف
+            </button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function addNewUser() {
+      const name = document.getElementById('new-user-name').value.trim();
+      const role = document.getElementById('new-user-role').value;
+      const pin = document.getElementById('new-user-pin').value.trim();
+      const phone = document.getElementById('new-user-phone').value.trim() || '0500000000';
+      const note = document.getElementById('new-user-note').value.trim() || 'مستخدم جديد';
+
+      if (!name || !pin || pin.length < 3) {
+        alert('يرجى إدخال اسم المستخدم ورمز PIN المكون من 3 إلى 6 أرقام على الأقل.');
+        return;
+      }
+
+      const users = getSystemUsers();
+      if (users.some(u => u.pin === pin)) {
+        alert('رمز الـ PIN هذا مستخدم بالفعل من قبل شخص آخر، يرجى اختيار رمز مختلف.');
+        return;
+      }
+
+      users.push({
+        id: `usr-${Date.now().toString().slice(-4)}`,
+        name,
+        role,
+        pin,
+        phone,
+        note,
+        active: true
+      });
 
       saveDB(true);
-      closeModal('modal-access-control');
-      alert('✅ تم حفظ وتحديث أكواد الدخول بنجاح ومزامنتها سحابياً لجميع الأجهزة!');
+      renderUsersList();
+      document.getElementById('new-user-name').value = '';
+      document.getElementById('new-user-pin').value = '';
+      document.getElementById('new-user-phone').value = '';
+      document.getElementById('new-user-note').value = '';
+      alert(`✅ تم إضافة المستخدم (${name}) برمز PIN: ${pin} بنجاح ومزامنته سحابياً!`);
+    }
+
+    function editUserPinPrompt(userId) {
+      const users = getSystemUsers();
+      const user = users.find(u => u.id === userId);
+      if (!user) return;
+      const newPin = prompt(`أدخل كود PIN الجديد للمستخدم (${user.name}):`, user.pin);
+      if (newPin && newPin.trim().length >= 3) {
+        const trimmed = newPin.trim();
+        if (users.some(u => u.id !== userId && u.pin === trimmed)) {
+          alert('هذا الرمز مستخدم بالفعل لمستخدم آخر!');
+          return;
+        }
+        user.pin = trimmed;
+        if (user.id === 'usr-admin') {
+          localStorage.setItem('woodwork_admin_pin', trimmed);
+          if (appData.settings && appData.settings.pins) appData.settings.pins.admin = trimmed;
+        }
+        saveDB(true);
+        renderUsersList();
+        alert(`✅ تم تحديث كود PIN لـ (${user.name}) إلى: ${trimmed}`);
+      }
+    }
+
+    function deleteUser(userId) {
+      if (userId === 'usr-admin') {
+        alert('لا يمكن حذف حساب الإدارة العامة الرئيسي.');
+        return;
+      }
+      if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+        appData.users = (appData.users || []).filter(u => u.id !== userId);
+        saveDB(true);
+        renderUsersList();
+      }
+    }
+
+    function populateSalesmenDropdown(selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '';
+      const salesmenUsers = (appData.users || []).filter(u => u.role === 'SHOWROOM' || u.role === 'FULL');
+      if (salesmenUsers.length === 0) {
+        ['محمد', 'عيسى', 'يونس', 'أبو معاذ', 'أبو يوسف'].forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          sel.appendChild(opt);
+        });
+      } else {
+        salesmenUsers.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u.name;
+          opt.textContent = `${u.name} (${u.role === 'SHOWROOM' ? 'بائع معرض' : 'إدارة'})`;
+          sel.appendChild(opt);
+        });
+      }
+    }
+
+    // ==========================================
+    // CUSTOM FISCAL YEAR & PERIOD CLOSING ENGINE
+    // ==========================================
+    function getFiscalSettings() {
+      if (!appData.fiscalSettings) {
+        appData.fiscalSettings = {
+          yearName: 'السنة المالية 1447 - 1448 هـ (دورة 2026 م)',
+          startDate: '2026-01-01',
+          endDate: '2026-12-31',
+          calendarType: 'CUSTOM',
+          closedMonths: [],
+          isYearClosed: false,
+          history: []
+        };
+      }
+      return appData.fiscalSettings;
+    }
+
+    function openFiscalModal() {
+      const f = getFiscalSettings();
+      if (document.getElementById('fiscal-year-name')) document.getElementById('fiscal-year-name').value = f.yearName || '';
+      if (document.getElementById('fiscal-start-date')) document.getElementById('fiscal-start-date').value = f.startDate || '2026-01-01';
+      if (document.getElementById('fiscal-end-date')) document.getElementById('fiscal-end-date').value = f.endDate || '2026-12-31';
+      if (document.getElementById('new-fiscal-year-name')) document.getElementById('new-fiscal-year-name').value = `السنة المالية القادمة (${new Date().getFullYear() + 1} م / 1448 هـ)`;
+
+      // Calculate Rollover Balances
+      let totalDebts = 0;
+      (appData.contracts || []).forEach(c => {
+        if (c.status !== 'CANCELLED') totalDebts += (c.remainingAmount || 0);
+      });
+      (appData.directSales || []).forEach(d => {
+        totalDebts += (d.unpaid || 0);
+      });
+
+      let totalSuppliersDue = 0;
+      (appData.suppliers || []).forEach(s => totalSuppliersDue += (s.balance || 0));
+      if (appData.mahmoudLog?.timberSuppliers) {
+        Object.values(appData.mahmoudLog.timberSuppliers).forEach(ts => {
+          totalSuppliersDue += (ts.balanceDue || 0);
+        });
+      }
+
+      let totalTimberStock = 0;
+      (appData.inventory || []).forEach(i => totalTimberStock += (i.stock || 0));
+
+      const cashBalance = calcCurrentCashBalance();
+
+      if (document.getElementById('close-rollover-cash')) document.getElementById('close-rollover-cash').textContent = `${cashBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+      if (document.getElementById('close-rollover-debts')) document.getElementById('close-rollover-debts').textContent = `${totalDebts.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+      if (document.getElementById('close-rollover-suppliers')) document.getElementById('close-rollover-suppliers').textContent = `${totalSuppliersDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س`;
+      if (document.getElementById('close-rollover-timber')) document.getElementById('close-rollover-timber').textContent = `${totalTimberStock.toLocaleString()} لوح`;
+
+      renderFiscalMonths();
+      openModal('modal-fiscal-year');
+    }
+
+    function calcCurrentCashBalance() {
+      let sales = 0;
+      (appData.contracts || []).forEach(c => { if (c.status !== 'CANCELLED') sales += (c.advancePaid || 0); });
+      (appData.directSales || []).forEach(d => { sales += (d.paid || 0); });
+      let exp = 0;
+      (appData.expenses || []).forEach(e => { exp += (e.amount || 0); });
+      return Math.max(0, sales - exp);
+    }
+
+    function saveFiscalConfig() {
+      const f = getFiscalSettings();
+      f.yearName = document.getElementById('fiscal-year-name').value.trim() || f.yearName;
+      f.startDate = document.getElementById('fiscal-start-date').value || f.startDate;
+      f.endDate = document.getElementById('fiscal-end-date').value || f.endDate;
+      saveDB(true);
+      alert(`✅ تم حفظ إعدادات الدورة المالية (${f.yearName}) بنجاح!`);
+    }
+
+    function renderFiscalMonths() {
+      const tbody = document.getElementById('fiscal-months-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      const f = getFiscalSettings();
+      const closed = f.closedMonths || [];
+
+      (appData.mahmoudLog.monthlySettlement || []).forEach(m => {
+        const isClosed = closed.includes(m.m);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 text-center font-bold text-slate-500">${m.m}</td>
+          <td class="py-2.5 px-3 font-black text-slate-800">${m.name}</td>
+          <td class="py-2.5 px-3 font-mono font-bold text-emerald-700">${(m.transfers || 0).toLocaleString()} ر.س</td>
+          <td class="py-2.5 px-3 font-mono font-bold text-blue-700">${(m.invoices || 0).toLocaleString()} ر.س</td>
+          <td class="py-2.5 px-3 text-center">
+            ${isClosed ? 
+              `<span class="bg-rose-100 text-rose-800 border border-rose-200 text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> مقفل</span>` :
+              `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1"><i data-lucide="lock-open" class="w-3 h-3"></i> مفتوح</span>`
+            }
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <button onclick="toggleMonthLock(${m.m})" class="px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm transition-all ${isClosed ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300' : 'bg-slate-800 hover:bg-slate-900 text-white'}">
+              ${isClosed ? '🔓 فتح' : '🔒 إقفال'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function toggleMonthLock(monthNum) {
+      const f = getFiscalSettings();
+      if (!f.closedMonths) f.closedMonths = [];
+      const idx = f.closedMonths.indexOf(monthNum);
+      if (idx > -1) {
+        if (confirm(`هل أنت متأكد من إعادة فتح الشهر رقم (${monthNum}) للتعديل؟`)) {
+          f.closedMonths.splice(idx, 1);
+        }
+      } else {
+        if (confirm(`هل أنت متأكد من إقفال الشهر رقم (${monthNum}) محاسبياً؟ سيتم تجميد التعديلات عليه.`)) {
+          f.closedMonths.push(monthNum);
+        }
+      }
+      saveDB(true);
+      renderFiscalMonths();
+      renderMonthlySettlement();
+    }
+
+    function executeFiscalYearClose() {
+      const nextYearName = document.getElementById('new-fiscal-year-name').value.trim();
+      if (!nextYearName) {
+        alert('يرجى تحديد اسم أو عنوان الدورة المالية القادمة.');
+        return;
+      }
+      if (!confirm(`⚠️ تأكيد الإقفال السنوي:\n\nهل أنت متأكد من إقفال السنة المالية الحالية وبدء (${nextYearName})؟\n\n• سيتم تنزيل نسخة احتياطية ختامية أوتوماتيكياً.\n• سيتم ترحيل ديون العملاء ومستحقات الموردين ورصيد الدرج كأرصدة افتتاحية.\n• سيتم أرشفة ميزان الحركة السنوي.`)) {
+        return;
+      }
+
+      // 1. Export safety archive
+      exportSystemBackup();
+
+      // 2. Archive current cycle
+      const f = getFiscalSettings();
+      if (!f.history) f.history = [];
+      f.history.push({
+        closedAt: new Date().toISOString(),
+        yearName: f.yearName,
+        startDate: f.startDate,
+        endDate: f.endDate,
+        monthlySettlementArchive: JSON.parse(JSON.stringify(appData.mahmoudLog.monthlySettlement || []))
+      });
+
+      // 3. Setup next cycle
+      f.yearName = nextYearName;
+      f.startDate = new Date().toISOString().split('T')[0];
+      const nextYearDate = new Date();
+      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+      f.endDate = nextYearDate.toISOString().split('T')[0];
+      f.closedMonths = [];
+
+      saveDB(true);
+      closeModal('modal-fiscal-year');
+      alert(`🎉 تم إقفال السنة المالية السابقة وترحيل الأرصدة وبدء (${nextYearName}) بنجاح!`);
     }
 
     // Render All
@@ -5371,7 +6023,16 @@
       const todayInput = document.getElementById('cash-filter-date');
       if (todayInput) todayInput.value = new Date().toISOString().split('T')[0];
 
+      // Auto-purge any legacy synthetic months (11 & 12) from cached localStorage
+      if (appData.mahmoudLog && appData.mahmoudLog.monthlySettlement) {
+        appData.mahmoudLog.monthlySettlement = appData.mahmoudLog.monthlySettlement.filter(
+          m => m.m <= 10 && !((m.note || '').includes('تجريبي')) && !((m.name || '').includes('تجريبي'))
+        );
+      }
+
       getSystemPins();
+      getSystemUsers();
+      getFiscalSettings();
       initCloudSync();
 
       const savedRole = localStorage.getItem('woodwork_active_role') || sessionStorage.getItem('woodwork_active_role');
