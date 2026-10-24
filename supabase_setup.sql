@@ -79,17 +79,27 @@ ALTER TABLE expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE direct_sales ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monthly_settlements ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public read access" ON system_metadata;
+DROP POLICY IF EXISTS "Allow public write access" ON system_metadata;
 CREATE POLICY "Allow public read access" ON system_metadata FOR SELECT USING (true);
-CREATE POLICY "Allow public write access" ON system_metadata FOR ALL USING (true);
+CREATE POLICY "Allow public write access" ON system_metadata FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public read access" ON contracts;
+DROP POLICY IF EXISTS "Allow public write access" ON contracts;
 CREATE POLICY "Allow public read access" ON contracts FOR SELECT USING (true);
-CREATE POLICY "Allow public write access" ON contracts FOR ALL USING (true);
+CREATE POLICY "Allow public write access" ON contracts FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public read access" ON expenses;
+DROP POLICY IF EXISTS "Allow public write access" ON expenses;
 CREATE POLICY "Allow public read access" ON expenses FOR SELECT USING (true);
-CREATE POLICY "Allow public write access" ON expenses FOR ALL USING (true);
+CREATE POLICY "Allow public write access" ON expenses FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public read access" ON direct_sales;
+DROP POLICY IF EXISTS "Allow public write access" ON direct_sales;
 CREATE POLICY "Allow public read access" ON direct_sales FOR SELECT USING (true);
-CREATE POLICY "Allow public write access" ON direct_sales FOR ALL USING (true);
+CREATE POLICY "Allow public write access" ON direct_sales FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public read access" ON monthly_settlements;
+DROP POLICY IF EXISTS "Allow public write access" ON monthly_settlements;
 CREATE POLICY "Allow public read access" ON monthly_settlements FOR SELECT USING (true);
-CREATE POLICY "Allow public write access" ON monthly_settlements FOR ALL USING (true);
+CREATE POLICY "Allow public write access" ON monthly_settlements FOR ALL USING (true) WITH CHECK (true);
