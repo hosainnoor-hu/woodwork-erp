@@ -1319,14 +1319,18 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-end gap-2 text-xs">
-        <button onclick="closeModal('modal-new-quote')" class="px-4 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
-        <button onclick="saveNewContract(false)" class="bg-wood-700 hover:bg-wood-800 text-white px-5 py-2.5 rounded-xl font-bold shadow-md flex items-center gap-1.5">
+        <button onclick="closeModal('modal-new-quote')" class="px-3.5 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
+        <button onclick="saveNewContract(false)" class="bg-wood-700 hover:bg-wood-800 text-white px-4 py-2.5 rounded-xl font-bold shadow-md flex items-center gap-1.5 transition-all">
           <i data-lucide="send" class="w-4 h-4"></i>
-          حفظ العقد وإرسال الأمر للورشة فوراً
+          حفظ وإرسال للورشة
         </button>
-        <button onclick="saveNewContract(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-5 py-2.5 rounded-xl font-black shadow-md flex items-center gap-1.5">
+        <button onclick="saveNewContract(false, true)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-black shadow-md flex items-center gap-1.5 transition-all">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          حفظ ومشاركة واتساب
+        </button>
+        <button onclick="saveNewContract(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2.5 rounded-xl font-black shadow-md flex items-center gap-1.5 transition-all">
           <i data-lucide="printer" class="w-4 h-4"></i>
-          حفظ وطباعة العقد والضمان
+          حفظ وطباعة العقد
         </button>
       </div>
     </div>
@@ -1437,10 +1441,14 @@
 
       <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-end gap-2 text-xs">
         <button onclick="closeModal('modal-collect-debt')" class="px-3 py-2 rounded-xl font-bold text-slate-600">إلغاء</button>
-        <button onclick="confirmCollectDebt(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold shadow-md">
+        <button onclick="confirmCollectDebt(false)" class="bg-slate-700 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl font-bold shadow-md transition-all">
           حفظ التحصيل
         </button>
-        <button onclick="confirmCollectDebt(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2 rounded-xl font-black shadow-md flex items-center gap-1">
+        <button onclick="confirmCollectDebt(false, true)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-black shadow-md flex items-center gap-1.5 transition-all">
+          <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+          حفظ ومشاركة واتساب
+        </button>
+        <button onclick="confirmCollectDebt(true)" class="bg-amber-500 hover:bg-amber-600 text-wood-950 px-4 py-2 rounded-xl font-black shadow-md flex items-center gap-1.5 transition-all">
           <i data-lucide="printer" class="w-3.5 h-3.5"></i>
           حفظ وطباعة سند قبض
         </button>
@@ -3148,6 +3156,12 @@
                 طباعة العقد
               </button>
               ${!isCancelled ? `
+                <button onclick="shareContractWhatsApp('${c.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 shadow-sm transition-all" title="مشاركة العقد عبر الواتساب">
+                  <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                  واتساب
+                </button>
+              ` : ''}
+              ${!isCancelled ? `
                 <button onclick="openCancelContractModal('${c.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-800 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1">
                   <i data-lucide="file-x" class="w-3.5 h-3.5"></i>
                   إلغاء / إشعار دائن
@@ -3219,6 +3233,7 @@
         `;
         container.appendChild(card);
       });
+      if (window.lucide) lucide.createIcons();
     }
 
     function updateContractCroquisAfter(contractId) {
@@ -3298,6 +3313,7 @@
         `;
         container.appendChild(card);
       });
+      if (window.lucide) lucide.createIcons();
     }
 
     function paySupplierModal(supCode) {
@@ -3467,6 +3483,7 @@
         `;
         container.appendChild(card);
       });
+      if (window.lucide) lucide.createIcons();
     }
 
     function advanceWorkOrder(id) {
@@ -3514,7 +3531,8 @@
           <td class="py-3 px-3 font-bold text-rose-600">${w.advances.toFixed(2)} ر.س</td>
           <td class="py-3 px-3 font-black text-emerald-700">${net.toFixed(2)} ر.س</td>
           <td class="py-3 px-3">
-            <button onclick="openNewWorkerAdvanceModal('MONTHLY', '${w.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1 rounded-lg text-[11px] font-bold">
+            <button onclick="openNewWorkerAdvanceModal('MONTHLY', '${w.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-2 rounded-xl text-xs font-black min-h-[36px] active:scale-95 shadow-sm transition-all flex items-center gap-1">
+              <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
               صرف سلفة
             </button>
           </td>
@@ -3633,7 +3651,7 @@
       openModal('modal-collect-debt');
     }
 
-    function confirmCollectDebt(andPrint = false) {
+    function confirmCollectDebt(andPrint = false, andWhatsApp = false) {
       const id = document.getElementById('cd-target-id').value;
       const type = document.getElementById('cd-target-type').value;
       const amt = parseFloat(document.getElementById('cd-amount').value) || 0;
@@ -3656,6 +3674,7 @@
           voucherId: `RV-${Date.now().toString().slice(-5)}`,
           date: today,
           customerName: c.customerName,
+          phone: c.phone || '',
           refId: c.id,
           amount: amt,
           remaining: c.remainingAmount,
@@ -3671,6 +3690,7 @@
           voucherId: `RV-${Date.now().toString().slice(-5)}`,
           date: today,
           customerName: ds.buyer,
+          phone: '',
           refId: ds.id,
           amount: amt,
           remaining: ds.unpaid,
@@ -3683,6 +3703,8 @@
       closeModal('modal-collect-debt');
       if (andPrint && receiptInfo) {
         printReceiptVoucher(receiptInfo);
+      } else if (andWhatsApp && receiptInfo) {
+        shareReceiptWhatsApp(receiptInfo);
       }
     }
 
@@ -3960,34 +3982,132 @@
       document.getElementById('qt-remaining-display').value = rem.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' ر.س';
     }
 
-    function previewCroquisUpload(input, targetType) {
-      const file = input?.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const base64 = evt.target.result;
-        if (targetType === 'BEFORE') {
-          currentCroquisBeforeImgData = base64;
-          const img = document.getElementById('qt-croquis-preview-img');
-          const box = document.getElementById('qt-croquis-preview-box');
-          if (img && box) {
-            img.src = base64;
-            box.classList.remove('hidden');
-          }
-        } else {
-          currentCroquisAfterImgData = base64;
-          const img = document.getElementById('uc-croquis-preview-img');
-          const box = document.getElementById('uc-croquis-preview-box');
-          if (img && box) {
-            img.src = base64;
-            box.classList.remove('hidden');
-          }
-        }
-      };
-      reader.readAsDataURL(file);
+    // ==========================================
+    // PKG-IMAGE: CLIENT-SIDE CANVAS COMPRESSION & SUPABASE STORAGE
+    // ==========================================
+    async function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth || height > maxHeight) {
+              if (width / height > maxWidth / maxHeight) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              } else {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            canvas.toBlob((blob) => {
+              resolve({
+                base64: compressedBase64,
+                blob: blob,
+                sizeKB: Math.round((blob ? blob.size : 0) / 1024)
+              });
+            }, 'image/jpeg', quality);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
-    function saveNewContract(andPrint = false) {
+    async function uploadToSupabaseStorage(blob, originalName) {
+      if (!supabaseClient || !blob) return null;
+      try {
+        const cleanName = (originalName || 'croquis.jpg').replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `croquis/${Date.now()}_${cleanName}`;
+        const { data, error } = await supabaseClient.storage
+          .from('croquis')
+          .upload(path, blob, { contentType: 'image/jpeg', upsert: true });
+
+        if (error) {
+          console.warn('Supabase storage upload error:', error);
+          return null;
+        }
+        const { data: publicData } = supabaseClient.storage.from('croquis').getPublicUrl(path);
+        return publicData?.publicUrl || null;
+      } catch (err) {
+        console.warn('Supabase storage exception:', err);
+        return null;
+      }
+    }
+
+    async function previewCroquisUpload(input, targetType) {
+      const file = input?.files?.[0];
+      if (!file) return;
+
+      const isBefore = (targetType === 'BEFORE' || String(targetType).includes('qt'));
+      const previewImg = document.getElementById(isBefore ? 'qt-croquis-preview' : 'uc-croquis-preview');
+
+      // 1. Temporary instant preview
+      try {
+        const tempUrl = URL.createObjectURL(file);
+        if (previewImg) {
+          previewImg.src = tempUrl;
+          previewImg.classList.remove('hidden');
+        }
+      } catch (e) {}
+
+      try {
+        // 2. High-efficiency Canvas Compression (shrinks 5MB to ~80KB)
+        const { base64, blob, sizeKB } = await compressImageFile(file, 1200, 1200, 0.75);
+
+        // 3. Optional Supabase Storage upload if connected
+        let finalDataUrl = base64;
+        if (supabaseClient) {
+          const cloudUrl = await uploadToSupabaseStorage(blob, file.name);
+          if (cloudUrl) finalDataUrl = cloudUrl;
+        }
+
+        // 4. Save to corresponding state variable
+        if (isBefore) {
+          currentCroquisBeforeImgData = finalDataUrl;
+        } else {
+          currentCroquisAfterImgData = finalDataUrl;
+        }
+
+        if (previewImg) {
+          previewImg.src = finalDataUrl;
+          previewImg.title = `تم التحسين والضغط بنجاح: ${sizeKB} كيلوبايت`;
+        }
+      } catch (err) {
+        console.warn('Compression failed, using standard reader fallback:', err);
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const b64 = evt.target.result;
+          if (isBefore) {
+            currentCroquisBeforeImgData = b64;
+          } else {
+            currentCroquisAfterImgData = b64;
+          }
+          if (previewImg) {
+            previewImg.src = b64;
+            previewImg.classList.remove('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function saveNewContract(andPrint = false, andWhatsApp = false) {
       const customerName = document.getElementById('qt-customer-name').value.trim();
       const phone = document.getElementById('qt-phone').value.trim() || '0500000000';
       const salesman = document.getElementById('qt-salesman').value;
@@ -4100,6 +4220,8 @@
 
       if (andPrint) {
         printContract(newContractId);
+      } else if (andWhatsApp) {
+        shareContractWhatsApp(newContractId);
       } else {
         alert(`تم حفظ العقد (${newContractId}) وإرسال أمر التصنيع للورشة وخصم الألواح بنجاح!`);
       }
@@ -4425,6 +4547,95 @@
         window.print();
         printArea.classList.add('hidden');
       }, 250);
+    }
+
+    // ==========================================
+    // PKG-WHATSAPP: DEEP LINK SHARING ENGINE
+    // ==========================================
+    function formatPhoneForWhatsApp(raw) {
+      if (!raw) return '';
+      let cleaned = String(raw).replace(/[^0-9]/g, '');
+      if (cleaned.startsWith('00966')) {
+        cleaned = cleaned.substring(2);
+      } else if (cleaned.startsWith('05')) {
+        cleaned = '966' + cleaned.substring(1);
+      } else if (cleaned.startsWith('5') && cleaned.length === 9) {
+        cleaned = '966' + cleaned;
+      }
+      return cleaned;
+    }
+
+    function shareContractWhatsApp(contractId) {
+      const c = appData.contracts.find(item => item.id === contractId);
+      if (!c) {
+        alert('لم يتم العثور على بيانات العقد.');
+        return;
+      }
+
+      const phone = formatPhoneForWhatsApp(c.phone);
+      const linkedWO = (appData.workOrders || []).find(w => w.contractId === c.id);
+      const stageName = linkedWO 
+        ? (stageNamesShort[linkedWO.stage] || linkedWO.stage) 
+        : (c.status === 'COMPLETED' ? 'مكتمل ومسلّم للعميل' : 'قيد المعالجة والتجهيز');
+
+      let itemsSummary = '';
+      if (c.items && c.items.length > 0) {
+        itemsSummary = '\n📋 *بنود ومواصفات العقد:*\n' + c.items.map((it, idx) => `  ${idx + 1}. ${it.desc} (${it.qty} م × ${it.price.toLocaleString()} ر.س)`).join('\n');
+      }
+
+      const msg = 
+`🪵 *مؤسسة أركان لتفصيل الدواليب والمطابخ*
+━━━━━━━━━━━━━━━━━━━━
+عزيزنا العميل: *${c.customerName}* المحترم،
+تحية طيبة، يسرنا تزويدكم بتفاصيل عقد التفصيل المعتمد لدينا:
+
+📄 *رقم العقد:* ${c.id}
+🛋️ *المشروع:* ${c.title}
+👤 *مسؤول المبيعات:* ${c.salesman}
+📅 *تاريخ التعاقد:* ${c.signingDate}
+🚚 *تاريخ التسليم المتوقع:* ${c.deliveryDate || 'حسب الاتفاق'}
+
+💰 *إجمالي قيمة العقد:* ${c.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س
+💵 *الدفعة المقدمة (العربون):* ${c.advancePaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س
+⏳ *المتبقي في الذمة:* ${c.remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س
+🏭 *مرحلة الورشة الحالية:* ${stageName}
+${itemsSummary}
+
+🛡️ *الضمان:* 5 سنوات على جودة الخشب والهيكل والمفصلات.
+✨ نسعد بخدمتكم دائماً، وشكراً لثقتكم بنا!
+📞 للتواصل والاستفسار: معرض أركان`;
+
+      const waUrl = phone 
+        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
+        : `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+
+      window.open(waUrl, '_blank');
+    }
+
+    function shareReceiptWhatsApp(info) {
+      if (!info) return;
+      const phone = formatPhoneForWhatsApp(info.phone);
+      const methodLabel = info.method === 'CASH' ? 'نقداً (صندوق المؤسسة)' : info.method === 'MADA' ? 'شبكة مدى' : 'حوالة بنكية';
+
+      const msg = 
+`🧾 *سند قبض مالي معتمد*
+🪵 *مؤسسة أركان لتفصيل الدواليب والمطابخ*
+━━━━━━━━━━━━━━━━━━━━
+استلمنا من المكرم: *${info.customerName}* المحترم
+💰 *المبلغ المقبوض:* ${info.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س
+💳 *طريقة السداد:* ${methodLabel}
+📄 *رقم السند:* ${info.voucherId}
+📅 *التاريخ:* ${info.date}
+🏷️ *البيان:* ${info.notes} (مرجع: ${info.refId})
+⏳ *المتبقي في الذمة بعد هذا السداد:* ${info.remaining.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س
+
+✨ تم قيد المبلغ في حسابكم، شكراً لتعاملكم الراقي مع مؤسسة أركان!`;
+
+      const waUrl = phone 
+        ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`
+        : `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+
+      window.open(waUrl, '_blank');
     }
 
     function openNewInventoryItemModal() {
@@ -5100,11 +5311,13 @@
           <td class="py-3 px-3 font-mono font-bold text-emerald-700">${w.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
           <td class="py-3 px-3 font-mono font-black text-rose-700">${w.remainingDue.toLocaleString('en-US', { minimumFractionDigits: 2 })} ر.س</td>
           <td class="py-3 px-3 text-center">
-            <div class="flex items-center justify-center gap-1">
-              <button onclick="openAddWorkDaysModal('${w.id}')" class="px-2 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold text-[10px]">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="openAddWorkDaysModal('${w.id}')" class="px-3 py-1.5 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-black text-xs min-h-[36px] active:scale-95 shadow-sm transition-all flex items-center gap-1">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
                 + يومية
               </button>
-              <button onclick="openNewWorkerAdvanceModal('DAILY', '${w.id}')" class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shadow-sm">
+              <button onclick="openNewWorkerAdvanceModal('DAILY', '${w.id}')" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs min-h-[36px] active:scale-95 shadow-sm transition-all flex items-center gap-1">
+                <i data-lucide="banknote" class="w-3.5 h-3.5"></i>
                 صرف دفعة
               </button>
             </div>
@@ -5296,7 +5509,7 @@
       try {
         const backupObj = {
           appName: 'منظومة أركان للأخشاب والدواليب والتصنيع',
-          version: '4.3.0',
+          version: '4.5.0',
           exportedAt: new Date().toISOString(),
           data: appData
         };
@@ -5390,7 +5603,7 @@
       try {
         const safetyBackup = {
           appName: 'منظومة أركان للأخشاب والدواليب والتصنيع - نسخة أمان تلقائية قبل تصفير البدء الفعلي',
-          version: '4.3.0',
+          version: '4.5.0',
           exportedAt: new Date().toISOString(),
           data: appData
         };
@@ -5851,12 +6064,33 @@
     }
 
     function calcCurrentCashBalance() {
-      let sales = 0;
-      (appData.contracts || []).forEach(c => { if (c.status !== 'CANCELLED') sales += (c.advancePaid || 0); });
-      (appData.directSales || []).forEach(d => { sales += (d.paid || 0); });
-      let exp = 0;
-      (appData.expenses || []).forEach(e => { exp += (e.amount || 0); });
-      return Math.max(0, sales - exp);
+      let totalSales = 0;
+      let totalPurchases = 0;
+      let totalExpenses = 0;
+
+      (appData.contracts || []).forEach(c => {
+        if (c.status === 'CANCELLED') return;
+        totalSales += (c.advancePaid || 0);
+        if (c.advanceDirectedTo && c.advanceDirectedTo !== 'صندوق المؤسسة') {
+          totalPurchases += (c.advancePaid || 0);
+        }
+      });
+
+      (appData.directSales || []).forEach(ds => {
+        totalSales += (ds.paid || 0);
+      });
+
+      (appData.expenses || []).forEach(e => {
+        if (e.method === 'CASH') {
+          if (e.category && e.category.startsWith('سداد دفعة للمورد:')) {
+            totalPurchases += (e.amount || 0);
+          } else {
+            totalExpenses += (e.amount || 0);
+          }
+        }
+      });
+
+      return Math.max(0, totalSales - (totalPurchases + totalExpenses));
     }
 
     function saveFiscalConfig() {

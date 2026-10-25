@@ -103,3 +103,13 @@ DROP POLICY IF EXISTS "Allow public read access" ON monthly_settlements;
 DROP POLICY IF EXISTS "Allow public write access" ON monthly_settlements;
 CREATE POLICY "Allow public read access" ON monthly_settlements FOR SELECT USING (true);
 CREATE POLICY "Allow public write access" ON monthly_settlements FOR ALL USING (true) WITH CHECK (true);
+
+-- 7. إنشاء وتأمين مخزن الصور السحابي للكروكي والدواليب (Supabase Storage Bucket: croquis)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('croquis', 'croquis', true)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Allow public uploads to croquis" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public view of croquis" ON storage.objects;
+CREATE POLICY "Allow public uploads to croquis" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'croquis');
+CREATE POLICY "Allow public view of croquis" ON storage.objects FOR SELECT USING (bucket_id = 'croquis');
